@@ -21,24 +21,24 @@ import play.api.mvc._
 import play.api.{Environment, Mode}
 import uk.gov.hmrc.agentmappingfrontend.audit.{AuditService, NoOpAuditService}
 import uk.gov.hmrc.agentmappingfrontend.controllers.routes
+import uk.gov.hmrc.agentmappingfrontend.model.Identifier
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.retrieve.Retrievals.{authorisedEnrolments,credentials}
+import uk.gov.hmrc.auth.core.retrieve.Retrievals.{authorisedEnrolments, credentials}
 import uk.gov.hmrc.auth.core.retrieve._
-import uk.gov.hmrc.domain.SaAgentReference
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.config.AuthRedirects
 
 import scala.concurrent.{ExecutionContext, Future}
 
-case class AgentRequest[A](saAgentReference: SaAgentReference, request: Request[A]) extends WrappedRequest[A](request)
+case class AgentRequest[A](identifier: Identifier, request: Request[A]) extends WrappedRequest[A](request)
 
 trait AuthActions extends AuthorisedFunctions with AuthRedirects {
 
   def env: Environment
 
-  private def withAgentEnrolledFor[A](serviceName: String, identifierKey: String)(body: (Option[(Boolean,String)], Credentials) => Future[Result])(implicit request: Request[A], hc: HeaderCarrier, ec: ExecutionContext): Future[Result] = {
+  private def withAgentEnrolledFor[A](serviceName: String, identifierKey: String)(body: (Option[(Boolean,Identifier)], Credentials) => Future[Result])(implicit request: Request[A], hc: HeaderCarrier, ec: ExecutionContext): Future[Result] = {
     authorised(
       Enrolment(serviceName) and AuthProviders(GovernmentGateway) and Agent)
       .retrieve(authorisedEnrolments and credentials) {
@@ -46,7 +46,7 @@ trait AuthActions extends AuthorisedFunctions with AuthRedirects {
           val args = for {
             enrolment <- enrolments.getEnrolment(serviceName)
             identifier <- enrolment.getIdentifier(identifierKey)
-          } yield (enrolment.isActivated, identifier.value)
+          } yield (enrolment.isActivated, Identifier(identifier.key, identifier.value))
           body(args, creds)
       } recover {
         case _: NoActiveSession => toGGLogin(if (env.mode.equals(Mode.Dev)) s"http://${request.host}${request.uri}" else s"${request.uri}")
@@ -55,11 +55,10 @@ trait AuthActions extends AuthorisedFunctions with AuthRedirects {
 
   def withAuthorisedSAAgent(auditService: AuditService = NoOpAuditService)(body: AgentRequest[AnyContent] => Future[Result])(implicit request: Request[AnyContent], hc: HeaderCarrier, ec: ExecutionContext): Future[Result] = {
       withAgentEnrolledFor("IR-SA-AGENT", "IRAgentReference") {
-        case (Some((activated, iRAgentReference)), creds) =>
-          val saAgentReference = SaAgentReference(iRAgentReference)
+        case (Some((activated, identifier)), creds) =>
           if(activated) {
-            AuditService.auditCheckAgentRefCodeEvent(Some(saAgentReference), Option(creds.providerId), Option(creds.providerType))(auditService)
-            body(AgentRequest(saAgentReference,request))
+            AuditService.auditCheckAgentRefCodeEvent(Some(identifier), Option(creds.providerId), Option(creds.providerType))(auditService)
+            body(AgentRequest(identifier, request))
           } else {
             AuditService.auditCheckAgentRefCodeEvent(None, Option(creds.providerId), Option(creds.providerType))(auditService)
             Future.failed(InsufficientEnrolments("IR-SA-AGENT enrolment not activated"))

@@ -20,24 +20,25 @@ import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.Request
 import uk.gov.hmrc.agentmappingfrontend.audit.AgentFrontendMappingEvent.AgentFrontendMappingEvent
+import uk.gov.hmrc.agentmappingfrontend.model.Identifier
 import uk.gov.hmrc.domain.SaAgentReference
 import uk.gov.hmrc.play.audit.AuditExtensions.auditHeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
-
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
+
 import scala.concurrent.Future
 import scala.util.Try
 import uk.gov.hmrc.http.HeaderCarrier
 
 object AuditService {
 
-  def auditCheckAgentRefCodeEvent(saAgentReferenceOpt: Option[SaAgentReference], authProviderId: Option[String], authProviderType: Option[String])
+  def auditCheckAgentRefCodeEvent(identifierOpt: Option[Identifier], authProviderId: Option[String], authProviderType: Option[String])
                                  (auditService: AuditService)
                                  (implicit hc: HeaderCarrier, request: Request[Any]): Unit = {
     val event = createEvent(AgentFrontendMappingEvent.CheckAgentRefCode, "check-agent-ref-code",
-      Seq("isEnrolledSAAgent" -> saAgentReferenceOpt.isDefined)
-        ++ saAgentReferenceOpt.map(r => Seq("saAgentRef" -> r.value)).getOrElse(Seq.empty)
+      Seq("isEnrolledSAAgent" -> identifierOpt.isDefined) //FIXME distinguish between SA and VAT
+        ++ identifierOpt.map(i => Seq("saAgentRef" -> i.value)).getOrElse(Seq.empty)
         ++ authProviderId.map(v => Seq("authProviderId" -> v)).getOrElse(Seq.empty)
         ++ authProviderType.map(v => Seq("authProviderType" -> v)).getOrElse(Seq.empty)
     )
