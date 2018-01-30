@@ -1,6 +1,5 @@
 package uk.gov.hmrc.agentmappingfrontend.stubs
 
-import uk.gov.hmrc.domain.SaAgentReference
 import com.github.tomakehurst.wiremock.client.WireMock._
 import play.api.libs.json.Json
 import uk.gov.hmrc.agentmappingfrontend.model.{Identifier, Mapping, Mappings}
@@ -14,18 +13,18 @@ object MappingStubs {
 
   val jsonBody = Json.toJson(Mappings(listOfMapping))
 
-  def mappingIsCreated(utr: Utr, arn: Arn, identifier: Identifier): Unit = {
-    stubFor(put(urlPathEqualTo(s"/agent-mapping/mappings/${utr.value}/${arn.value}/$identifier"))
+  def mappingIsCreated(utr: Utr, arn: Arn, identifiers: Seq[Identifier]): Unit = {
+    stubFor(put(urlPathEqualTo(s"/agent-mapping/mappings/${utr.value}/${arn.value}/${identifiers.mkString("~")}"))
         willReturn aResponse().withStatus(201))
   }
 
-  def mappingExists(utr: Utr, arn: Arn, identifier: Identifier): Unit = {
-    stubFor(put(urlPathEqualTo(s"/agent-mapping/mappings/${utr.value}/${arn.value}/$identifier"))
+  def mappingExists(utr: Utr, arn: Arn, identifiers: Seq[Identifier]): Unit = {
+    stubFor(put(urlPathEqualTo(s"/agent-mapping/mappings/${utr.value}/${arn.value}/${identifiers.mkString("~")}"))
       willReturn aResponse().withStatus(409))
   }
 
-  def mappingKnownFactsIssue(utr: Utr, arn: Arn, identifier: Identifier): Unit = {
-    stubFor(put(urlPathEqualTo(s"/agent-mapping/mappings/${utr.value}/${arn.value}/$identifier"))
+  def mappingKnownFactsIssue(utr: Utr, arn: Arn, identifiers: Seq[Identifier]): Unit = {
+    stubFor(put(urlPathEqualTo(s"/agent-mapping/mappings/${utr.value}/${arn.value}/${identifiers.mkString("~")}"))
       willReturn aResponse().withStatus(403))
   }
 

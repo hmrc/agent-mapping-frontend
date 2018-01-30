@@ -10,8 +10,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 class MappingConnectorISpec extends BaseControllerISpec {
   private val arn = Arn("ARN0001")
-  //private val saAgentReference = SaAgentReference("ARN0001")
-  private val identifier = Identifier("IRAgentReference", "ARN0001")
+  private val identifiers = Seq(Identifier("IRAgentReference", "ARN0001"), Identifier("VATRegNo", "VRN0001"))
   private val utr = Utr("2000000000")
 
   private def connector = app.injector.instanceOf[MappingConnector]
@@ -19,18 +18,18 @@ class MappingConnectorISpec extends BaseControllerISpec {
 
   "createMapping" should {
     "create a mapping" in {
-      mappingIsCreated(utr, arn, identifier)
-      await(connector.createMapping(utr, arn, identifier)) shouldBe 201
+      mappingIsCreated(utr, arn, identifiers)
+      await(connector.createMapping(utr, arn, identifiers)) shouldBe 201
     }
 
     "not create a mapping when one already exists" in {
-      mappingExists(utr, arn, identifier)
-      await(connector.createMapping(utr, arn, identifier)) shouldBe 409
+      mappingExists(utr, arn, identifiers)
+      await(connector.createMapping(utr, arn, identifiers)) shouldBe 409
     }
 
     "not create a mapping when there is a problem with the supplied known facts" in {
-      mappingKnownFactsIssue(utr, arn, identifier)
-      await(connector.createMapping(utr, arn, identifier)) shouldBe 403
+      mappingKnownFactsIssue(utr, arn, identifiers)
+      await(connector.createMapping(utr, arn, identifiers)) shouldBe 403
     }
   }
 

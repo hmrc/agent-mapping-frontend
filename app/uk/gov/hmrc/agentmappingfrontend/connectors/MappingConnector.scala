@@ -30,8 +30,8 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class MappingConnector @Inject()(@Named("agent-mapping-baseUrl") baseUrl: URL, httpGet: HttpGet, httpPut: HttpPut, httpDelete: HttpDelete) {
 
-  def createMapping(utr: Utr, arn: Arn, identifier: Identifier)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Int] = {
-    httpPut.PUT(createUrl(utr, arn, identifier), "").map{
+  def createMapping(utr: Utr, arn: Arn, identifiers: Seq[Identifier])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Int] = {
+    httpPut.PUT(createUrl(utr, arn, identifiers), "").map{
       r => r.status
     }.recover {
       case e: Upstream4xxResponse if Status.FORBIDDEN.equals(e.upstreamResponseCode) => Status.FORBIDDEN
@@ -40,8 +40,8 @@ class MappingConnector @Inject()(@Named("agent-mapping-baseUrl") baseUrl: URL, h
     }
   }
 
-  private def createUrl(utr: Utr, arn: Arn, identifier: Identifier): String = {
-    new URL(baseUrl, s"/agent-mapping/mappings/${utr.value}/${arn.value}/$identifier").toString
+  private def createUrl(utr: Utr, arn: Arn, identifiers: Seq[Identifier]): String = {
+    new URL(baseUrl, s"/agent-mapping/mappings/${utr.value}/${arn.value}/${identifiers.mkString("~")}").toString
   }
 
   private def deleteUrl(arn: Arn): String = {

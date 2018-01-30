@@ -68,32 +68,32 @@ class MappingController @Inject()(override val messagesApi: MessagesApi,
   }
 
   def startSubmit: Action[AnyContent] = Action.async { implicit request =>
-    withAuthorisedSAAgent() {
+    withAuthorisedAgent() {
       implicit request: AgentRequest[AnyContent] =>
         successful(Redirect(routes.MappingController.showAddCode()))
     }
   }
 
   def showAddCode: Action[AnyContent] = Action.async { implicit request =>
-    withAuthorisedSAAgent(auditService) {
+    withAuthorisedAgent(auditService) {
       implicit request: AgentRequest[AnyContent] =>
-        successful(Ok(html.add_code(mappingForm, request.identifier)))
+        successful(Ok(html.add_code(mappingForm, request.identifiers)))
     }
   }
 
   def submitAddCode: Action[AnyContent] = Action.async { implicit request =>
-    withAuthorisedSAAgent() {
+    withAuthorisedAgent() {
       implicit request: AgentRequest[AnyContent] =>
         mappingForm.bindFromRequest.fold(
           formWithErrors => {
-            successful(Ok(html.add_code(formWithErrors, request.identifier)))
+            successful(Ok(html.add_code(formWithErrors, request.identifiers)))
           },
           mappingData => {
-            mappingConnector.createMapping(mappingData.utr, mappingData.arn, request.identifier) map { r: Int =>
+            mappingConnector.createMapping(mappingData.utr, mappingData.arn, request.identifiers) map { r: Int =>
               r match {
-                case CREATED => Redirect(routes.MappingController.complete(mappingData.arn, request.identifier))
-                case FORBIDDEN => Ok(html.add_code(mappingForm.withGlobalError("These details don't match our records. Check your account number and tax reference."), request.identifier))
-                case CONFLICT => Redirect(routes.MappingController.alreadyMapped(mappingData.arn, request.identifier))
+                case CREATED => Redirect(routes.MappingController.complete())
+                case FORBIDDEN => Ok(html.add_code(mappingForm.withGlobalError("These details don't match our records. Check your account number and tax reference."), request.identifiers))
+                case CONFLICT => Redirect(routes.MappingController.alreadyMapped())
               }
             }
           }
@@ -102,17 +102,18 @@ class MappingController @Inject()(override val messagesApi: MessagesApi,
   }
 
 
-  def complete(arn: Arn, identifier: Identifier): Action[AnyContent] = Action.async { implicit request =>
-    withAuthorisedSAAgent() {
+  val complete: Action[AnyContent] = Action.async { implicit request =>
+    withAuthorisedAgent() {
       implicit request =>
-        successful(Ok(html.complete(arn, identifier)))
+        successful(Ok(html.complete()))
     }
   }
 
-  def alreadyMapped(arn: Arn, identifier: Identifier): Action[AnyContent] = Action.async { implicit request =>
-    withAuthorisedSAAgent() {
+
+  val alreadyMapped: Action[AnyContent] = Action.async { implicit request =>
+    withAuthorisedAgent() {
       implicit request =>
-        successful(Ok(html.already_mapped(arn, identifier)))
+        successful(Ok(html.already_mapped()))
     }
   }
 

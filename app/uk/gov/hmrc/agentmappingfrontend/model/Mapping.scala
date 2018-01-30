@@ -19,7 +19,7 @@ package uk.gov.hmrc.agentmappingfrontend.model
 import play.api.libs.json.Format
 import play.api.libs.json.Json._
 
-case class Identifier(key: String, value: String){
+case class Identifier(key: String, value: String, activated: Boolean = true){
   override def toString: String = s"$key~$value"
 }
 

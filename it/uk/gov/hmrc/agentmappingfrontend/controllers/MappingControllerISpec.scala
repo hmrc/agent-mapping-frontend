@@ -92,23 +92,23 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
 
     "redirect to complete if the user enters an ARN and UTR that match the known facts" in {
       givenUserIsAuthenticated(anSAEnrolledAgent)
-      mappingIsCreated(Utr("2000000000"),Arn("TARN0000001"), anSAEnrolledAgent.identifier.get)
+      mappingIsCreated(Utr("2000000000"),Arn("TARN0000001"), anSAEnrolledAgent.identifier)
       val request = fakeRequest(POST, endpoint).withFormUrlEncodedBody("arn.arn" -> "TARN0000001", "utr.value" -> "2000000000")
       val result = callEndpointWith(request)
 
       status(result) shouldBe 303
-      redirectLocation(result).get shouldBe routes.MappingController.complete(Arn("TARN0000001"), anSAEnrolledAgent.identifier.get).url
+      redirectLocation(result).get shouldBe routes.MappingController.complete().url
     }
 
     "redirect to the already-mapped page if the mapping already exists" in new App {
       givenUserIsAuthenticated(anSAEnrolledAgent)
-      mappingExists(Utr("2000000000"),Arn("TARN0000001"), anSAEnrolledAgent.identifier.get)
+      mappingExists(Utr("2000000000"),Arn("TARN0000001"), anSAEnrolledAgent.identifier)
 
       val request = fakeRequest(POST, endpoint).withFormUrlEncodedBody("arn.arn" -> "TARN0000001", "utr.value" -> "2000000000")
       val result = callEndpointWith(request)
 
       status(result) shouldBe 303
-      redirectLocation(result).get shouldBe routes.MappingController.alreadyMapped(Arn("TARN0000001"), anSAEnrolledAgent.identifier.get).url
+      redirectLocation(result).get shouldBe routes.MappingController.alreadyMapped().url
     }
 
     "redisplay the form " when {
@@ -156,7 +156,7 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
 
       "the known facts check fails" in {
         givenUserIsAuthenticated(anSAEnrolledAgent)
-        mappingKnownFactsIssue(Utr("2000000000"),Arn("TARN0000001"), anSAEnrolledAgent.identifier.get)
+        mappingKnownFactsIssue(Utr("2000000000"),Arn("TARN0000001"), anSAEnrolledAgent.identifier)
 
         val request = fakeRequest(POST, endpoint).withFormUrlEncodedBody("arn.arn" -> "TARN0000001", "utr.value" -> "2000000000")
         val result = callEndpointWith(request)
@@ -169,21 +169,19 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
 
   "complete" should {
 
-    behave like anEndpointReachableGivenAgentAffinityGroupAndIrSaAgentEnrolment(GET, s"/agent-mapping/complete/TARN0000001/${anSAEnrolledAgent.identifier.get}",
+    behave like anEndpointReachableGivenAgentAffinityGroupAndIrSaAgentEnrolment(GET, s"/agent-mapping/complete",
       expectCheckAgentRefCodeAudit = false)(callEndpointWith)
 
     "display the complete page for an arn and ir sa agent reference" in {
       givenUserIsAuthenticated(anSAEnrolledAgent)
-      val saRef: Identifier = anSAEnrolledAgent.identifier.get
-      val request = fakeRequest(GET, s"/agent-mapping/complete/TARN0000001/${anSAEnrolledAgent.identifier.get}")
+      val saRef: Seq[Identifier] = anSAEnrolledAgent.identifier
+      val request = fakeRequest(GET, s"/agent-mapping/complete")
       val result = callEndpointWith(request)
       val resultBody: String = bodyOf(result)
       status(result) shouldBe 200
       resultBody should include(htmlEscapedMessage("connectionComplete.title"))
       resultBody should include(htmlEscapedMessage("button.repeatProcess"))
       resultBody should include(htmlEscapedMessage("button.signOut"))
-      resultBody shouldNot include("TARN0000001")
-      resultBody shouldNot include(saRef.value)
     }
   }
 
