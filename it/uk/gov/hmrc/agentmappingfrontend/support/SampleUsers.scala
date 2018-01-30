@@ -24,6 +24,22 @@ object SampleUsers {
     identifier = Seq(Identifier("IRAgentReference","HZ1234"))
   )
 
+  val anVATEnrolledAgent = SampleUser(
+    s"""{
+       |  "authorisedEnrolments": [
+       |   { "key":"HMCE-VATDEC-ORG", "identifiers": [
+       |      { "key":"VATRegNo", "value": "HZ1234" }
+       |    ]}
+       |  ],
+       |  "affinityGroup": "Agent",
+       |  "credentials": {
+       |    "providerId": "12345-credId",
+       |    "providerType": "GovernmentGateway"
+       |  }
+       |}""".stripMargin,
+    identifier = Seq(Identifier("VATRegNo","HZ1234"))
+  )
+
   val anSAEnrolledAgentInactive = SampleUser(
     s"""{
        |  "authorisedEnrolments": [
@@ -40,6 +56,24 @@ object SampleUsers {
        |  }
        |}""".stripMargin,
     identifier = Seq(Identifier("IRAgentReference","HZ1234"))
+  )
+
+  val anVATEnrolledAgentInactive = SampleUser(
+    s"""{
+       |  "authorisedEnrolments": [
+       |   { "key":"HMCE-VATDEC-ORG",
+       |     "identifiers": [
+       |        { "key":"VATRegNo", "value": "HZ1234" }
+       |      ],
+       |     "state": "Inactive" }
+       |  ],
+       |  "affinityGroup": "Agent",
+       |  "credentials": {
+       |    "providerId": "12345-credId",
+       |    "providerType": "GovernmentGateway"
+       |  }
+       |}""".stripMargin,
+    identifier = Seq(Identifier("VATRegNo","HZ1234"))
   )
 
   val anAgentNotEnrolled = SampleUser(

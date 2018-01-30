@@ -7,7 +7,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.agentmappingfrontend.model.Identifier
 import uk.gov.hmrc.agentmappingfrontend.stubs.AuthStubs
 import uk.gov.hmrc.agentmappingfrontend.stubs.MappingStubs.{mappingExists, mappingIsCreated, mappingKnownFactsIssue}
-import uk.gov.hmrc.agentmappingfrontend.support.SampleUsers.anSAEnrolledAgent
+import uk.gov.hmrc.agentmappingfrontend.support.SampleUsers.{anSAEnrolledAgent, anVATEnrolledAgent}
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, Utr}
 import uk.gov.hmrc.domain.SaAgentReference
 
@@ -37,8 +37,15 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
 
     behave like anAuthenticatedEndpoint(GET, "/agent-mapping/start-submit", callEndpointWith)
 
-    "redirect to add-code if the current user is logged in and has legacy agent enrolment" in {
+    "redirect to add-code if the current user is logged in and has legacy agent enrolment for SA" in {
       givenUserIsAuthenticated(anSAEnrolledAgent)
+      val request = fakeRequest(GET, "/agent-mapping/start-submit")
+      val result = callEndpointWith(request)
+      status(result) shouldBe 303
+      redirectLocation(result).get shouldBe routes.MappingController.showAddCode().url
+    }
+    "redirect to add-code if the current user is logged in and has legacy agent enrolment for VAT" in {
+      givenUserIsAuthenticated(anVATEnrolledAgent)
       val request = fakeRequest(GET, "/agent-mapping/start-submit")
       val result = callEndpointWith(request)
       status(result) shouldBe 303
