@@ -26,7 +26,7 @@ case class Identifier(key: String, value: String){
 object Identifier {
   implicit val formats: Format[Identifier] = format[Identifier]
 
-  def apply(identifier: String): Identifier = {
+  def parse(identifier: String): Identifier = {
     val args = identifier.split("~")
     if(args.size!=2) throw new IllegalArgumentException("Identifier format shall be KEY~VALUE.")
     Identifier(args(0),args(1))

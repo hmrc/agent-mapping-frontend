@@ -22,5 +22,5 @@ import uk.gov.hmrc.play.binders.SimpleObjectBinder
 
 object UrlBinders {
   implicit val arnBinder = new SimpleObjectBinder[Arn](Arn.apply, _.value)
-  implicit val identifierBinder = new SimpleObjectBinder[Identifier](Identifier.apply, _.toString)
+  implicit val identifierBinder = new SimpleObjectBinder[Identifier](Identifier.parse, _.toString)
 }
