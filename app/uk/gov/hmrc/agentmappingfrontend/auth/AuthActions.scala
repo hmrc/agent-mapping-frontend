@@ -20,6 +20,7 @@ import play.api.mvc.Results.Redirect
 import play.api.mvc._
 import play.api.{Environment, Mode}
 import uk.gov.hmrc.agentmappingfrontend.audit.{AuditService, NoOpAuditService}
+import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
 import uk.gov.hmrc.agentmappingfrontend.controllers.routes
 import uk.gov.hmrc.agentmappingfrontend.model.Identifier
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
@@ -38,6 +39,7 @@ case class AgentRequest[A](identifiers: Seq[Identifier], request: Request[A]) ex
 trait AuthActions extends AuthorisedFunctions with AuthRedirects {
 
   def env: Environment
+  def appConfig: AppConfig
 
   private val validEnrolments: Seq[(String, String)] = Seq(("IR-SA-AGENT", "IRAgentReference"), ("HMCE-VATDEC-ORG", "VATRegNo"))
 
@@ -64,7 +66,7 @@ trait AuthActions extends AuthorisedFunctions with AuthRedirects {
           val identifiers = extractIdentifiers(enrolments, justAuthorisedEnrolments)
           body(identifiers, creds)
       } recover {
-        case _: NoActiveSession => toGGLogin(if (env.mode.equals(Mode.Dev)) s"http://${request.host}${request.uri}" else s"${request.uri}")
+        case _: NoActiveSession => toGGLogin(s"${appConfig.authenticationLoginCallbackUrl}${request.uri}")
     }
   }
 
