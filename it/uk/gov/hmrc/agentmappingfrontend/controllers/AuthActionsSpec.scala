@@ -39,7 +39,7 @@ class AuthActionsSpec extends BaseControllerISpec with AuthStubs {
     val config = app.injector.instanceOf[Configuration]
 
     def testWithAuthorisedSAAgent = {
-      await(withAuthorisedSAAgent(){request => Future.successful(Ok(request.identifierValue.value))})
+      await(withAuthorisedSAAgent(){request => Future.successful(Ok(request.identifier.value))})
     }
   }
 

@@ -4,6 +4,7 @@ import play.api.http.Writeable
 import play.api.mvc.{Request, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.agentmappingfrontend.model.Identifier
 import uk.gov.hmrc.agentmappingfrontend.stubs.AuthStubs
 import uk.gov.hmrc.agentmappingfrontend.stubs.MappingStubs.{mappingExists, mappingIsCreated, mappingKnownFactsIssue}
 import uk.gov.hmrc.agentmappingfrontend.support.SampleUsers.anSAEnrolledAgent
@@ -91,23 +92,23 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
 
     "redirect to complete if the user enters an ARN and UTR that match the known facts" in {
       givenUserIsAuthenticated(anSAEnrolledAgent)
-      mappingIsCreated(Utr("2000000000"),Arn("TARN0000001"), anSAEnrolledAgent.saAgentReference.get)
+      mappingIsCreated(Utr("2000000000"),Arn("TARN0000001"), anSAEnrolledAgent.identifier.get)
       val request = fakeRequest(POST, endpoint).withFormUrlEncodedBody("arn.arn" -> "TARN0000001", "utr.value" -> "2000000000")
       val result = callEndpointWith(request)
 
       status(result) shouldBe 303
-      redirectLocation(result).get shouldBe routes.MappingController.complete(Arn("TARN0000001"),anSAEnrolledAgent.saAgentReference.get).url
+      redirectLocation(result).get shouldBe routes.MappingController.complete(Arn("TARN0000001"), anSAEnrolledAgent.identifier.get).url
     }
 
     "redirect to the already-mapped page if the mapping already exists" in new App {
       givenUserIsAuthenticated(anSAEnrolledAgent)
-      mappingExists(Utr("2000000000"),Arn("TARN0000001"), anSAEnrolledAgent.saAgentReference.get)
+      mappingExists(Utr("2000000000"),Arn("TARN0000001"), anSAEnrolledAgent.identifier.get)
 
       val request = fakeRequest(POST, endpoint).withFormUrlEncodedBody("arn.arn" -> "TARN0000001", "utr.value" -> "2000000000")
       val result = callEndpointWith(request)
 
       status(result) shouldBe 303
-      redirectLocation(result).get shouldBe routes.MappingController.alreadyMapped(Arn("TARN0000001"),anSAEnrolledAgent.saAgentReference.get).url
+      redirectLocation(result).get shouldBe routes.MappingController.alreadyMapped(Arn("TARN0000001"), anSAEnrolledAgent.identifier.get).url
     }
 
     "redisplay the form " when {
@@ -155,7 +156,7 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
 
       "the known facts check fails" in {
         givenUserIsAuthenticated(anSAEnrolledAgent)
-        mappingKnownFactsIssue(Utr("2000000000"),Arn("TARN0000001"), anSAEnrolledAgent.saAgentReference.get)
+        mappingKnownFactsIssue(Utr("2000000000"),Arn("TARN0000001"), anSAEnrolledAgent.identifier.get)
 
         val request = fakeRequest(POST, endpoint).withFormUrlEncodedBody("arn.arn" -> "TARN0000001", "utr.value" -> "2000000000")
         val result = callEndpointWith(request)
@@ -168,13 +169,13 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
 
   "complete" should {
 
-    behave like anEndpointReachableGivenAgentAffinityGroupAndIrSaAgentEnrolment(GET, s"/agent-mapping/complete/TARN0000001/${anSAEnrolledAgent.saAgentReference.get}",
+    behave like anEndpointReachableGivenAgentAffinityGroupAndIrSaAgentEnrolment(GET, s"/agent-mapping/complete/TARN0000001/${anSAEnrolledAgent.identifier.get}",
       expectCheckAgentRefCodeAudit = false)(callEndpointWith)
 
     "display the complete page for an arn and ir sa agent reference" in {
       givenUserIsAuthenticated(anSAEnrolledAgent)
-      val saRef: SaAgentReference = anSAEnrolledAgent.saAgentReference.get
-      val request = fakeRequest(GET, s"/agent-mapping/complete/TARN0000001/${anSAEnrolledAgent.saAgentReference.get}")
+      val saRef: Identifier = anSAEnrolledAgent.identifier.get
+      val request = fakeRequest(GET, s"/agent-mapping/complete/TARN0000001/${anSAEnrolledAgent.identifier.get}")
       val result = callEndpointWith(request)
       val resultBody: String = bodyOf(result)
       status(result) shouldBe 200

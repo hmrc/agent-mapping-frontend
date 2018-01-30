@@ -1,9 +1,10 @@
 package uk.gov.hmrc.agentmappingfrontend.support
 
+import uk.gov.hmrc.agentmappingfrontend.model.Identifier
 import uk.gov.hmrc.auth.core.InsufficientEnrolments
 import uk.gov.hmrc.domain.SaAgentReference
 
-case class SampleUser(authoriseJsonResponse: String, saAgentReference: Option[SaAgentReference] = None, throwException: Option[Exception] = None)
+case class SampleUser(authoriseJsonResponse: String, identifier: Option[Identifier] = None, throwException: Option[Exception] = None)
 
 object SampleUsers {
 
@@ -20,7 +21,7 @@ object SampleUsers {
        |    "providerType": "GovernmentGateway"
        |  }
        |}""".stripMargin,
-    saAgentReference = Some(SaAgentReference("HZ1234"))
+    identifier = Some(Identifier("IRAgentReference","HZ1234"))
   )
 
   val anSAEnrolledAgentInactive = SampleUser(
@@ -38,7 +39,7 @@ object SampleUsers {
        |    "providerType": "GovernmentGateway"
        |  }
        |}""".stripMargin,
-    saAgentReference = Some(SaAgentReference("HZ1234"))
+    identifier = Some(Identifier("IRAgentReference","HZ1234"))
   )
 
   val anAgentNotEnrolled = SampleUser(
@@ -50,7 +51,7 @@ object SampleUsers {
        |    "providerType": "GovernmentGateway"
        |  }
        |}""".stripMargin,
-    saAgentReference = Some(SaAgentReference("HZ1234"))
+    identifier = Some(Identifier("IRAgentReference","HZ1234"))
   )
 
   val individual = SampleUser("", None, Some(InsufficientEnrolments()))
