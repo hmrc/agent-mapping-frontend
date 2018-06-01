@@ -28,8 +28,7 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
       val request = FakeRequest(GET, "/agent-mapping/start")
       val result = callEndpointWith(request)
       status(result) shouldBe 200
-      bodyOf(result) should include(
-        "Link your current Self Assessment and VAT clients to your agent services account")
+      bodyOf(result) should include(htmlEscapedMessage("connectAgentServices.start.title"))
     }
   }
 
