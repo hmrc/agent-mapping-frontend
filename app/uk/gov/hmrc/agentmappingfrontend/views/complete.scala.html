@@ -18,20 +18,20 @@
 @import uk.gov.hmrc.agentmappingfrontend.controllers.routes
 @import uk.gov.hmrc.agentmappingfrontend.views.html
 
-@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(providerId: String, arn: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @html.main_template(appConfig, title = Messages("connectionComplete.title"), bodyClasses = None) {
 
     <div class="transaction-banner--complete">
         <h1 class="transaction-banner__heading">
-            <span class="small-text">Government Gateway account</span>
-            <span class="heading-xlarge large-text" id="ggAccount">12345678900</span>
-            <span class="small-text">is now linked to your agent services account</span>
-            <span class="heading-large" id="xarn">XARN-123-4567</span>
+            <span class="small-text">@Messages("connectionComplete.header1")</span>
+            <span class="heading-xlarge large-text" id="providerId">@providerId</span>
+            <span class="small-text">@Messages("connectionComplete.header2")</span>
+            <span class="heading-large" id="arn">@arn</span>
         </h1>
     </div>
 
-    <h3 class="heading-medium">@Messages("connectionComplete.h3.1")</h3>
+    <h2 class="heading-medium">@Messages("connectionComplete.h3.1")</h2>
 
     <p>@Messages("connectionComplete.p1")</p>
     <p>@Messages("connectionComplete.p2")</p>

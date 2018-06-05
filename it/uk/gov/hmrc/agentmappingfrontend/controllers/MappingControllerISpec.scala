@@ -9,6 +9,7 @@ import uk.gov.hmrc.agentmappingfrontend.stubs.AuthStubs
 import uk.gov.hmrc.agentmappingfrontend.stubs.MappingStubs.{mappingExists, mappingIsCreated, mappingKnownFactsIssue}
 import uk.gov.hmrc.agentmappingfrontend.support.SampleUsers._
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, Utr}
+import uk.gov.hmrc.http.InternalServerException
 
 class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
 
@@ -233,7 +234,7 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
 
     "display the complete page for an arn and ir sa agent reference" in {
       givenUserIsAuthenticated(eligibleAgent)
-      val request = fakeRequest(GET, s"/agent-mapping/complete")
+      val request = fakeRequest(GET, s"/agent-mapping/complete").withSession(("mappingArn", "TARN0000001"))
       val result = callEndpointWith(request)
       val resultBody: String = bodyOf(result)
       status(result) shouldBe 200
@@ -244,13 +245,19 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
 
     "display the complete page for an arn and vat agent reference" in {
       givenUserIsAuthenticated(vatEnrolledAgent)
-      val request = fakeRequest(GET, s"/agent-mapping/complete")
+      val request = fakeRequest(GET, s"/agent-mapping/complete").withSession(("mappingArn", "TARN0000001"))
       val result = callEndpointWith(request)
       val resultBody: String = bodyOf(result)
       status(result) shouldBe 200
       resultBody should include(htmlEscapedMessage("connectionComplete.title"))
       resultBody should include(htmlEscapedMessage("button.repeatProcess"))
       resultBody should include(htmlEscapedMessage("link.finishSignOut"))
+    }
+
+    "InternalServerError due no ARN found after mapping complete" in {
+      givenUserIsAuthenticated(eligibleAgent)
+      val request = fakeRequest(GET, s"/agent-mapping/complete")
+      an[InternalServerException] shouldBe thrownBy(callEndpointWith(request))
     }
   }
 

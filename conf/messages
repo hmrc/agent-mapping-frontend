@@ -56,7 +56,8 @@ noMatch.try-again.button=Try again
 
 #Connection complete
 connectionComplete.title=You have link this Government Gateway account
-
+connectionComplete.header1=Government Gateway account
+connectionComplete.header2=is now linked to your agent services account
 connectionComplete.h3.1=What you can do next
 connectionComplete.p1=Your agent services account can now access your current client relationships linked to this Government Gateway account.
 connectionComplete.p2=So if your clients are signed up to report their income and expenses, or their VAT returns, through software, you can now:
