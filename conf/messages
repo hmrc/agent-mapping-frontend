@@ -4,6 +4,7 @@ servicename.titleSuffix=- Agent services account - GOV.UK
 #Connect agent services
 enter-account-number.title=What is your agent services account number?
 enter-account-number.details.heading=For example, XARN-123-4567
+enter-account-number.details.summary=Where to find your agent services account number
 enter-account-number.details.content=You can find this on your agent services account homepage. Your account number starts with a letter, then ARN and 7 numbers.
 
 enter-utr.title=What is your business''s Unique Taxpayer Reference(UTR)?
@@ -59,7 +60,6 @@ connectionComplete.title=You''ve connected this Government Gateway ID
 connectionComplete.p1=If you need to add another agent Government Gateway ID, sign out and repeat the process.
 
 #Buttons
-button.connect=Connect
 button.continue=Continue
 button.repeatProcess=Repeat process with another ID
 button.signOut=Sign out
