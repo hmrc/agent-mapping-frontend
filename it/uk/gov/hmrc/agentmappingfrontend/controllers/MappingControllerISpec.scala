@@ -56,21 +56,21 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
       endpoint,
       expectCheckAgentRefCodeAudit = true)(callEndpointWith)
 
-    "display the add code page if the current user is logged in and has legacy agent enrolment for SA" in {
+    "display the enter utr page if the current user is logged in and has legacy agent enrolment for SA" in {
       givenUserIsAuthenticated(eligibleAgent)
       val request = fakeRequest(GET, endpoint)
       val result = callEndpointWith(request)
       status(result) shouldBe 200
-      bodyOf(result) should include("Connect to your agent services account")
+      bodyOf(result) should include(htmlEscapedMessage("enter-account-number.title"))
       verifyCheckAgentRefCodeAuditEvent(activeEnrolments = eligibleAgent.activeEnrolments)
     }
 
-    "display the add code page if the current user is logged in and has legacy agent enrolment for VAT" in {
+    "display the enter utr page if the current user is logged in and has legacy agent enrolment for VAT" in {
       givenUserIsAuthenticated(vatEnrolledAgent)
       val request = fakeRequest(GET, endpoint)
       val result = callEndpointWith(request)
       status(result) shouldBe 200
-      bodyOf(result) should include("Connect to your agent services account")
+      bodyOf(result) should include(htmlEscapedMessage("enter-account-number.title"))
       verifyCheckAgentRefCodeAuditEvent(activeEnrolments = vatEnrolledAgent.activeEnrolments)
     }
 

@@ -103,12 +103,10 @@ class MappingController @Inject()(
         formWithUtr => {
           request.session.get("mappingArn") match {
             case Some(arn) =>
-              mappingConnector.createMapping(Utr(formWithUtr.utr.value), Arn(arn)) map { r: Int =>
-                r match {
-                  case CREATED   => Redirect(routes.MappingController.complete())
-                  case FORBIDDEN => Redirect(routes.MappingController.noMatch())
-                  case CONFLICT  => Redirect(routes.MappingController.alreadyMapped())
-                }
+              mappingConnector.createMapping(formWithUtr.utr, Arn(arn)) map {
+                case CREATED   => Redirect(routes.MappingController.complete())
+                case FORBIDDEN => Redirect(routes.MappingController.noMatch())
+                case CONFLICT  => Redirect(routes.MappingController.alreadyMapped())
               }
             case None => successful(Redirect(routes.MappingController.showEnterAccountNo()))
           }
