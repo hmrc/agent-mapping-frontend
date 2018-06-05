@@ -22,17 +22,33 @@
 
 @html.main_template(appConfig, title = Messages("connectionComplete.title"), bodyClasses = None) {
 
-<div class="transaction-banner--complete">
-    <h1 class="transaction-banner__heading">@Messages("connectionComplete.title")</h1>
-</div>
+    <div class="transaction-banner--complete">
+        <h1 class="transaction-banner__heading">
+            <span class="small-text">Government Gateway account</span>
+            <span class="heading-xlarge large-text" id="ggAccount">12345678900</span>
+            <span class="small-text">is now linked to your agent services account</span>
+            <span class="heading-large" id="xarn">XARN-123-4567</span>
+        </h1>
+    </div>
 
-<p>@Messages("connectionComplete.p1")</p>
+    <h3 class="heading-medium">@Messages("connectionComplete.h3.1")</h3>
 
-<p>
-    <a href="@routes.SignedOutController.signOutAndRedirect" class="button" id="buttonRepeatProcess" role="button">@Messages("button.repeatProcess")</a>
-</p>
+    <p>@Messages("connectionComplete.p1")</p>
+    <p>@Messages("connectionComplete.p2")</p>
 
-<p>
-    <a href="@routes.SignedOutController.signOut" id="buttonSignOut">@Messages("button.signOut")</a>
-</p>
+    <ul class="list list-bullet">
+        <li>@Messages("connectionComplete.l1")</li>
+        <li>@Messages("connectionComplete.l2")</li>
+    </ul>
+
+    <p>@Messages("connectionComplete.p3")</p>
+
+    <h3 class="heading-medium">@Messages("connectionComplete.h3.2")</h3>
+
+    <p>@Messages("connectionComplete.p4")</p>
+    <p>@Messages("connectionComplete.p5")</p>
+
+    <p><a href="@routes.SignedOutController.signOutAndRedirect" class="button" id="buttonRepeatProcess" role="button">@Messages("button.repeatProcess")</a></p>
+
+    <p><a href="@routes.SignedOutController.signOut" id="buttonSignOut">@Messages("link.finishSignOut")</a></p>
 }

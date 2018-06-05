@@ -77,7 +77,7 @@ class MappingController @Inject()(
         mappingData => {
           mappingConnector.createMapping(mappingData.utr, mappingData.arn) map { r: Int =>
             r match {
-              case CREATED => Redirect(routes.MappingController.complete())
+              case CREATED => Redirect(routes.MappingController.complete(mappingData.arn))
               case FORBIDDEN =>
                 Ok(
                   html.add_code(mappingForm.withGlobalError(

@@ -11,3 +11,5 @@ GET         /not-enrolled                                 uk.gov.hmrc.agentmappi
 
 GET         /signed-out                                   uk.gov.hmrc.agentmappingfrontend.controllers.SignedOutController.signOut
 GET         /signed-out-redirect                          uk.gov.hmrc.agentmappingfrontend.controllers.SignedOutController.signOutAndRedirect
+
+GET         /assets/*file                                 controllers.Assets.at(path="/public", file)
