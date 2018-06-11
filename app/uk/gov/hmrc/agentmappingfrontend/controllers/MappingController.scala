@@ -29,7 +29,8 @@ import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
 import uk.gov.hmrc.agentmappingfrontend.connectors.MappingConnector
 import uk.gov.hmrc.agentmappingfrontend.views.html
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, Utr}
-import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.auth.core.{AuthConnector, EnrolmentIdentifier}
+import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.bootstrap.controller.{ActionWithMdc, FrontendController}
 
@@ -58,7 +59,10 @@ class MappingController @Inject()(
   }
 
   val start: Action[AnyContent] = Action.async { implicit request =>
-    Future successful Ok(html.start())
+    withCheckForArn { optHmrcEnrolIdentifier: Option[EnrolmentIdentifier] =>
+      Future successful Ok(html.start(optHmrcEnrolIdentifier))
+
+    }
   }
 
   def startSubmit: Action[AnyContent] = Action.async { implicit request =>
@@ -94,7 +98,7 @@ class MappingController @Inject()(
   }
 
   def submitEnterUtr: Action[AnyContent] = Action.async { implicit request =>
-    withAuthorisedAgent { providerId =>
+    withAuthorisedAgent { providerId: String =>
       mappingFormUtr.bindFromRequest.fold(
         formWithErrors => {
           successful(Ok(html.enter_utr(formWithErrors)))
