@@ -61,7 +61,6 @@ class MappingController @Inject()(
   val start: Action[AnyContent] = Action.async { implicit request =>
     withCheckForArn { optHmrcEnrolIdentifier: Option[EnrolmentIdentifier] =>
       Future successful Ok(html.start(optHmrcEnrolIdentifier))
-
     }
   }
 
