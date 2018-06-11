@@ -107,16 +107,10 @@ trait AuthActions extends AuthorisedFunctions with AuthRedirects {
     authorised(AuthProviders(GovernmentGateway) and AffinityGroup.Agent)
       .retrieve(allEnrolments) {
         case agentEnrolments =>
-          val optHmrcEnrolIden = agentEnrolments.getEnrolment("HMRC-AS-AGENT") match {
-            case Some(asAgentEnrol) => asAgentEnrol.getIdentifier("AgentReferenceNumber")
-            case None               => None
-          }
-          body(optHmrcEnrolIden)
+          body(agentEnrolments.getEnrolment("HMRC-AS-AGENT").flatMap(_.getIdentifier("AgentReferenceNumber")))
       }
       .recoverWith {
-        case _: JsResultException => body(None)
-      }
-      .recoverWith {
+        case _: JsResultException      => body(None)
         case _: AuthorisationException => body(None)
       }
 }

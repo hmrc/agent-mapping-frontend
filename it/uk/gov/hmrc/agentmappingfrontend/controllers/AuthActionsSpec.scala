@@ -232,5 +232,13 @@ class AuthActionsSpec extends BaseControllerISpec with AuthStubs {
       status(result) shouldBe 200
       bodyOf(result) should include("None")
     }
+
+    "return None no Bearer Token" in {
+      givenUserIsNotAuthenticated
+
+      val result = TestController.testWithCheckForArn
+      status(result) shouldBe 200
+      bodyOf(result) should include("None")
+    }
   }
 }

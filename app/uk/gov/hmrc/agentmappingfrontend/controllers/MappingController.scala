@@ -30,7 +30,6 @@ import uk.gov.hmrc.agentmappingfrontend.connectors.MappingConnector
 import uk.gov.hmrc.agentmappingfrontend.views.html
 import uk.gov.hmrc.agentmtdidentifiers.model.{Arn, Utr}
 import uk.gov.hmrc.auth.core.{AuthConnector, EnrolmentIdentifier}
-import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.bootstrap.controller.{ActionWithMdc, FrontendController}
 
@@ -38,7 +37,6 @@ import scala.concurrent.Future
 import scala.concurrent.Future.successful
 
 case class MappingFormArn(arn: Arn)
-
 case class MappingFormUtr(utr: Utr)
 
 @Singleton
@@ -59,8 +57,8 @@ class MappingController @Inject()(
   }
 
   val start: Action[AnyContent] = Action.async { implicit request =>
-    withCheckForArn { optHmrcEnrolIdentifier: Option[EnrolmentIdentifier] =>
-      Future successful Ok(html.start(optHmrcEnrolIdentifier))
+    withCheckForArn { enrolmentIdentifier: Option[EnrolmentIdentifier] =>
+      Future successful Ok(html.start(enrolmentIdentifier))
     }
   }
 
