@@ -80,7 +80,8 @@ button.back=Back
 error.title=There is a problem
 error.prefix=Error:
 error.summary.heading=Something''s wrong
-error.utr.invalid = Check you have entered a valid UTR or tax reference
+error.utr.blank= UTR blank
+error.utr.invalid = UTR contains invalid characters or invalid length. (if UTR is entered with spaces, for example, 1234567890, this should still be accepted as valid input.)
 error.arn.invalid = Check you have entered a valid account number
 
 #TestOnly
