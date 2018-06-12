@@ -14,7 +14,7 @@ class FieldMappingsSpec extends UnitSpec with EitherValues {
       bind("2000000000") shouldBe Right("2000000000")
     }
 
-    "give \"error.required\" error when it is not supplied" in {
+    "unreachable by user, Give \"error.required\" error if somehow supplied Map.empty" in {
       utrMapping.bind(Map.empty).left.value should contain only FormError("testKey", "error.required")
     }
 
