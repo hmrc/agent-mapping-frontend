@@ -22,13 +22,16 @@ import play.api.data.validation._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentmtdidentifiers.model.Utr
 
+import scala.util.Try
+
 package object controllers {
 
   private val utrConstraint: Constraint[String] = Constraint[String] { fieldValue: String =>
     Constraints.nonEmpty(fieldValue) match {
-      case i: Invalid                   => Invalid(ValidationError("error.utr.blank"))
-      case _ if !isUtrValid(fieldValue) => Invalid(ValidationError("error.utr.invalid"))
-      case _                            => Valid
+      case i: Invalid                                         => Invalid(ValidationError("error.utr.blank"))
+      case _ if fieldValue.trim.map(_.isDigit).reduce(_ && _) => validateLength(fieldValue)
+      case _ if !isUtrValid(fieldValue)                       => Invalid(ValidationError("error.utr.invalid.format"))
+      case _                                                  => Valid
     }
   }
 
@@ -47,6 +50,14 @@ package object controllers {
   private def isArnValid(arnStr: String): Boolean = normalizeArn(arnStr).nonEmpty
 
   private def isUtrValid(utrStr: String): Boolean = normalizeUtr(utrStr).nonEmpty
+
+  private def validateLength(utrStr: String): ValidationResult =
+    if (utrStr.trim.size > 10)
+      Invalid(ValidationError("error.utr.invalid.length"))
+    else if (!isUtrValid(utrStr.trim))
+      Invalid(ValidationError("error.utr.invalid.format"))
+    else
+      Valid
 
   def normalizeArn(arnStr: String): Option[Arn] = {
     val hyphenPattern = """([A-Z]ARN-\d{3}-\d{4})""".r
