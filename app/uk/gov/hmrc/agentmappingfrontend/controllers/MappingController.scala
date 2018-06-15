@@ -58,7 +58,7 @@ class MappingController @Inject()(
 
   val start: Action[AnyContent] = Action.async { implicit request =>
     withCheckForArn { enrolmentIdentifier: Option[EnrolmentIdentifier] =>
-      Future successful Ok(html.start(enrolmentIdentifier.map(identifier => prettify(identifier.value))))
+      Future successful Ok(html.start(enrolmentIdentifier.map(identifier => prettify(Arn(identifier.value)))))
     }
   }
 
@@ -121,7 +121,7 @@ class MappingController @Inject()(
         .get("mappingArn")
         .getOrElse(
           throw new InternalServerException("user must not completed the mapping journey or have lost the stored arn"))
-      successful(Ok(html.complete(providerId, prettify(arn))))
+      successful(Ok(html.complete(providerId, prettify(Arn(arn)))))
     }
   }
 
@@ -149,8 +149,7 @@ object MappingController {
     mapping(
       "arn" -> mapping(
         "arn" -> arn
-      )(x => normalizeArn(x).map(Arn(_)).getOrElse(throw new Exception("Invalid Arn after validation")))(arn =>
-        Some(arn.value))
+      )(normalizeArn(_).getOrElse(throw new Exception("Invalid Arn after validation")))(arn => Some(arn.value))
     )(MappingFormArn.apply)(MappingFormArn.unapply)
   )
 

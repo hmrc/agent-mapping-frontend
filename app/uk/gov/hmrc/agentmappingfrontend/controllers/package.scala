@@ -24,9 +24,6 @@ import uk.gov.hmrc.agentmtdidentifiers.model.Utr
 
 package object controllers {
 
-  private val hyphenPattern = """([A-Z]ARN-\d{3}-\d{4})""".r
-  private val defaultPattern = """([A-Z]ARN\d{7})""".r
-
   private val utrConstraint: Constraint[String] = Constraint[String] { fieldValue: String =>
     Constraints.nonEmpty(fieldValue) match {
       case i: Invalid                    => Invalid(ValidationError("error.utr.blank"))
@@ -49,22 +46,25 @@ package object controllers {
 
   private def isValid(arnStr: String): Boolean = normalizeArn(arnStr).nonEmpty
 
-  def normalizeArn(arnStr: String): Option[String] = {
+  def normalizeArn(arnStr: String): Option[Arn] = {
+    val hyphenPattern = """([A-Z]ARN-\d{3}-\d{4})""".r
+    val defaultPattern = """([A-Z]ARN\d{7})""".r
+
     val formattedArn = arnStr.trim match {
       case hyphenPattern(value)  => Some(value.replace("-", ""))
       case defaultPattern(value) => Some(value)
       case _                     => None
     }
 
-    formattedArn.flatMap(arn => if (Arn.isValid(arn)) Some(arn) else None)
+    formattedArn.flatMap(arn => if (Arn.isValid(arn)) Some(Arn(arn)) else None)
   }
 
-  def prettify(arn: String): String = {
+  def prettify(arn: Arn): String = {
     val unapplyPattern = """([A-Z]ARN)(\d{3})(\d{4})""".r
 
     unapplyPattern
-      .unapplySeq(arn)
+      .unapplySeq(arn.value)
       .map(_.mkString("-"))
-      .getOrElse(throw new Exception(s"The arn contains an invalid value $arn.value"))
+      .getOrElse(throw new Exception(s"The arn contains an invalid value ${arn.value}"))
   }
 }
