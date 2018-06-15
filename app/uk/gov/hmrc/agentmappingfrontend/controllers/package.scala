@@ -34,7 +34,7 @@ package object controllers {
 
   private val arnConstraint: Constraint[String] = Constraint[String] { fieldValue: String =>
     Constraints.nonEmpty(fieldValue) match {
-      case i: Invalid                   => i
+      case i: Invalid                   => Invalid(ValidationError("error.arn.blank"))
       case _ if !isArnValid(fieldValue) => Invalid(ValidationError("error.arn.invalid"))
       case _                            => Valid
     }
