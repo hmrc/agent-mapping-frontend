@@ -31,20 +31,34 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
       val result = callEndpointWith(request)
       status(result) shouldBe 200
       checkHtmlResultContainsMsgs(result, "connectAgentServices.start.title")
-      bodyOf(result) should include("TARN-000-0001")
     }
 
-    "display the start page for unAuthenticated user" in {
+    "display the /start/sign-in-required for unAuthenticated or user without HMRC-AS-AGENT/ARN" in {
       givenUserIsNotAuthenticated
       val request = FakeRequest(GET, "/agent-mapping/start")
       val result = callEndpointWith(request)
+      redirectLocation(result) shouldBe Some(routes.MappingController.needAgentServicesAccount().url)
+    }
+  }
+
+  "/start/sign-in-required" should {
+    "display the /start/sign-in-required page" in {
+      givenUserIsNotAuthenticated
+      val request = FakeRequest(GET, "/agent-mapping/start/sign-in-required")
+      val result = callEndpointWith(request)
       status(result) shouldBe 200
-      checkHtmlResultContainsMsgs(result,"connectAgentServices.start.title")
+      checkHtmlResultContainsMsgs(result, "start.not-signed-in.title")
+    }
+
+    "display the /start page when user has HMRC-AS-AGENT/ARN" in {
+      givenUserIsAuthenticated(mtdAsAgent)
+      val request = FakeRequest(GET, "/agent-mapping/start/sign-in-required")
+      val result = callEndpointWith(request)
+      redirectLocation(result) shouldBe Some(routes.MappingController.start().url)
     }
   }
 
   "startSubmit" should {
-
     Auth.validEnrolments.foreach { serviceName =>
       s"redirect to the enter-account-number if the current user is logged in and has legacy agent enrolment for $serviceName" in {
         givenAuthorisedFor(serviceName)
