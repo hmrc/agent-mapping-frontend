@@ -33,14 +33,14 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
       checkHtmlResultContainsMsgs(result, "connectAgentServices.start.title")
     }
 
-    "303 the /start/sign-in-required for unAuthenticated" in {
+    "303 the /sign-in-required for unAuthenticated" in {
       givenUserIsNotAuthenticated
       val request = FakeRequest(GET, "/agent-mapping/start")
       val result = callEndpointWith(request)
       redirectLocation(result) shouldBe Some(routes.MappingController.needAgentServicesAccount().url)
     }
 
-    "303 to /start/sign-in-required when user without HMRC-AS-AGENT/ARN" in {
+    "303 to /sign-in-required when user without HMRC-AS-AGENT/ARN" in {
       givenAuthorisedFor("notHMRCASAGENT")
       val request = FakeRequest(GET, "/agent-mapping/start")
       val result = callEndpointWith(request)
@@ -49,18 +49,18 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
     }
   }
 
-  "/start/sign-in-required" should {
+  "/sign-in-required" should {
     "200 the /start/sign-in-required page when not logged in" in {
       givenUserIsNotAuthenticated
-      val request = FakeRequest(GET, "/agent-mapping/start/sign-in-required")
+      val request = FakeRequest(GET, "/agent-mapping/sign-in-required")
       val result = callEndpointWith(request)
       status(result) shouldBe 200
       checkHtmlResultContainsMsgs(result, "start.not-signed-in.title")
     }
 
-    "200 the /start/sign-in-required page as NO ARN is found" in {
+    "200 the /sign-in-required page as NO ARN is found" in {
       givenAuthorisedFor("notHMRCASAGENT")
-      val request = FakeRequest(GET, "/agent-mapping/start/sign-in-required")
+      val request = FakeRequest(GET, "/agent-mapping/sign-in-required")
       val result = callEndpointWith(request)
       status(result) shouldBe 200
       checkHtmlResultContainsMsgs(result, "start.not-signed-in.title")
@@ -68,7 +68,7 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
 
     "303 the /start page when user has HMRC-AS-AGENT/ARN" in {
       givenUserIsAuthenticated(mtdAsAgent)
-      val request = FakeRequest(GET, "/agent-mapping/start/sign-in-required")
+      val request = FakeRequest(GET, "/agent-mapping/sign-in-required")
       val result = callEndpointWith(request)
       redirectLocation(result) shouldBe Some(routes.MappingController.start().url)
     }

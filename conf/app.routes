@@ -2,7 +2,7 @@
 
 GET         /                                             uk.gov.hmrc.agentmappingfrontend.controllers.MappingController.root
 GET         /start                                        uk.gov.hmrc.agentmappingfrontend.controllers.MappingController.start
-GET         /start/sign-in-required                       uk.gov.hmrc.agentmappingfrontend.controllers.MappingController.needAgentServicesAccount
+GET         /sign-in-required                             uk.gov.hmrc.agentmappingfrontend.controllers.MappingController.needAgentServicesAccount
 GET         /start-submit                                 uk.gov.hmrc.agentmappingfrontend.controllers.MappingController.startSubmit
 GET         /enter-account-number                         uk.gov.hmrc.agentmappingfrontend.controllers.MappingController.showEnterAccountNo
 POST        /enter-account-number                         uk.gov.hmrc.agentmappingfrontend.controllers.MappingController.submitEnterAccountNo
