@@ -39,11 +39,27 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
       val result = callEndpointWith(request)
       redirectLocation(result) shouldBe Some(routes.MappingController.needAgentServicesAccount().url)
     }
+
+    "display the /start/sign-in-required page as NO ARN is found" in {
+      givenAuthorisedFor("notHMRCASAGENT")
+      val request = FakeRequest(GET, "/agent-mapping/start")
+      val result = callEndpointWith(request)
+      status(result) shouldBe 303
+      redirectLocation(result) shouldBe Some(routes.MappingController.needAgentServicesAccount().url)
+    }
   }
 
   "/start/sign-in-required" should {
-    "display the /start/sign-in-required page" in {
+    "display the /start/sign-in-required page when not logged in" in {
       givenUserIsNotAuthenticated
+      val request = FakeRequest(GET, "/agent-mapping/start/sign-in-required")
+      val result = callEndpointWith(request)
+      status(result) shouldBe 200
+      checkHtmlResultContainsMsgs(result, "start.not-signed-in.title")
+    }
+
+    "display the /start/sign-in-required page as NO ARN is found" in {
+      givenAuthorisedFor("notHMRCASAGENT")
       val request = FakeRequest(GET, "/agent-mapping/start/sign-in-required")
       val result = callEndpointWith(request)
       status(result) shouldBe 200
