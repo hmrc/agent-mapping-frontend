@@ -25,7 +25,7 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
   }
 
   "start" should {
-    "display the start page with ARN if user has HMRC-AS-AGENT" in {
+    "200 the start page if user has HMRC-AS-AGENT" in {
       givenUserIsAuthenticated(mtdAsAgent)
       val request = FakeRequest(GET, "/agent-mapping/start")
       val result = callEndpointWith(request)
@@ -33,14 +33,14 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
       checkHtmlResultContainsMsgs(result, "connectAgentServices.start.title")
     }
 
-    "display the /start/sign-in-required for unAuthenticated or user without HMRC-AS-AGENT/ARN" in {
+    "303 the /start/sign-in-required for unAuthenticated" in {
       givenUserIsNotAuthenticated
       val request = FakeRequest(GET, "/agent-mapping/start")
       val result = callEndpointWith(request)
       redirectLocation(result) shouldBe Some(routes.MappingController.needAgentServicesAccount().url)
     }
 
-    "display the /start/sign-in-required page as NO ARN is found" in {
+    "303 to /start/sign-in-required when user without HMRC-AS-AGENT/ARN" in {
       givenAuthorisedFor("notHMRCASAGENT")
       val request = FakeRequest(GET, "/agent-mapping/start")
       val result = callEndpointWith(request)
@@ -50,7 +50,7 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
   }
 
   "/start/sign-in-required" should {
-    "display the /start/sign-in-required page when not logged in" in {
+    "200 the /start/sign-in-required page when not logged in" in {
       givenUserIsNotAuthenticated
       val request = FakeRequest(GET, "/agent-mapping/start/sign-in-required")
       val result = callEndpointWith(request)
@@ -58,7 +58,7 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
       checkHtmlResultContainsMsgs(result, "start.not-signed-in.title")
     }
 
-    "display the /start/sign-in-required page as NO ARN is found" in {
+    "200 the /start/sign-in-required page as NO ARN is found" in {
       givenAuthorisedFor("notHMRCASAGENT")
       val request = FakeRequest(GET, "/agent-mapping/start/sign-in-required")
       val result = callEndpointWith(request)
@@ -66,7 +66,7 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
       checkHtmlResultContainsMsgs(result, "start.not-signed-in.title")
     }
 
-    "display the /start page when user has HMRC-AS-AGENT/ARN" in {
+    "303 the /start page when user has HMRC-AS-AGENT/ARN" in {
       givenUserIsAuthenticated(mtdAsAgent)
       val request = FakeRequest(GET, "/agent-mapping/start/sign-in-required")
       val result = callEndpointWith(request)
