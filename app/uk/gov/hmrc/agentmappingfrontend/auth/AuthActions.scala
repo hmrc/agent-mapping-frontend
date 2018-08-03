@@ -24,6 +24,7 @@ import uk.gov.hmrc.agentmappingfrontend.audit.AuditData
 import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
 import uk.gov.hmrc.agentmappingfrontend.controllers.routes
 import uk.gov.hmrc.agentmappingfrontend.model.Names._
+import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.Retrievals.{allEnrolments, credentials}
@@ -99,14 +100,18 @@ trait AuthActions extends AuthorisedFunctions with AuthRedirects {
         case _: AuthorisationException => toGGLogin(s"${appConfig.authenticationLoginCallbackUrl}${request.uri}")
       }
 
-  def withCheckForArn(body: Option[EnrolmentIdentifier] => Future[Result])(
+  def withCheckForArn(body: Option[Arn] => Future[Result])(
     implicit request: Request[AnyContent],
     hc: HeaderCarrier,
     ec: ExecutionContext): Future[Result] =
     authorised(AuthProviders(GovernmentGateway) and AffinityGroup.Agent)
       .retrieve(allEnrolments) {
         case agentEnrolments =>
-          body(agentEnrolments.getEnrolment("HMRC-AS-AGENT").flatMap(_.getIdentifier("AgentReferenceNumber")))
+          body(
+            agentEnrolments
+              .getEnrolment("HMRC-AS-AGENT")
+              .flatMap(_.getIdentifier("AgentReferenceNumber")
+                .map(identifier => Arn(identifier.value))))
       }
       .recoverWith {
         case _: JsResultException      => body(None)

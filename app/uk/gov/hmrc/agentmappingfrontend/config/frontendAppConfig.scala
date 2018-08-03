@@ -72,7 +72,7 @@ class FrontendAppConfig @Inject()(val environment: Environment, val configuratio
   override lazy val signOutUrl: String =
     s"$companyAuthFrontendExternalUrl$signOutPath?continue=${urlEncode(signOutContinueUrl)}"
   override lazy val signOutAndRedirectUrl: String =
-    s"$companyAuthFrontendExternalUrl$signOutPath?continue=${urlEncode(signOutRedirectUrl)}"
+    s"$companyAuthFrontendExternalUrl$ggSignIn?continue=${urlEncode(signOutRedirectUrl)}"
   override lazy val authenticationLoginCallbackUrl: String = loadConfig("authentication.login-callback.url")
   override lazy val agentServicesFrontendExternalUrl = loadConfig(
     "microservice.services.agent-services-account-frontend.external-url")
