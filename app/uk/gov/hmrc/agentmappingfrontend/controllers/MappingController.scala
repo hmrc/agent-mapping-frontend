@@ -77,7 +77,7 @@ class MappingController @Inject()(
             doMappingResult <- mappingConnector.createMapping(arn).map {
                                 case CREATED =>
                                   Redirect(routes.MappingController.complete(newRefForArn))
-                                    .withSession(request.session + "mappingArn" -> arn.value)
+                                    .withSession(request.session + ("mappingArn" -> arn.value))
                                 case CONFLICT => Redirect(routes.MappingController.alreadyMapped(newRefForArn))
                               }
             _ <- repository.delete(id)
