@@ -69,44 +69,51 @@ class MappingController @Inject()(
   }
 
   def startSubmit(id: MappingArnResultId): Action[AnyContent] = Action.async { implicit request =>
-    withAuthorisedAgent { _ =>
+    withAuthorisedAgent(id) { _ =>
       repository.findArn(id).flatMap {
-        case Some(arn) =>
-          mappingConnector.createMapping(arn) map {
-            case CREATED =>
-              Redirect(routes.MappingController.complete()).withSession(request.session + "mappingArn" -> arn.value)
-            case CONFLICT => Redirect(routes.MappingController.alreadyMapped())
-          }
-        case None => successful(Ok)
+        case Some(arn) => {
+          for {
+            newRefForArn <- repository.create(arn)
+            doMappingResult <- mappingConnector.createMapping(arn).map {
+                                case CREATED =>
+                                  Redirect(routes.MappingController.complete(newRefForArn))
+                                    .withSession(request.session + "mappingArn" -> arn.value)
+                                case CONFLICT => Redirect(routes.MappingController.alreadyMapped(newRefForArn))
+                              }
+            _ <- repository.delete(id)
+          } yield doMappingResult
+        }
+        case None =>
+          successful(Redirect(routes.MappingController.start()).withNewSession) //TODO APB-2866 might require some new Content for user to understand this
       }
     }
   }
 
-  def complete(): Action[AnyContent] = Action.async { implicit request =>
-    withAuthorisedAgent { _ =>
+  def complete(id: MappingArnResultId): Action[AnyContent] = Action.async { implicit request =>
+    withAuthorisedAgent(id) { _ =>
       request.session.get("mappingArn") match {
-        case Some(arn) if Arn.isValid(arn) => successful(Ok(html.complete()))
+        case Some(arn) if Arn.isValid(arn) => successful(Ok(html.complete(id)))
         case _ =>
           throw new InternalServerException("user must not completed the mapping journey or have lost the stored arn")
       }
     }
   }
 
-  val alreadyMapped: Action[AnyContent] = Action.async { implicit request =>
+  def alreadyMapped(id: MappingArnResultId): Action[AnyContent] = Action.async { implicit request =>
     withBasicAuth {
-      successful(Ok(html.already_mapped()))
+      successful(Ok(html.already_mapped(id)))
     }
   }
 
-  val notEnrolled: Action[AnyContent] = Action.async { implicit request =>
+  def notEnrolled(id: MappingArnResultId): Action[AnyContent] = Action.async { implicit request =>
     withBasicAuth {
-      successful(Ok(html.not_enrolled()))
+      successful(Ok(html.not_enrolled(id)))
     }
   }
 
-  val incorrectAccount: Action[AnyContent] = Action.async { implicit request =>
+  def incorrectAccount(id: MappingArnResultId): Action[AnyContent] = Action.async { implicit request =>
     withBasicAuth {
-      successful(Ok(html.incorrect_account()))
+      successful(Ok(html.incorrect_account(id)))
     }
   }
 }

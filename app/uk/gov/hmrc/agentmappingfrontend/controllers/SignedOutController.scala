@@ -26,10 +26,6 @@ import scala.concurrent.Future
 
 class SignedOutController @Inject()(appConfig: AppConfig) extends FrontendController {
 
-  def signOut: Action[AnyContent] = Action.async { implicit request =>
-    Future successful Redirect(appConfig.signOutUrl)
-  }
-
   def signOutAndRedirect(id: MappingArnResultId): Action[AnyContent] = Action.async { implicit request =>
     Future successful Redirect(s"${appConfig.signOutAndRedirectUrl}?id=$id")
   }
