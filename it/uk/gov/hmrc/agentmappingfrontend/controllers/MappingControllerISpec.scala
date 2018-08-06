@@ -11,6 +11,8 @@ import uk.gov.hmrc.agentmappingfrontend.stubs.MappingStubs.{mappingExists, mappi
 import uk.gov.hmrc.agentmappingfrontend.support.SampleUsers.{eligibleAgent, _}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.http.InternalServerException
+import uk.gov.hmrc.play.HeaderCarrierConverter
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
@@ -87,9 +89,11 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
         val persistedMappingArnResultId = await(repo.create(arn))
         mappingIsCreated(arn)
         givenAuthorisedFor(serviceName)
-        val request = fakeRequest(GET, s"/agent-mapping/start-submit?id=$persistedMappingArnResultId")
+        implicit val request = fakeRequest(GET, s"/agent-mapping/start-submit?id=$persistedMappingArnResultId")
         val result = callEndpointWith(request)
+
         status(result) shouldBe 303
+        result.session.get("mappingArn").get shouldBe "TARN0000001"
         redirectLocation(result).get should include(routes.MappingController.complete(id = "").url)
 
         givenAuthorisedFor(serviceName)
