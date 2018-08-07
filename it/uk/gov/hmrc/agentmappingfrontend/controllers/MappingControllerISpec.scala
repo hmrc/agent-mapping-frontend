@@ -143,7 +143,7 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
           "connectionComplete.banner.paragraph")
       }
 
-      s"throw internal state exception if repository does not record key: mappingArn for user: ${user.activeEnrolments.mkString(", ")}" in {
+      s"return an exception when repository does not hold the record for the user with enrolment ${user.activeEnrolments.mkString(", ")}" in {
         givenUserIsAuthenticated(user)
         val request = fakeRequest(GET, routes.MappingController.complete(id = "someArnRefForMapping").url)
         an[InternalServerException] shouldBe thrownBy(callEndpointWith(request))
