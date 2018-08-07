@@ -77,7 +77,6 @@ class MappingController @Inject()(
             doMappingResult <- mappingConnector.createMapping(arn).map {
                                 case CREATED =>
                                   Redirect(routes.MappingController.complete(newRefForArn))
-                                    .withSession(request.session + ("mappingArn" -> arn.value))
                                 case CONFLICT => Redirect(routes.MappingController.alreadyMapped(newRefForArn))
                               }
             _ <- repository.delete(id)
@@ -91,9 +90,9 @@ class MappingController @Inject()(
 
   def complete(id: MappingArnResultId): Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAgent(id) { _ =>
-      request.session.get("mappingArn") match {
-        case Some(arn) if Arn.isValid(arn) => successful(Ok(html.complete(id)))
-        case _ =>
+      repository.findArn(id).map {
+        case Some(_) => Ok(html.complete(id))
+        case None =>
           throw new InternalServerException("user must not completed the mapping journey or have lost the stored arn")
       }
     }

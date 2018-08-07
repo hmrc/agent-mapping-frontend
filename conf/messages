@@ -31,9 +31,6 @@ incorrectAccount.p2=You need to sign in with a Government Gateway account that y
 notEnrolled.p1=You cannot link this Government Gateway account to your agent services account.
 notEnrolled.p2=You can only link Government Gateway accounts registered to your business.
 notEnrolled.p3=If you need to link another Government Gateway account, sign in with the login details for that account.
-#No match
-noMatch.p1=We could not find any records that match the details you entered.
-noMatch.try-again.button=Try again
 #Connection complete
 connectionComplete.title=Account linked
 connectionComplete.banner.header=Account linked

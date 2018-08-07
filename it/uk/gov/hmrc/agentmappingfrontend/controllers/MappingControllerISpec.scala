@@ -11,7 +11,6 @@ import uk.gov.hmrc.agentmappingfrontend.stubs.MappingStubs.{mappingExists, mappi
 import uk.gov.hmrc.agentmappingfrontend.support.SampleUsers.{eligibleAgent, _}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.play.HeaderCarrierConverter
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -78,7 +77,7 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
       givenUserIsAuthenticated(mtdAsAgent)
       val request = FakeRequest(GET, "/agent-mapping/sign-in-required")
       val result = callEndpointWith(request)
-      redirectLocation(result) shouldBe Some(routes.MappingController.start().url) //TODO APB-2866
+      redirectLocation(result) shouldBe Some(routes.MappingController.start().url)
     }
   }
 
@@ -93,7 +92,6 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
         val result = callEndpointWith(request)
 
         status(result) shouldBe 303
-        result.session.get("mappingArn").get shouldBe "TARN0000001"
         redirectLocation(result).get should include(routes.MappingController.complete(id = "").url)
 
         givenAuthorisedFor(serviceName)
@@ -112,15 +110,6 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
     }
 
     s"303 to /already-mapped when all available identifiers have been mapped" in {
-      val persistedMappingArnResultId = await(repo.create(arn))
-      mappingIsCreated(arn)
-      givenAuthorisedFor("IR-SA-AGENT")
-      val request = fakeRequest(GET, s"/agent-mapping/start-submit?id=$persistedMappingArnResultId")
-      val result = callEndpointWith(request)
-
-      status(result) shouldBe 303
-      redirectLocation(result).get should include(routes.MappingController.complete(id = "").url)
-
       mappingExists(arn)
       givenAuthorisedFor("IR-SA-AGENT")
       val attempt2Id = await(repo.create(arn))
@@ -133,16 +122,18 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
   }
 
   "complete" should {
+    val arn = Arn("TARN0000001")
 
     behave like anEndpointReachableIfSignedInWithEligibleEnrolment(
       GET,
-      routes.MappingController.complete(id = "someArnRefForMapping").url, //TODO check this id
+      routes.MappingController.complete(id = "someArnRefForMapping").url,
       expectCheckAgentRefCodeAudit = false)(callEndpointWith)
 
     for(user <- Seq(eligibleAgent, vatEnrolledAgent)) {
       s"display the complete page with correct content for a user with enrolments: ${user.activeEnrolments.mkString(", ")}" in {
+        val persistedMappingArnResultId = await(repo.create(arn))
         givenUserIsAuthenticated(user)
-        val request = fakeRequest(GET, routes.MappingController.complete(id = "someArnRefForMapping").url).withSession(("mappingArn", "TARN0000001"))
+        val request = fakeRequest(GET, routes.MappingController.complete(id = persistedMappingArnResultId).url)
         val result = callEndpointWith(request)
         status(result) shouldBe 200
         checkHtmlResultContainsMsgs(result, "connectionComplete.title",
@@ -152,15 +143,9 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
           "connectionComplete.banner.paragraph")
       }
 
-      s"throw internal state exception if SESSION DOES NOT CONTAIN key: mappingArn for user: ${user.activeEnrolments.mkString(", ")}" in {
+      s"throw internal state exception if repository does not record key: mappingArn for user: ${user.activeEnrolments.mkString(", ")}" in {
         givenUserIsAuthenticated(user)
         val request = fakeRequest(GET, routes.MappingController.complete(id = "someArnRefForMapping").url)
-        an[InternalServerException] shouldBe thrownBy(callEndpointWith(request))
-      }
-
-      s"throw internal state exception if SESSION KEY: 'mappingArn' contains invalidArn for user: ${user.activeEnrolments.mkString(", ")}" in {
-        givenUserIsAuthenticated(user)
-        val request = fakeRequest(GET, routes.MappingController.complete(id = "someArnRefForMapping").url).withSession(("mappingArn", "someInvalidArn"))
         an[InternalServerException] shouldBe thrownBy(callEndpointWith(request))
       }
     }

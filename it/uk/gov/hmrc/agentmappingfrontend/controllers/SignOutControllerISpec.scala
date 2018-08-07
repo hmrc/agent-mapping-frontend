@@ -14,7 +14,7 @@ class SignOutControllerISpec extends BaseControllerISpec {
       val result = await(controller.signOutAndRedirect("someIdToRetrieveArnWithToMapAccount")(fakeRequest))
 
       status(result) shouldBe 303
-      redirectLocation(result).get should include("agent-mapping%2Fstart-submit?id=someIdToRetrieveArnWithToMapAccount")
+      redirectLocation(result).get should include("agent-mapping%2Fstart-submit%3Fid%3DsomeIdToRetrieveArnWithToMapAccount")
     }
   }
 
