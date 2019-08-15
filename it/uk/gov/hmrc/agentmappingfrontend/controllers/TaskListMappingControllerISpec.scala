@@ -199,7 +199,7 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
       await(repo.findRecord(id).get).alreadyMapped shouldBe true
     }
 
-    "303 to ggTag with no update to db when the current user has already mapped" in {
+    "303 to existing client relationships with no update to db when the current user has already mapped" in {
       givenUserIsAuthenticated(vatEnrolledAgent)
       givenSubscriptionJourneyRecordExistsForAuthProviderId(AuthProviderId("12345-credId"), sjrWithMapping)
       val id = await(repo.create("continue-id"))
@@ -209,7 +209,7 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
       val result = callEndpointWith(request)
 
       status(result) shouldBe 303
-      redirectLocation(result) shouldBe Some(routes.TaskListMappingController.showGGTag(id).url)
+      redirectLocation(result) shouldBe Some(routes.TaskListMappingController.showExistingClientRelationships(id).url)
     }
 
     "303 to task-list/start when no task list mapping record found (for example when entering the url manually from agent-subscription/task-list)" in {

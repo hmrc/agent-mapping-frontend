@@ -139,7 +139,7 @@ class TaskListMappingController @Inject()(
             }
 
           } else {
-            Redirect(routes.TaskListMappingController.showGGTag(id))
+            Redirect(routes.TaskListMappingController.showExistingClientRelationships(id))
           }
         case None =>
           Logger.warn(
