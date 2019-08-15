@@ -230,7 +230,7 @@ class TaskListMappingController @Inject()(
     id: MappingArnResultId)(implicit hc: HeaderCarrier, request: Request[AnyContent]): Future[Result] =
     withSubscribingAgent { agent =>
       repository.findRecord(id).flatMap {
-        case Some(record) => {
+        case Some(record) =>
           agentSubscriptionConnector.getSubscriptionJourneyRecord(record.continueId).map {
             case Some(sjr) =>
               if (sjr.cleanCredsAuthProviderId.contains(agent.authProviderId)) {
@@ -247,7 +247,6 @@ class TaskListMappingController @Inject()(
               throw new RuntimeException(
                 s"no subscription journey record found for agentCode ${agent.agentCodeOpt.getOrElse(" ")} when routing to next page")
           }
-        }
         case None =>
           throw new RuntimeException(
             s"no task list mapping record found for id $id and agent code ${agent.agentCodeOpt.getOrElse(" ")}")
@@ -256,13 +255,12 @@ class TaskListMappingController @Inject()(
 
   private def backUrl(id: MappingArnResultId): Future[String] =
     repository.findRecord(id).flatMap {
-      case Some(record) => {
+      case Some(record) =>
         if (record.alreadyMapped) {
           routes.TaskListMappingController.showClientRelationshipsFound(id).url
         } else {
           s"${appConfig.agentSubscriptionFrontendExternalUrl}${appConfig.agentSubscriptionFrontendTaskListPath}"
         }
-      }
       case None => throw new RuntimeException(s"no task-list mapping record found for id $id for backUrl")
     }
 }

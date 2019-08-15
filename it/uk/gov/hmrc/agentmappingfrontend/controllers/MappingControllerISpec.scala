@@ -111,6 +111,15 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
         }
       }
     }
+
+    "redirect to start if there is no record found" in {
+      givenAuthorisedFor("IR-SA-AGENT")
+      implicit val request = fakeRequest(GET, s"/agent-mapping/start-submit?id=foo")
+      val result = callEndpointWith(request)
+
+      status(result) shouldBe 303
+      redirectLocation(result) shouldBe Some(routes.MappingController.start().url)
+    }
   }
 
   "/client-relationships-found" should {
@@ -147,6 +156,15 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
           }
         }
       }
+    }
+
+    "display page not found if there is no record found" in {
+      givenAuthorisedFor("IR-SA-AGENT")
+      implicit val request = fakeRequest(GET, s"/agent-mapping/client-relationships-found?id=foo")
+      val result = callEndpointWith(request)
+
+      status(result) shouldBe 200
+      checkHtmlResultContainsEscapedMsgs(result, "page-not-found.title", "page-not-found.h1", "page-not-found.p1")
     }
   }
 
@@ -232,6 +250,65 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
       }
     }
 
+    "display the existing client relationships page if the user is already mapped" in {
+      val arn = Arn("TARN0000001")
+      val clientCount = 12
+      val id = await(repo.create(arn, List(clientCount)))
+      await(repo.updateFor(id))
+      givenAuthorisedFor("IR-SA-AGENT")
+      implicit val request = fakeRequest(GET, s"/agent-mapping/existing-client-relationships?id=$id")
+      val result = callEndpointWith(request)
+
+      status(result) shouldBe 200
+      checkHtmlResultContainsEscapedMsgs(
+        result,
+        "existingClientRelationships.title",
+        "existingClientRelationships.td",
+        "existingClientRelationships.heading",
+        "existingClientRelationships.p1",
+        "existingClientRelationships.yes",
+        "existingClientRelationships.no"
+      )
+    }
+
+    "redirect to already mapped when mapping creation returns a conflict" in {
+      val arn = Arn("TARN0000001")
+      val clientCount = 12
+      val id = await(repo.create(arn, List(clientCount)))
+      givenAuthorisedFor("IR-SA-AGENT")
+      mappingExists(arn)
+      implicit val request = fakeRequest(GET, s"/agent-mapping/existing-client-relationships?id=$id")
+      val result = callEndpointWith(request)
+
+      status(result) shouldBe 303
+      redirectLocation(result) shouldBe Some(routes.MappingController.alreadyMapped(id).url)
+    }
+
+    "throw an internal server error when the response from mapping creation is unknown" in {
+      val arn = Arn("TARN0000001")
+      val clientCount = 12
+      val id = await(repo.create(arn, List(clientCount)))
+      givenAuthorisedFor("IR-SA-AGENT")
+      mappingKnownFactsIssue(arn)
+      implicit val request = fakeRequest(GET, s"/agent-mapping/existing-client-relationships?id=$id")
+      val result = callEndpointWith(request)
+
+      status(result) shouldBe 500
+    }
+
+    "show the page not found page if there is not record" in {
+      givenAuthorisedFor("IR-SA-AGENT")
+      implicit val request = fakeRequest(GET, s"/agent-mapping/existing-client-relationships?id=foo")
+      val result = callEndpointWith(request)
+
+      status(result) shouldBe 200
+      checkHtmlResultContainsEscapedMsgs(
+        result,
+        "page-not-found.title",
+        "page-not-found.h1",
+        "page-not-found.p1"
+      )
+    }
   }
 
   "/existing-client-relationships - POST" should {
@@ -250,7 +327,6 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
       status(result) shouldBe 303
 
       redirectLocation(result) shouldBe Some(routes.MappingController.complete(persistedMappingArnResultId).url)
-
     }
 
     "redirect to gg/sign-in when the user selects YES" in {
@@ -267,7 +343,6 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
 
       redirectLocation(result) shouldBe Some(
         routes.SignedOutController.signOutAndRedirect(persistedMappingArnResultId).url)
-
     }
 
     "200 OK to /existing-clients with error message when inputs invalid data" in {
@@ -294,7 +369,19 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
       )
 
       bodyOf(result) should include(htmlEscapedMessage("existingClientRelationships.single.th"))
+    }
 
+    "redirect to start when there is a form error and no record found" in {
+      givenUserIsAuthenticated(vatEnrolledAgent)
+      val request = fakeRequest(
+        POST,
+        routes.MappingController.submitExistingClientRelationships(id = "foo").url)
+        .withFormUrlEncodedBody("additional-clients" -> "foo")
+
+      val result = callEndpointWith(request)
+
+      status(result) shouldBe 303
+      redirectLocation(result) shouldBe Some(routes.MappingController.start().url)
     }
 
   }
