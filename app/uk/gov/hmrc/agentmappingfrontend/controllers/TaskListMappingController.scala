@@ -163,7 +163,7 @@ class TaskListMappingController @Inject()(
             Ok(html.gg_tag(formWithErrors, id))
           },
           ggTag => {
-            //save ggTag to the temporary store -> ticket APB-4131
+            //save ggTag to the temporary store -> ticket APB-4080
             Redirect(continueOrStop(routes.TaskListMappingController.showExistingClientRelationships(id), id))
           }
         )
