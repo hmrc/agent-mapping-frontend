@@ -131,7 +131,7 @@ class MappingController @Inject()(
         html.existing_client_relationships(
           ExistingClientRelationshipsForm.form,
           id,
-          mappingDetailsRecord.mappingDetails.map(_.count).toList,
+          mappingDetailsRecord.mappingDetails,
           taskList = false,
           backUrl))
 
@@ -145,7 +145,7 @@ class MappingController @Inject()(
             html.existing_client_relationships(
               ExistingClientRelationshipsForm.form,
               id,
-              mappingDetailsRecord.mappingDetails.map(_.count).toList,
+              mappingDetailsRecord.mappingDetails,
               taskList = false,
               backUrl)))
 
@@ -184,7 +184,7 @@ class MappingController @Inject()(
                       html.existing_client_relationships(
                         formWithErrors,
                         id,
-                        mappingDetailsRecord.mappingDetails.map(_.count).toList,
+                        mappingDetailsRecord.mappingDetails,
                         taskList = false,
                         backUrl))
                 }
