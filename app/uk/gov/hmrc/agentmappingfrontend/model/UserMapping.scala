@@ -19,6 +19,7 @@ package uk.gov.hmrc.agentmappingfrontend.model
 import java.time.LocalDateTime
 
 import play.api.libs.json.{Json, OFormat}
+import uk.gov.hmrc.agentmappingfrontend.repository.ClientCountAndGGTag
 import uk.gov.hmrc.domain.AgentCode
 
 /**
@@ -37,7 +38,7 @@ final case class UserMapping(
   count: Int = 0,
   ggTag: String) {
 
-  def toMappingDetails = MappingDetails(this.authProviderId, this.ggTag, this.count, LocalDateTime.now())
+  def toClientCountAndGGTag: ClientCountAndGGTag = ClientCountAndGGTag(this.count, this.ggTag)
 }
 
 object UserMapping {

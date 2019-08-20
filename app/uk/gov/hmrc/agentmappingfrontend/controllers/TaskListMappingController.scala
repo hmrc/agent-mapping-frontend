@@ -187,7 +187,7 @@ class TaskListMappingController @Inject()(
             existing_client_relationships(
               ExistingClientRelationshipsForm.form,
               id,
-              agent.getMandatorySubscriptionJourneyRecord.userMappings.map(u => u.toMappingDetails),
+              agent.getMandatorySubscriptionJourneyRecord.userMappings.map(u => u.toClientCountAndGGTag),
               taskList = true,
               url
             ))
@@ -202,13 +202,14 @@ class TaskListMappingController @Inject()(
           formWithErrors => {
             backUrl(id).flatMap(
               url =>
-                Ok(existing_client_relationships(
-                  formWithErrors,
-                  id,
-                  agent.getMandatorySubscriptionJourneyRecord.userMappings.map(u => u.toMappingDetails),
-                  taskList = true,
-                  url
-                )))
+                Ok(
+                  existing_client_relationships(
+                    formWithErrors,
+                    id,
+                    agent.getMandatorySubscriptionJourneyRecord.userMappings.map(u => u.toClientCountAndGGTag),
+                    taskList = true,
+                    url
+                  )))
           }, {
             case Yes => Redirect(continueOrStop(routes.SignedOutController.taskListSignOutAndRedirect(id), id))
             case No  => Redirect(continueOrStop(routes.SignedOutController.returnAfterMapping(), id))
