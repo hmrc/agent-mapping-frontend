@@ -40,11 +40,10 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class MappingController @Inject()(
   override val messagesApi: MessagesApi,
-  val authConnector: AuthConnector,
   mappingConnector: MappingConnector,
+  authConnector: AuthConnector,
   repository: MappingArnRepository,
-  val env: Environment,
-  val config: Configuration)(implicit val appConfig: AppConfig, val ec: ExecutionContext)
+  cc: ControllerComponents)(implicit val appConfig: AppConfig, val ec: ExecutionContext)
     extends MappingBaseController with I18nSupport with AuthActions {
 
   val root: Action[AnyContent] = Action {

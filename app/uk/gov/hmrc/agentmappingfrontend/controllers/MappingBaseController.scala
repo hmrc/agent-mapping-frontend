@@ -19,9 +19,9 @@ package uk.gov.hmrc.agentmappingfrontend.controllers
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.HeaderCarrierConverter
-import uk.gov.hmrc.play.bootstrap.controller.BaseController
+import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 
-trait MappingBaseController extends BaseController {
+trait MappingBaseController extends FrontendBaseController  {
 
   override implicit def hc(implicit rh: RequestHeader): HeaderCarrier =
     HeaderCarrierConverter.fromHeadersAndSessionAndRequest(rh.headers, Some(rh.session), Some(rh))
