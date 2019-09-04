@@ -81,7 +81,16 @@ uiServiceInfo: uk.gov.hmrc.play.views.html.layouts.ServiceInfo,
 }
 
 @footerTop = {}
-@footerLinks = {}
+@footerLinks = {
+    <li>
+        <a href='@Messages("footer.links.accessibility.url")'
+           data-sso="false"
+           data-journey-click="footer:Click:Accessibility">
+            @Messages("footer.links.accessibility.text")
+        </a>
+    </li>
+}
+
 
 @serviceInfo = {
     @uiServiceInfo(
