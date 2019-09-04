@@ -16,10 +16,12 @@
 
 package uk.gov.hmrc.agentmappingfrontend.connectors
 
+import com.codahale.metrics.MetricRegistry
 import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
+import uk.gov.hmrc.agent.kenshoo.monitoring.HttpAPIMonitor
 import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
-import uk.gov.hmrc.agentmappingfrontend.metrics.Metrics
+import com.kenshoo.play.metrics.Metrics
 import uk.gov.hmrc.agentmappingfrontend.model.{AuthProviderId, SubscriptionJourneyRecord}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
@@ -32,38 +34,42 @@ class AgentSubscriptionConnector @Inject()(
   http: HttpClient,
   metrics: Metrics,
   appConfig: AppConfig
-)(implicit ec: ExecutionContext) {
+)(implicit ec: ExecutionContext)
+    extends HttpAPIMonitor {
+
+  override val kenshooRegistry: MetricRegistry = metrics.defaultRegistry
 
   def getSubscriptionJourneyRecord(authProviderId: AuthProviderId)(
     implicit hc: HeaderCarrier): Future[Option[SubscriptionJourneyRecord]] = {
     val url =
       s"${appConfig.agentSubscriptionBaseUrl}/agent-subscription/subscription/journey/id/${encodePathSegment(authProviderId.id)}"
-    val timerContext = metrics.getSjrByAuthAid.time()
-    http
-      .GET[HttpResponse](url)
-      .map(response => {
-        timerContext.stop()
-        response.status match {
-          case 200 => Some(Json.parse(response.body).as[SubscriptionJourneyRecord])
-          case 204 => None
-        }
-      })
+    monitor("ConsumedAPI-Agent-Subscription-getSubscriptionJourneyRecord-GET") {
+      http
+        .GET[HttpResponse](url)
+        .map(response => {
+          response.status match {
+            case 200 => Some(Json.parse(response.body).as[SubscriptionJourneyRecord])
+            case 204 => None
+          }
+        })
+    }
   }
 
   def getSubscriptionJourneyRecord(continueId: String)(
     implicit hc: HeaderCarrier): Future[Option[SubscriptionJourneyRecord]] = {
     val url =
       s"${appConfig.agentSubscriptionBaseUrl}/agent-subscription/subscription/journey/continueId/${encodePathSegment(continueId)}"
-    val timerContext = metrics.getSjrByContinueId.time()
-    http
-      .GET[HttpResponse](url)
-      .map(response => {
-        timerContext.stop()
-        response.status match {
-          case 200 => Some(Json.parse(response.body).as[SubscriptionJourneyRecord])
-          case 204 => None
-        }
-      })
+    monitor("ConsumedAPI-Agent-Subscription-findByContinueId-GET") {
+      http
+        .GET[HttpResponse](url)
+        .map(response => {
+
+          response.status match {
+            case 200 => Some(Json.parse(response.body).as[SubscriptionJourneyRecord])
+            case 204 => None
+          }
+        })
+    }
   }
 
   def createOrUpdateJourney(subscriptionJourneyRecord: SubscriptionJourneyRecord)(
@@ -71,19 +77,20 @@ class AgentSubscriptionConnector @Inject()(
     val url =
       s"${appConfig.agentSubscriptionBaseUrl}/agent-subscription/subscription/journey/primaryId/${encodePathSegment(
         subscriptionJourneyRecord.authProviderId.id)}"
-    val timerContext = metrics.createOrUpdateSjr.time()
-    http
-      .POST[SubscriptionJourneyRecord, HttpResponse](url, subscriptionJourneyRecord)
-      .map(response => {
-        timerContext.stop()
-        response.status match {
-          case 204    => Right(())
-          case status => Left(s"POST to $url returned $status")
+    monitor("ConsumedAPI-Agent-Subscription-createOrUpdate-POST") {
+      http
+        .POST[SubscriptionJourneyRecord, HttpResponse](url, subscriptionJourneyRecord)
+        .map(response => {
+
+          response.status match {
+            case 204    => Right(())
+            case status => Left(s"POST to $url returned $status")
+          }
+        })
+        .recover {
+          case ex: Throwable => Left(s"unexpected response ${ex.getMessage}")
         }
-      })
-      .recover {
-        case ex: Throwable => Left(s"unexpected response ${ex.getMessage}")
-      }
+    }
   }
 
 }
