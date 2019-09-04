@@ -36,51 +36,54 @@ class AgentSubscriptionConnector @Inject()(
 
   def getSubscriptionJourneyRecord(authProviderId: AuthProviderId)(
     implicit hc: HeaderCarrier): Future[Option[SubscriptionJourneyRecord]] = {
-      val url =  s"${appConfig.agentSubscriptionBaseUrl}/agent-subscription/subscription/journey/id/${encodePathSegment(authProviderId.id)}"
-      val timerContext = metrics.getSjrByAuthAid.time()
-      http
-        .GET[HttpResponse](url)
-        .map(response => {
-          timerContext.stop()
-          response.status match {
-            case 200 => Some(Json.parse(response.body).as[SubscriptionJourneyRecord])
-            case 204 => None
-          }
-        })
-    }
+    val url =
+      s"${appConfig.agentSubscriptionBaseUrl}/agent-subscription/subscription/journey/id/${encodePathSegment(authProviderId.id)}"
+    val timerContext = metrics.getSjrByAuthAid.time()
+    http
+      .GET[HttpResponse](url)
+      .map(response => {
+        timerContext.stop()
+        response.status match {
+          case 200 => Some(Json.parse(response.body).as[SubscriptionJourneyRecord])
+          case 204 => None
+        }
+      })
+  }
 
   def getSubscriptionJourneyRecord(continueId: String)(
     implicit hc: HeaderCarrier): Future[Option[SubscriptionJourneyRecord]] = {
-      val url = s"${appConfig.agentSubscriptionBaseUrl}/agent-subscription/subscription/journey/continueId/${encodePathSegment(continueId)}"
-      val timerContext = metrics.getSjrByContinueId.time()
-      http
-        .GET[HttpResponse](url)
-        .map(response => {
-          timerContext.stop()
-          response.status match {
-            case 200 => Some(Json.parse(response.body).as[SubscriptionJourneyRecord])
-            case 204 => None
-          }
-        })
-    }
+    val url =
+      s"${appConfig.agentSubscriptionBaseUrl}/agent-subscription/subscription/journey/continueId/${encodePathSegment(continueId)}"
+    val timerContext = metrics.getSjrByContinueId.time()
+    http
+      .GET[HttpResponse](url)
+      .map(response => {
+        timerContext.stop()
+        response.status match {
+          case 200 => Some(Json.parse(response.body).as[SubscriptionJourneyRecord])
+          case 204 => None
+        }
+      })
+  }
 
   def createOrUpdateJourney(subscriptionJourneyRecord: SubscriptionJourneyRecord)(
     implicit hc: HeaderCarrier): Future[Either[String, Unit]] = {
-      val url =
-        s"${appConfig.agentSubscriptionBaseUrl}/agent-subscription/subscription/journey/primaryId/${encodePathSegment(subscriptionJourneyRecord.authProviderId.id)}"
+    val url =
+      s"${appConfig.agentSubscriptionBaseUrl}/agent-subscription/subscription/journey/primaryId/${encodePathSegment(
+        subscriptionJourneyRecord.authProviderId.id)}"
     val timerContext = metrics.createOrUpdateSjr.time()
     http
-        .POST[SubscriptionJourneyRecord, HttpResponse](url, subscriptionJourneyRecord)
-        .map(response => {
-          timerContext.stop()
-          response.status match {
-            case 204 => Right(())
-            case status => Left(s"POST to $url returned $status")
-          }
-        })
-        .recover {
-          case ex: Throwable => Left(s"unexpected response ${ex.getMessage}")
+      .POST[SubscriptionJourneyRecord, HttpResponse](url, subscriptionJourneyRecord)
+      .map(response => {
+        timerContext.stop()
+        response.status match {
+          case 204    => Right(())
+          case status => Left(s"POST to $url returned $status")
         }
-    }
+      })
+      .recover {
+        case ex: Throwable => Left(s"unexpected response ${ex.getMessage}")
+      }
+  }
 
 }

@@ -16,11 +16,12 @@
 
 package uk.gov.hmrc.agentmappingfrontend.config
 
+import com.google.inject.ImplementedBy
 import javax.inject.{Inject, Singleton}
-
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import views.html.helper.urlEncode
 
+@ImplementedBy(classOf[FrontendAppConfig])
 trait AppConfig {
   val analyticsToken: String
   val analyticsHost: String
@@ -41,11 +42,12 @@ trait AppConfig {
   val agentSubscriptionFrontendProgressSavedUrl: String
   val agentMappingFrontendExternalUrl: String
   val ggSignIn: String
+  val appName: String
 }
 @Singleton
 class FrontendAppConfig @Inject()(servicesConfig: ServicesConfig) extends AppConfig {
 
-  val appName = "agent-mapping-frontend"
+  override val appName = "agent-mapping-frontend"
 
   def getConf(key: String) = servicesConfig.getString(key)
 

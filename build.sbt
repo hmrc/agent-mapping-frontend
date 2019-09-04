@@ -22,7 +22,8 @@ lazy val compileDeps = Seq(
   "uk.gov.hmrc" %% "auth-client" % "2.27.0-play-26",
   "uk.gov.hmrc" %% "play-partials" % "6.9.0-play-26",
   "uk.gov.hmrc" %% "simple-reactivemongo" % "7.20.0-play-26",
-  "uk.gov.hmrc" %% "agent-mtd-identifiers" % "0.16.0-play-26"
+  "uk.gov.hmrc" %% "agent-mtd-identifiers" % "0.16.0-play-26",
+  "com.typesafe.play" %% "play-json-joda" % "2.6.10"
 )
 
 def tmpMacWorkaround(): Seq[ModuleID] =

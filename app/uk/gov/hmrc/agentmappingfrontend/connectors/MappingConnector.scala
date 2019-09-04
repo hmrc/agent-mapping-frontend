@@ -30,44 +30,43 @@ import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class MappingConnector @Inject()(
-                                  http: HttpClient,
-                                  metrics: Metrics,
-                                  appConfig: AppConfig)  {
+class MappingConnector @Inject()(http: HttpClient, metrics: Metrics, appConfig: AppConfig) {
 
   def createMapping(arn: Arn)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Int] = {
     val timerContext = metrics.createMapping.time()
-    http.PUT(createUrl(arn), "")
-        .map {
-          timerContext.stop()
-          r =>
+    http
+      .PUT(createUrl(arn), "")
+      .map {
+        timerContext.stop()
+        r =>
           r.status
-        }
-        .recover {
-          case e: Upstream4xxResponse if Status.FORBIDDEN.equals(e.upstreamResponseCode) => Status.FORBIDDEN
-          case e: Upstream4xxResponse if Status.CONFLICT.equals(e.upstreamResponseCode)  => Status.CONFLICT
-          case e                                                                         => throw e
-        }
-    }
+      }
+      .recover {
+        case e: Upstream4xxResponse if Status.FORBIDDEN.equals(e.upstreamResponseCode) => Status.FORBIDDEN
+        case e: Upstream4xxResponse if Status.CONFLICT.equals(e.upstreamResponseCode)  => Status.CONFLICT
+        case e                                                                         => throw e
+      }
+  }
 
   def getClientCount(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Int] = {
     val timerContext = metrics.getClientCount.time()
-    http.GET[HttpResponse](createUrlClientCount)
-        .map {
-          timerContext.stop()
-          response => (response.json \ "clientCount").as[Int]
-        }
-    }
+    http
+      .GET[HttpResponse](createUrlClientCount)
+      .map {
+        timerContext.stop()
+        response =>
+          (response.json \ "clientCount").as[Int]
+      }
+  }
 
   def findSaMappingsFor(arn: Arn)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Seq[SaMapping]] = {
     val timerContext = metrics.findSaMappingsFor.time()
-    http.GET[JsValue](findSaUrl(arn)).map {
-      response =>
-        timerContext.stop()
-        (response \ "mappings").as[Seq[SaMapping]]
+    http.GET[JsValue](findSaUrl(arn)).map { response =>
+      timerContext.stop()
+      (response \ "mappings").as[Seq[SaMapping]]
     } recover {
       case _: NotFoundException => Seq.empty
-      case ex: Throwable => throw new RuntimeException(ex)
+      case ex: Throwable        => throw new RuntimeException(ex)
     }
   }
 
@@ -76,11 +75,11 @@ class MappingConnector @Inject()(
     http.GET[JsValue](findVatUrl(arn)).map { response =>
       timerContext.stop()
       (response \ "mappings").as[Seq[VatMapping]]
-    }recover {
-        case _: NotFoundException => Seq.empty
-        case ex: Throwable        => throw new RuntimeException(ex)
-      }
+    } recover {
+      case _: NotFoundException => Seq.empty
+      case ex: Throwable        => throw new RuntimeException(ex)
     }
+  }
 
   def deleteAllMappingsBy(arn: Arn)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Int] = {
     val timeContext = metrics.deleteAllMappingsFor.time()
@@ -88,21 +87,25 @@ class MappingConnector @Inject()(
       timeContext.stop()
       r =>
         r.status
-      }
     }
+  }
 
   def createOrUpdateMappingDetails(arn: Arn, mappingDetailsRequest: MappingDetailsRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext) = {
     val timerContext = metrics.createOrUpdateMappingDetails.time()
-      http.POST[MappingDetailsRequest, HttpResponse](createOrUpdateUrl(arn), mappingDetailsRequest).map{
+    http
+      .POST[MappingDetailsRequest, HttpResponse](createOrUpdateUrl(arn), mappingDetailsRequest)
+      .map {
         timerContext.stop()
-        r => r.status
-    }.recover {
-      case ex =>
-        Logger.error(s"creating or updating mapping details failed for some reason: $ex")
-        throw new RuntimeException
-    }
+        r =>
+          r.status
+      }
+      .recover {
+        case ex =>
+          Logger.error(s"creating or updating mapping details failed for some reason: $ex")
+          throw new RuntimeException
+      }
   }
 
   private lazy val baseUrl = appConfig.agentMappingBaseUrl
