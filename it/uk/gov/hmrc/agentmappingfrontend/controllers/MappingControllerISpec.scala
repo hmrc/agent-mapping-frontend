@@ -227,16 +227,16 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
 
   "/existing-client-relationships - GET" should {
 
-    testsForExistingClientRelationships(true)
-    testsForExistingClientRelationships(false)
+    testsForExistingClientRelationships(1)
+    testsForExistingClientRelationships(12)
+    testsForExistingClientRelationships(20)
 
-    def testsForExistingClientRelationships(singleClientCountResponse: Boolean): Unit = {
+    def testsForExistingClientRelationships(clientCount: Int): Unit = {
       val arn = Arn("TARN0000001")
       val ggTag = "6666"
       LegacyAgentEnrolmentType.foreach { enrolmentType =>
-        s"200 to /existing-client-relationships for ${enrolmentType.serviceKey} and for a single client relationship $singleClientCountResponse" in {
+        s"200 to /existing-client-relationships for ${enrolmentType.serviceKey} and for a single client relationship $clientCount" in {
 
-          val clientCount = if (singleClientCountResponse) 1 else 12
           val id = await(repo.create(arn, clientCount))
           await(repo.updateClientCountAndGGTag(id, ClientCountAndGGTag(clientCount, ggTag)))
           await(repo.updateCurrentGGTag(id, ggTag))
@@ -254,11 +254,13 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
             "existingClientRelationships.yes",
             "existingClientRelationships.no"
           )
-          //bodyOf(result) should include(htmlEscapedMessage("existingClientRelationships.td", ggTag))
-          if (singleClientCountResponse) {
+          bodyOf(result) should include(htmlEscapedMessage("existingClientRelationships.ggTag", ggTag))
+          if (clientCount == 1) {
             bodyOf(result) should include(htmlEscapedMessage("existingClientRelationships.single.th", clientCount))
-          } else {
+          } else if(clientCount < 15) {
             bodyOf(result) should include(htmlEscapedMessage("existingClientRelationships.multi.th", clientCount))
+          } else {
+            bodyOf(result) should include(htmlEscapedMessage("existingClientRelationships.max.th", 15))
           }
         }
       }
@@ -284,7 +286,7 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
         "existingClientRelationships.yes",
         "existingClientRelationships.no"
       )
-      //bodyOf(result) should include(htmlEscapedMessage("existingClientRelationships.td", ggTag))
+      bodyOf(result) should include(htmlEscapedMessage("existingClientRelationships.ggTag", ggTag))
     }
 
     "redirect to already mapped when mapping creation returns a conflict" in {
