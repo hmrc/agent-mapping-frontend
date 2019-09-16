@@ -101,7 +101,7 @@ class MappingArnRepository @Inject()(appConfig: AppConfig, mongoComponent: React
 
   def updateCurrentGGTag(id: MappingArnResultId, ggTag: String)(implicit ec: ExecutionContext): Future[Unit] = {
     val updateOp = Json.obj("$set" -> Json.obj("currentGGTag" -> ggTag))
-    collection.update(ordered = true).one(Json.obj("id" -> id), updateOp).checkResult
+    collection.update(ordered = false).one(Json.obj("id" -> id), updateOp).checkResult
   }
 
   def updateMappingCompleteStatus(id: MappingArnResultId)(implicit ec: ExecutionContext): Future[Unit] = {
