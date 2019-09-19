@@ -171,7 +171,7 @@ accessibility.statement.noncompliance.heading=Non compliance with the accessibil
 accessibility.statement.howtested.heading=How we tested this service
 accessibility.statement.howtested.p1=The service was last tested on 22 August 2019 and was checked for compliance with WCAG 2.1 AA.
 accessibility.statement.howtested.p2=The service was built using parts that were tested by the <a href="http://www.digitalaccessibilitycentre.org/">Digital Accessibility Centre</a>. The full service was tested by HMRC and included disabled users.
-accessibility.statement.howtested.p4=This page was prepared on 23 September 2019. It was last updated on 23 September 2019.
+accessibility.statement.howtested.p3=This page was prepared on 23 September 2019. It was last updated on 23 September 2019.
 
 footer.links.accessibility.text=Accessibility
 footer.links.accessibility.url=/agent-mapping/accessibility-statement
