@@ -49,13 +49,13 @@ class SignedOutController @Inject()(appConfig: AppConfig, cc: MessagesController
   }
 
   def taskList(): Action[AnyContent] = Action.async { implicit request =>
-    val url = s"${appConfig.agentSubscriptionFrontendExternalUrl}${appConfig.agentSubscriptionFrontendTaskListPath}"
+    val url = appConfig.agentSubscriptionFrontendTaskListUrl
     Future.successful(Redirect(url))
   }
 
   def returnAfterMapping(): Action[AnyContent] = Action.async { implicit request =>
     val url =
-      s"${appConfig.agentSubscriptionFrontendExternalUrl}${appConfig.agentSubscriptionFrontendReturnAfterMappingPath}"
+      s"${appConfig.agentSubscriptionFrontendExternalUrl}/return-after-mapping"
     Future.successful(Redirect(url))
   }
 
