@@ -73,7 +73,7 @@ class MappingController @Inject()(
           countsAndTags =>
             repository
               .create(arn)
-              .map(id => Ok(startTemplate(id, countsAndTags, appConfig.agentServicesFrontendExternalUrl))))
+              .map(id => Ok(startTemplate(id, countsAndTags, appConfig.agentServicesFrontendBaseUrl))))
 
       case None => successful(Redirect(routes.MappingController.needAgentServicesAccount()))
     }
