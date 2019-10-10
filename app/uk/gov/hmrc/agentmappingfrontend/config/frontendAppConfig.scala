@@ -39,7 +39,6 @@ trait AppConfig {
   val agentSubscriptionFrontendTaskListUrl: String
   val agentSubscriptionFrontendProgressSavedUrl: String
   val agentMappingFrontendExternalUrl: String
-  val ggSignIn: String
   val appName: String
   val clientCountMaxRecords: Int
 }
@@ -54,9 +53,6 @@ class FrontendAppConfig @Inject()(servicesConfig: ServicesConfig) extends AppCon
 
   private lazy val contactFrontendHost: String = servicesConfig.getString("contact-frontend.host")
 
-  private lazy val startMappingAfterLogin: String =
-    servicesConfig.getString("microservice.services.company-auth-frontend.sign-in.continue-url")
-
   override lazy val analyticsToken: String = servicesConfig.getString(s"google-analytics.token")
   override lazy val analyticsHost: String = servicesConfig.getString(s"google-analytics.host")
   override lazy val reportAProblemPartialUrl =
@@ -64,23 +60,18 @@ class FrontendAppConfig @Inject()(servicesConfig: ServicesConfig) extends AppCon
   override lazy val reportAProblemNonJSUrl =
     s"$contactFrontendHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
 
-  override lazy val companyAuthFrontendExternalUrl: String =
-    servicesConfig.getString("microservice.services.company-auth-frontend.external-url")
+  override lazy val companyAuthFrontendExternalUrl: String = servicesConfig.baseUrl("company-auth-frontend")
 
   override lazy val agentSubscriptionBaseUrl: String = servicesConfig.baseUrl("agent-subscription")
 
   override lazy val agentMappingBaseUrl: String = servicesConfig.baseUrl("agent-mapping")
 
-  override lazy val ggSignIn: String =
-    servicesConfig.getString("microservice.services.company-auth-frontend.sign-in.path")
-  override lazy val signOutRedirectUrl: String =
-    servicesConfig.getString("microservice.services.company-auth-frontend.sign-out.redirect-url")
-  override lazy val taskListSignOutRedirectUrl: String =
-    servicesConfig.getString("microservice.services.company-auth-frontend.sign-out.taskList.redirect-url")
+  override lazy val signOutRedirectUrl: String = s"$agentMappingFrontendExternalUrl/start-submit"
+  override lazy val taskListSignOutRedirectUrl: String = s"$agentMappingFrontendExternalUrl/task-list/start-submit"
   override lazy val authenticationLoginCallbackUrl: String =
     servicesConfig.getString("authentication.login-callback.url")
   override lazy val agentServicesFrontendExternalUrl: String =
-    servicesConfig.getString("microservice.services.agent-services-account-frontend.external-url")
+    s"${servicesConfig.baseUrl("agent-services-account-frontend")}/agent-services-account"
 
   override lazy val agentSubscriptionFrontendExternalUrl: String =
     s"${servicesConfig.baseUrl("agent-subscription-frontend")}/agent-subscription"
@@ -90,11 +81,10 @@ class FrontendAppConfig @Inject()(servicesConfig: ServicesConfig) extends AppCon
     s"$agentSubscriptionFrontendExternalUrl/progress-saved/?backLink=$agentMappingFrontendExternalUrl"
 
   override lazy val signInAndContinue =
-    s"$companyAuthFrontendExternalUrl$ggSignIn?continue=${urlEncode(startMappingAfterLogin)}"
+    s"$companyAuthFrontendExternalUrl/gg/sign-in?continue=${urlEncode(agentServicesFrontendExternalUrl)}"
 
-  override lazy val agentMappingFrontendExternalUrl: String = servicesConfig.getString(
-    s"microservice.services.agent-mapping-frontend.external-url"
-  )
+  override lazy val agentMappingFrontendExternalUrl: String =
+    s"${servicesConfig.baseUrl("agent-mapping-frontend")}/agent-mapping"
 
   override lazy val clientCountMaxRecords: Int = servicesConfig.getInt("clientCount.maxRecords")
 

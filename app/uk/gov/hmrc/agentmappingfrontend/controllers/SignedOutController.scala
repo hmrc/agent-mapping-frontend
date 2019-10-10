@@ -31,7 +31,7 @@ class SignedOutController @Inject()(appConfig: AppConfig, cc: MessagesController
   def signOutAndRedirect(id: MappingArnResultId): Action[AnyContent] = Action { implicit request =>
     val url = s"${appConfig.signOutRedirectUrl}?id=$id"
     val signOutAndRedirectUrl: String =
-      s"${appConfig.companyAuthFrontendExternalUrl}${appConfig.ggSignIn}?continue=${urlEncode(url)}"
+      s"${appConfig.companyAuthFrontendExternalUrl}/gg/sign-in?continue=${urlEncode(url)}"
 
     Redirect(signOutAndRedirectUrl)
   }
@@ -42,7 +42,7 @@ class SignedOutController @Inject()(appConfig: AppConfig, cc: MessagesController
   }
 
   private def constructRedirectUrl(continue: String): String =
-    s"${appConfig.companyAuthFrontendExternalUrl}${appConfig.ggSignIn}?continue=${urlEncode(continue)}"
+    s"${appConfig.companyAuthFrontendExternalUrl}/gg/sign-in?continue=${urlEncode(continue)}"
 
   def reLogForMappingStart: Action[AnyContent] = Action { implicit request =>
     Redirect(appConfig.signInAndContinue).withNewSession
