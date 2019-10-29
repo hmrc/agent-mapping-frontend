@@ -20,7 +20,7 @@
 uiGovUkWrapper: govuk_wrapper
 )
 
-@(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages,
+@(pageTitle: String, heading: String, message: String, is5xx: Boolean = true)(implicit request: Request[_], messages: Messages,
         appConfig: AppConfig)
 
 @contentHeader = {
@@ -29,6 +29,12 @@ uiGovUkWrapper: govuk_wrapper
 
 @mainContent = {
   <p>@message</p>
+
+ @if(is5xx) {
+  <p>@Messages("global.error.500.p2")</p>
+  <p>@Html(Messages("global.error.500.vat_helpline"))</p>
+  <p>@Html(Messages("global.error.500.sa_helpline"))</p>
+ }
 }
 
 @uiGovUkWrapper(appConfig = appConfig, title = pageTitle, contentHeader = Some(contentHeader), mainContent = mainContent)
