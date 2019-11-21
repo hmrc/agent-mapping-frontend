@@ -77,9 +77,10 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
       val result = callEndpointWith(request)
       status(result) shouldBe 200
       checkHtmlResultContainsEscapedMsgs(result,
-        "connectAgentServices.start.whatYouNeedToDo.heading",
-        "connectAgentServices.start.whatYouNeedToDo.p1",
-        "connectAgentServices.start.whatYouNeedToDo.p2",
+        "start.task-list.heading",
+        "start.task-list.need-to-do",
+        "start.task-list.need-to-know",
+        "start.task-list.need-to-know.panel",
         "button.continue")
       bodyOf(result) should include("/task-list/client-relationships-found?id=")
     }
