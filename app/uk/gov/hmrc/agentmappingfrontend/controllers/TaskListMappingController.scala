@@ -66,7 +66,7 @@ class TaskListMappingController @Inject()(
         case Some(_) =>
           repository
             .create(continueId)
-            .flatMap(id => nextPage(id, continueId))
+            .flatMap(id => nextPage(id, Some(continueId)))
         case None =>
           throw new RuntimeException(s"continueId $continueId not recognised")
       }
@@ -245,7 +245,7 @@ class TaskListMappingController @Inject()(
     call
   }
 
-  private def nextPage(id: MappingArnResultId, continueId: String = "")(
+  private def nextPage(id: MappingArnResultId, continueId: Option[String] = None)(
     implicit hc: HeaderCarrier,
     request: Request[AnyContent]): Future[Result] =
     withSubscribingAgent(id) { agent =>
@@ -254,7 +254,11 @@ class TaskListMappingController @Inject()(
           agentSubscriptionConnector.getSubscriptionJourneyRecord(record.continueId).map {
             case Some(sjr) =>
               if (sjr.userMappings.map(_.authProviderId).isEmpty) {
-                Ok(startTemplate(continueId, id, appConfig.agentSubscriptionFrontendTaskListUrl)) //first time here
+                Ok(
+                  startTemplate(
+                    continueId.getOrElse(throw new RuntimeException("no continueId found for start page")),
+                    id,
+                    appConfig.agentSubscriptionFrontendTaskListUrl)) //first time here
               } else if (sjr.cleanCredsAuthProviderId.contains(agent.authProviderId) ||
                          sjr.userMappings.map(_.authProviderId).contains(agent.authProviderId)) {
                 Redirect(routes.TaskListMappingController.showExistingClientRelationships(id))
