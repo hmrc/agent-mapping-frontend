@@ -53,6 +53,11 @@ existingClientRelationships.yes=Iawn
 existingClientRelationships.no=Na
 existingClientRelationships.max=neu ragor o gleientiaid TAW a Hunanasesiad
 
+#Copy Across
+copyAcross.h1=Copïwch eich cleientiaid Hunanasesiad a TAW presennol ar draws i’ch cyfrif gwasanaethau asiant
+copyAcross.heading=
+copyAcross.p1=
+copyAcross.p2=
 
 #PageNotFound
 page-not-found.title=Heb ddod o hyd i’r dudalen
