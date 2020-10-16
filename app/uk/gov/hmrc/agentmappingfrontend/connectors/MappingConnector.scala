@@ -28,7 +28,7 @@ import uk.gov.hmrc.agentmappingfrontend.model.{MappingDetailsRepositoryRecord, M
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HttpClient, _}
-
+import uk.gov.hmrc.http.HttpErrorFunctions._
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -94,11 +94,12 @@ class MappingConnector @Inject()(http: HttpClient, metrics: Metrics, appConfig: 
       http
         .POST[MappingDetailsRequest, HttpResponse](detailsUrl(arn), mappingDetailsRequest)
         .map { r =>
-          if (r.status < BAD_REQUEST) {
-            r.status
-          } else {
-            logger.error(s"creating or updating mapping details failed for some reason: ${r.status} on arn: $arn")
-            throw new RuntimeException
+          r.status match {
+            case status if is2xx(status) =>
+              status
+            case status =>
+              logger.error(s"creating or updating mapping details failed for some reason: $status on arn: $arn")
+              throw new RuntimeException
           }
         }
     }
