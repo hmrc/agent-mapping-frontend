@@ -15,14 +15,13 @@ lazy val scoverageSettings = {
 
 lazy val compileDeps = Seq(
   ws,
+  "com.typesafe.play" %% "play-json-joda" % "2.7.4",
   "uk.gov.hmrc" %% "bootstrap-frontend-play-27" % "2.24.0",
-  "uk.gov.hmrc" %% "govuk-template" % "5.56.0-play-27",
+  "uk.gov.hmrc" %% "govuk-template" % "5.58.0-play-27",
   "uk.gov.hmrc" %% "play-ui" % "8.18.0-play-27",
-  "uk.gov.hmrc" %% "auth-client" % "3.0.0-play-27",
   "uk.gov.hmrc" %% "play-partials" % "6.11.0-play-27",
   "uk.gov.hmrc" %% "simple-reactivemongo" % "7.30.0-play-26",
-  "uk.gov.hmrc" %% "agent-mtd-identifiers" % "0.19.0-play-27",
-  "com.typesafe.play" %% "play-json-joda" % "2.7.4",
+  "uk.gov.hmrc" %% "agent-mtd-identifiers" % "0.22.0-play-27",
   "uk.gov.hmrc" %% "agent-kenshoo-monitoring" % "4.4.0",
   "uk.gov.hmrc" %% "play-language" % "4.3.0-play-27"
 )
@@ -51,7 +50,6 @@ lazy val root = (project in file("."))
       "-Xfatal-warnings",
       "-Xlint:-missing-interpolator,_",
       "-Yno-adapted-args",
-      "-Ywarn-value-discard",
       "-Ywarn-dead-code",
       "-deprecation",
       "-feature",
