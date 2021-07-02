@@ -18,7 +18,7 @@ package uk.gov.hmrc.agentmappingfrontend.model
 
 import uk.gov.hmrc.http.BadRequestException
 
-sealed trait RadioInputAnswer extends Product with Serializable
+sealed trait RadioInputAnswer
 
 object RadioInputAnswer {
   case object Yes extends RadioInputAnswer
