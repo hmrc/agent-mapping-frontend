@@ -16,8 +16,6 @@
 
 package uk.gov.hmrc.agentmappingfrontend.controllers
 
-import java.net.URLEncoder
-
 import play.api.mvc.Result
 import play.api.mvc.Results._
 import play.api.test.FakeRequest
@@ -46,7 +44,8 @@ class AuthActionsSpec extends BaseControllerISpec with AuthStubs with AgentSubsc
     implicit val request = FakeRequest("GET", "/foo").withSession(SessionKeys.authToken -> "Bearer XYZ")
 
     val env = app.injector.instanceOf[Environment]
-    val config = app.injector.instanceOf[Configuration]
+    lazy val config = app.injector.instanceOf[Configuration]
+
     val appConfig = app.injector.instanceOf[AppConfig]
 
     def testWithAuthorisedAgent =
@@ -240,7 +239,7 @@ class AuthActionsSpec extends BaseControllerISpec with AuthStubs with AgentSubsc
       givenUnauthorisedWith("MissingBearerToken")
       val result = TestController.testWithAuthorisedAgent
       status(result) shouldBe 303
-      result.header.headers(HeaderNames.LOCATION) shouldBe s"/bas-gateway/sign-in?continue_url=${URLEncoder.encode("http://localhost:9438/foo", "utf-8")}&origin=agent-mapping-frontend"
+      result.header.headers(HeaderNames.LOCATION) shouldBe s"http://localhost:9553/bas-gateway/sign-in?continue_url=http://localhost:9438/foo&origin=agent-mapping-frontend"
     }
   }
 
@@ -308,7 +307,7 @@ class AuthActionsSpec extends BaseControllerISpec with AuthStubs with AgentSubsc
         givenUserHasUnsupportedAuthProvider()
         val result = TestController.testWithSubscribingAgent
         status(result) shouldBe 303
-        result.header.headers(HeaderNames.LOCATION) shouldBe s"/bas-gateway/sign-in?continue_url=${URLEncoder.encode("http://localhost:9438/foo", "utf-8")}&origin=agent-mapping-frontend"
+        result.header.headers(HeaderNames.LOCATION) shouldBe s"http://localhost:9553/bas-gateway/sign-in?continue_url=http://localhost:9438/foo"
       }
     }
   }
@@ -325,7 +324,7 @@ class AuthActionsSpec extends BaseControllerISpec with AuthStubs with AgentSubsc
       givenUnauthorisedWith("MissingBearerToken")
       val result = TestController.testWithBasicAuth
       status(result) shouldBe 303
-      result.header.headers(HeaderNames.LOCATION) shouldBe s"/bas-gateway/sign-in?continue_url=${URLEncoder.encode("http://localhost:9438/foo", "utf-8")}&origin=agent-mapping-frontend"
+      result.header.headers(HeaderNames.LOCATION) shouldBe s"http://localhost:9553/bas-gateway/sign-in?continue_url=http://localhost:9438/foo&origin=agent-mapping-frontend"
     }
   }
 
@@ -341,7 +340,7 @@ class AuthActionsSpec extends BaseControllerISpec with AuthStubs with AgentSubsc
       givenUnauthorisedWith("MissingBearerToken")
       val result = TestController.testWithBasicAgentAuth
       status(result) shouldBe 303
-      result.header.headers(HeaderNames.LOCATION) shouldBe s"/bas-gateway/sign-in?continue_url=${URLEncoder.encode("http://localhost:9438/foo", "utf-8")}&origin=agent-mapping-frontend"
+      result.header.headers(HeaderNames.LOCATION) shouldBe s"http://localhost:9553/bas-gateway/sign-in?continue_url=http://localhost:9438/foo&origin=agent-mapping-frontend"
     }
   }
 

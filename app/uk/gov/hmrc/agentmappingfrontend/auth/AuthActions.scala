@@ -18,7 +18,7 @@ package uk.gov.hmrc.agentmappingfrontend.auth
 
 import play.api.mvc.Results._
 import play.api.mvc.{Request, Result, _}
-import play.api.{Environment, Logging}
+import play.api.{Configuration, Environment, Logging}
 import uk.gov.hmrc.agentmappingfrontend.auth.EnrolmentHelper._
 import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
 import uk.gov.hmrc.agentmappingfrontend.connectors.AgentSubscriptionConnector
@@ -32,15 +32,16 @@ import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.{agentCode, allEnrolments, c
 import uk.gov.hmrc.auth.core.retrieve.{Credentials, ~}
 import uk.gov.hmrc.domain.AgentCode
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.config.AuthRedirects
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait AuthActions extends AuthorisedFunctions with AuthRedirects with Logging {
+trait AuthActions extends AuthorisedFunctions with Logging {
 
   def env: Environment
 
   def appConfig: AppConfig
+
+  def config: Configuration
 
   def agentSubscriptionConnector: AgentSubscriptionConnector
 
@@ -166,7 +167,7 @@ trait AuthActions extends AuthorisedFunctions with AuthRedirects with Logging {
       Forbidden
 
     case _: NoActiveSession =>
-      toGGLogin(s"${appConfig.agentMappingFrontendBaseUrl}${request.uri}")
+      Redirect(s"$signInUrl?continue_url=$continueUrl${request.uri}&origin=$appName")
 
     case _: InsufficientEnrolments =>
       logger.warn(s"Logged in user does not have required enrolments")
@@ -174,9 +175,15 @@ trait AuthActions extends AuthorisedFunctions with AuthRedirects with Logging {
 
     case _: UnsupportedAuthProvider =>
       logger.warn("User is not logged in via  GovernmentGateway, signing out and redirecting")
-      toGGLogin(s"${appConfig.agentMappingFrontendBaseUrl}${request.uri}")
+      Redirect(s"$signInUrl?continue_url=$continueUrl${request.uri}")
   }
 
+  private val signInUrl = getString("bas-gateway.url")
+  private val continueUrl = getString("login.continue")
+  private val appName = getString("appName")
+
+  private def getString(key: String): String =
+    config.underlying.getString(key)
 }
 
 class Agent(
@@ -193,4 +200,5 @@ class Agent(
       .getOrElse(
         throw new RuntimeException(
           s"mandatory subscription journey record was missing for authProviderID $authProviderId"))
+
 }
