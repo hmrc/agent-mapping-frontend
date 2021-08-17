@@ -16,15 +16,15 @@ lazy val scoverageSettings = {
 
 lazy val compileDeps = Seq(
   ws,
-  "uk.gov.hmrc"       %% "bootstrap-frontend-play-27" % "5.6.0",
+  "uk.gov.hmrc"       %% "bootstrap-frontend-play-27" % "5.11.0",
   "com.typesafe.play" %% "play-json-joda"             % "2.7.4",
-  "uk.gov.hmrc"       %% "govuk-template"             % "5.61.0-play-27",
-  "uk.gov.hmrc"       %% "play-ui"                    % "9.1.0-play-27",
-  "uk.gov.hmrc"       %% "play-partials"              % "7.1.0-play-27",
-  "uk.gov.hmrc"       %% "simple-reactivemongo"       % "7.31.0-play-26",
+  "uk.gov.hmrc"       %% "govuk-template"             % "5.69.0-play-27",
+  "uk.gov.hmrc"       %% "play-ui"                    % "9.6.0-play-27",
+  "uk.gov.hmrc"       %% "play-partials"              % "8.2.0-play-27",
+  "uk.gov.hmrc"       %% "simple-reactivemongo"       % "8.0.0-play-26",
   "uk.gov.hmrc"       %% "agent-mtd-identifiers"      % "0.25.0-play-27",
-  "uk.gov.hmrc"       %% "agent-kenshoo-monitoring"   % "4.7.0-play-27",
-  "uk.gov.hmrc"       %% "play-language"              % "4.12.0-play-27"
+  "uk.gov.hmrc"       %% "agent-kenshoo-monitoring"   % "4.8.0-play-27",
+  "uk.gov.hmrc"       %% "play-language"              % "5.1.0-play-27"
 )
 
 def testDeps(scope: String) = Seq(
@@ -33,7 +33,7 @@ def testDeps(scope: String) = Seq(
   "org.mockito" % "mockito-core" % "2.27.0" % scope,
   "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.3" % scope,
   "com.github.tomakehurst" % "wiremock-jre8" % "2.27.1" % scope,
-  "uk.gov.hmrc" %% "reactivemongo-test" % "4.21.0-play-27" % scope,
+  "uk.gov.hmrc" %% "reactivemongo-test" % "5.0.0-play-27" % scope,
   "org.jsoup" % "jsoup" % "1.12.1" % scope
 )
 

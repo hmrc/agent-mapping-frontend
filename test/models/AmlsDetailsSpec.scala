@@ -32,9 +32,14 @@ class AmlsDetailsSpec extends UnitSpec {
       }
       "registered amls details" in {
         Json.toJson(
-          AmlsDetails("supervisory", Right(RegisteredDetails("memNumber-123", LocalDate.parse("2020-10-10"))))) shouldBe
-          Json.parse(
-            """{"supervisoryBody": "supervisory", "membershipNumber": "memNumber-123", "membershipExpiresOn": "2020-10-10"}""")
+          AmlsDetails(
+            "supervisory",
+            Right(RegisteredDetails("memNumber-123", LocalDate.parse("2020-10-10"), Some("1234"), Some("1234"))))) shouldBe
+          Json.parse("""{"supervisoryBody": "supervisory",
+                       |"membershipNumber": "memNumber-123",
+                       |"membershipExpiresOn": "2020-10-10",
+                       |"amlsSafeId": "1234",
+                       |"agentBPRSafeId": "1234"}""".stripMargin)
       }
     }
 
@@ -47,9 +52,11 @@ class AmlsDetailsSpec extends UnitSpec {
       "registered amls details" in {
         Json
           .parse(
-            """{"supervisoryBody": "supervisory", "membershipNumber": "memNumber-123", "membershipExpiresOn": "2020-10-10"}""")
+            """{"supervisoryBody": "supervisory", "membershipNumber": "memNumber-123", "membershipExpiresOn": "2020-10-10", "amlsSafeId": "1234", "agentBPRSafeId": "1234"}""")
           .as[AmlsDetails] shouldBe
-          AmlsDetails("supervisory", Right(RegisteredDetails("memNumber-123", LocalDate.parse("2020-10-10"))))
+          AmlsDetails(
+            "supervisory",
+            Right(RegisteredDetails("memNumber-123", LocalDate.parse("2020-10-10"), Some("1234"), Some("1234"))))
       }
     }
   }
