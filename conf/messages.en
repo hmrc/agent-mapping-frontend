@@ -35,9 +35,8 @@ clientRelationshipsFound.multi.p2=If you continue, they will be copied across to
 clientRelationshipsFound.max=or more VAT and Self Assessment clients
 
 #gg-tag
-gg-tag.title=Identify this user ID
-gg-tag.p1=Enter the last 4 characters of the user ID you signed in with, so you can identify it later.
-gg-tag.form.identifier=Government Gateway user ID
+gg-tag.title=Enter the last 4 characters of the Government Gateway user ID you signed in with
+gg-tag.p1=You will see this reference number whenever you check your previously copied across clients.
 gg-tag.form.hint=For example, XXXX-XXXX-1234
 gg-tag.xs=XXXX-XXXX-
 
@@ -94,7 +93,7 @@ button.continue=Continue
 button.signOut=Sign out
 button.startNow=Start now
 button.saveContinue=Save and continue
-button.saveComeBackLater=Save and come back later
+button.saveComeBackLater=Save as draft
 button.yes=Yes
 button.no=No
 button.back=Back

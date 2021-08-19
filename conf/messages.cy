@@ -35,9 +35,8 @@ clientRelationshipsFound.multi.p2=Os byddwch yn mynd yn eich blaen, byddant yn c
 clientRelationshipsFound.max=neu ragor o gleientiaid TAW a Hunanasesiad
 
 #gg-tag
-gg-tag.title=Adnabod y Dynodydd Defnyddiwr (ID) hwn
-gg-tag.p1=Nodwch 4 cymeriad olaf y Dynodydd Defnyddiwr (ID) a ddefnyddioch i fewngofnodi, fel y gallwch ei adnabod yn nes ymlaen.
-gg-tag.form.identifier=Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth
+gg-tag.title=Enter the last 4 characters of the Government Gateway user ID you signed in with
+gg-tag.p1=You will see this reference number whenever you check your previously copied across clients.
 gg-tag.form.hint=Er enghraifft, XXXX-XXXX-1234
 gg-tag.xs=XXXX-XXXX-
 
@@ -94,7 +93,7 @@ button.continue=Yn eich blaen
 button.signOut=Allgofnodi
 button.startNow=Dechrau nawr
 button.saveContinue=Cadw ac yn eich blaen
-button.saveComeBackLater=Cadw a dod yn ôl yn nes ymlaen
+button.saveComeBackLater=Save as draft
 button.yes=Iawn
 button.no=Na
 button.back=Yn ôl
