@@ -187,7 +187,6 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
         result,
         "gg-tag.title",
         "gg-tag.p1",
-        "gg-tag.form.identifier",
         "gg-tag.form.hint",
         "gg-tag.xs")
     }

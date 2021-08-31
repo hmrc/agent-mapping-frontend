@@ -196,7 +196,6 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
 
       checkHtmlResultContainsEscapedMsgs(result, "gg-tag.title",
         "gg-tag.p1",
-        "gg-tag.form.identifier",
         "gg-tag.form.hint",
         "gg-tag.xs")
     }
