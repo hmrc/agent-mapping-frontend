@@ -27,7 +27,7 @@ mainTemplate: main_template)
 
 @mainTemplate(appConfig, title = Messages("connectionComplete.title"), bodyClasses = None) {
 
-    <div class="transaction-banner--complete">
+    <div class="transaction-banner--complete with-govuk-success-colour">
         <h1 class="transaction-banner__heading">
             @Messages("connectionComplete.banner.header")
             <p>@if(totalClients == 1){
