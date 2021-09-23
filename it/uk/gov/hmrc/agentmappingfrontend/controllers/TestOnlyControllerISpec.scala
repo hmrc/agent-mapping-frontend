@@ -4,6 +4,7 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.agentmappingfrontend.controllers.testOnly.TestOnlyController
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.agentmappingfrontend.stubs.MappingStubs._
+import play.api.test.Helpers._
 
 class TestOnlyControllerISpec extends BaseControllerISpec {
 

@@ -10,6 +10,7 @@ import uk.gov.hmrc.agentmappingfrontend.stubs.MappingStubs._
 import uk.gov.hmrc.agentmappingfrontend.support.MetricTestSupport
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.http.HeaderCarrier
+import play.api.test.Helpers._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 

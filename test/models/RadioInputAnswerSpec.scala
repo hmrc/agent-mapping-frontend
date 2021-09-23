@@ -18,8 +18,8 @@ package models
 
 import uk.gov.hmrc.agentmappingfrontend.model.RadioInputAnswer
 import uk.gov.hmrc.agentmappingfrontend.model.RadioInputAnswer.{No, Yes}
+import uk.gov.hmrc.agentmappingfrontend.support.UnitSpec
 import uk.gov.hmrc.http.BadRequestException
-import uk.gov.hmrc.play.test.UnitSpec
 
 class RadioInputAnswerSpec extends UnitSpec {
 

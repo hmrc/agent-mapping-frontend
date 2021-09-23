@@ -7,8 +7,8 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.ws.WSClient
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.agentmappingfrontend.stubs.AuthStubs
-import uk.gov.hmrc.agentmappingfrontend.support.WireMockSupport
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.agentmappingfrontend.support.{UnitSpec, WireMockSupport}
+import play.api.test.Helpers._
 
 class MappingISpec extends UnitSpec with GuiceOneServerPerSuite with WireMockSupport with AuthStubs {
 

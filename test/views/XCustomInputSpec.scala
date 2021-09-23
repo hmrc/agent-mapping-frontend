@@ -21,8 +21,8 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.Forms.{nonEmptyText, single}
 import play.api.data.{Field, Form, FormError}
 import uk.gov.hmrc.agentmappingfrontend.views.html.x_custom_input
-import uk.gov.hmrc.play.test.UnitSpec
 import play.api.test.Helpers._
+import uk.gov.hmrc.agentmappingfrontend.support.UnitSpec
 
 class XCustomInputSpec extends UnitSpec with GuiceOneAppPerSuite {
 

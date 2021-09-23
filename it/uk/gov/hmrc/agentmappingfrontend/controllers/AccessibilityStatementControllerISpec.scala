@@ -4,7 +4,7 @@ import org.scalatest.matchers.{MatchResult, Matcher}
 import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.mvc.Http.HeaderNames
-
+import play.api.test.Helpers._
 
 class AccessibilityStatementControllerISpec extends BaseControllerISpec {
 

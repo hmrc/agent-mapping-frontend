@@ -47,7 +47,7 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
       givenSubscriptionJourneyRecordExistsForContinueId("continue-id", sjrWithNoUserMappings)
       val request = FakeRequest(GET, "/agent-mapping/task-list/start/?continueId=continue-id")
       val result = callEndpointWith(request)
-      val id = await(repo.findByContinueId("continue-id").get.id)
+      val id = await(repo.findByContinueId("continue-id")).get.id
       status(result) shouldBe 303
       redirectLocation(result) shouldBe Some(routes.TaskListMappingController.incorrectAccount(id).url)
     }
@@ -440,7 +440,7 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
 
       val request = FakeRequest(GET, s"/agent-mapping/task-list/start-submit/?id=$id")
       val result = callEndpointWith(request)
-      val newId = await(repo.findByContinueId("continue-id").get.id)
+      val newId = await(repo.findByContinueId("continue-id")).get.id
 
       status(result) shouldBe 303
 
@@ -498,7 +498,7 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
 
       val request = FakeRequest(GET, s"/agent-mapping/task-list/start-submit/?id=$id")
       val result = callEndpointWith(request)
-      val newId = await(repo.findByContinueId("continue-id").get.id)
+      val newId = await(repo.findByContinueId("continue-id")).get.id
 
       status(result) shouldBe 303
       redirectLocation(result) shouldBe Some(routes.TaskListMappingController.notEnrolled(newId).url)

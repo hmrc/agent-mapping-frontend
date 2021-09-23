@@ -3,9 +3,9 @@ package uk.gov.hmrc.agentmappingfrontend.repository
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
-import uk.gov.hmrc.agentmappingfrontend.support.MongoApp
+import uk.gov.hmrc.agentmappingfrontend.support.{MongoApp, UnitSpec}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.play.test.UnitSpec
+import play.api.test.Helpers._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -51,7 +51,7 @@ class MappingArnRepositoryISpec extends UnitSpec with GuiceOneAppPerSuite with M
 
       await(repo.insert(record))
       await(repo.upsert(record.copy(clientCountAndGGTags = record.clientCountAndGGTags :+ ClientCountAndGGTag(12,"")), record.id))
-      val result = await(repo.findRecord(record.id).get.clientCountAndGGTags.head.clientCount)
+      val result = await(repo.findRecord(record.id)).get.clientCountAndGGTags.head.clientCount
 
       result shouldBe 12
     }
@@ -61,7 +61,7 @@ class MappingArnRepositoryISpec extends UnitSpec with GuiceOneAppPerSuite with M
 
       await(repo.insert(record))
       await(repo.updateCurrentGGTag(record.id, "6666"))
-      val result = await(repo.findRecord(record.id).get.currentGGTag)
+      val result = await(repo.findRecord(record.id)).get.currentGGTag
 
       result shouldBe "6666"
     }
@@ -71,7 +71,7 @@ class MappingArnRepositoryISpec extends UnitSpec with GuiceOneAppPerSuite with M
 
       await(repo.insert(record))
       await(repo.updateMappingCompleteStatus(record.id))
-      val result = await(repo.findRecord(record.id).get.alreadyMapped)
+      val result = await(repo.findRecord(record.id)).get.alreadyMapped
 
       result shouldBe true
     }

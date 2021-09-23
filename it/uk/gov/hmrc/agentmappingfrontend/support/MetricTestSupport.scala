@@ -2,9 +2,11 @@ package uk.gov.hmrc.agentmappingfrontend.support
 
 import com.codahale.metrics.MetricRegistry
 import com.kenshoo.play.metrics.Metrics
-import org.scalatest.{Assertion, Matchers}
+import org.scalatest.Assertion
+import org.scalatest.matchers.should.Matchers
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
+
 import scala.collection.JavaConverters._
 
 trait MetricTestSupport {

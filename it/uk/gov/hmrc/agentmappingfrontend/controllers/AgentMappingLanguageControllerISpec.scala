@@ -1,18 +1,17 @@
 package uk.gov.hmrc.agentmappingfrontend.controllers
 
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{cookies, redirectLocation}
+import play.api.test.Helpers.{cookies}
+import play.api.test.Helpers
+
 
 import scala.concurrent.duration._
 
 class AgentMappingLanguageControllerISpec extends BaseControllerISpec {
 
-
-  implicit val timeout = 2.seconds
-
+  implicit val timeout = 2.second
 
   lazy private val controller: AgentMappingLanguageController = app.injector.instanceOf[AgentMappingLanguageController]
-
 
   "GET /language/:lang" should {
 
@@ -22,7 +21,7 @@ class AgentMappingLanguageControllerISpec extends BaseControllerISpec {
 
       val result = controller.switchToLanguage("english")(request)
       status(result) shouldBe 303
-      redirectLocation(result)(timeout) shouldBe Some("https://www.tax.service.gov.uk/agent-mapping")
+      Helpers.redirectLocation(result)(timeout) shouldBe Some("https://www.tax.service.gov.uk/agent-mapping")
 
       cookies(result)(timeout).get("PLAY_LANG").get.value shouldBe "en"
     }
@@ -33,7 +32,7 @@ class AgentMappingLanguageControllerISpec extends BaseControllerISpec {
 
       val result = controller.switchToLanguage("english")(request)
       status(result) shouldBe 303
-      redirectLocation(result)(timeout) shouldBe Some("/some-page")
+      Helpers.redirectLocation(result)(timeout) shouldBe Some("/some-page")
 
       cookies(result)(timeout).get("PLAY_LANG").get.value shouldBe "en"
     }
@@ -44,7 +43,7 @@ class AgentMappingLanguageControllerISpec extends BaseControllerISpec {
 
       val result = controller.switchToLanguage("cymraeg")(request)
       status(result) shouldBe 303
-      redirectLocation(result)(timeout) shouldBe Some("/some-page")
+      Helpers.redirectLocation(result)(timeout) shouldBe Some("/some-page")
 
       cookies(result)(timeout).get("PLAY_LANG").get.value shouldBe "cy"
     }
