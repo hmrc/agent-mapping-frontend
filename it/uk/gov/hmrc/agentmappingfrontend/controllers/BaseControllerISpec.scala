@@ -25,11 +25,9 @@ import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Result
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.agentmappingfrontend.support.{EndpointBehaviours, WireMockSupport}
+import uk.gov.hmrc.agentmappingfrontend.support.{EndpointBehaviours, UnitSpec, WireMockSupport}
 import uk.gov.hmrc.http.SessionKeys
-import uk.gov.hmrc.play.test.UnitSpec
 
 abstract class BaseControllerISpec
     extends UnitSpec with GuiceOneAppPerSuite with WireMockSupport with EndpointBehaviours {

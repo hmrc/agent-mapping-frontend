@@ -3,7 +3,6 @@ package uk.gov.hmrc.agentmappingfrontend.controllers
 import play.api.http.Writeable
 import play.api.mvc.{Request, Result}
 import play.api.test.FakeRequest
-import play.api.test.Helpers.redirectLocation
 import play.api.test.Helpers._
 
 class SignOutControllerISpec extends BaseControllerISpec {

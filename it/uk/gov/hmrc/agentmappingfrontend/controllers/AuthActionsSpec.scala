@@ -29,6 +29,7 @@ import uk.gov.hmrc.agentmappingfrontend.stubs.{AgentSubscriptionStubs, AuthStubs
 import uk.gov.hmrc.agentmappingfrontend.support.SubscriptionJourneyRecordSamples
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
+import play.api.test.Helpers._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
+import play.Logger
+
 import javax.inject.{Inject, Singleton}
-import play.api.Logger.logger
 import play.api.http.HeaderNames.CACHE_CONTROL
 import play.api.i18n.MessagesApi
 import play.api.mvc.Results._
@@ -41,6 +42,7 @@ class ErrorHandler @Inject()(
     extends FrontendErrorHandler with AuthRedirects with ErrorAuditing {
 
   val appName: String = appConfig.appName
+  val logger = Logger.of(appName)
 
   override def onClientError(request: RequestHeader, statusCode: Int, message: String): Future[Result] = {
     auditClientError(request, statusCode, message)

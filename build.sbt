@@ -16,25 +16,24 @@ lazy val scoverageSettings = {
 
 lazy val compileDeps = Seq(
   ws,
-  "uk.gov.hmrc"       %% "bootstrap-frontend-play-27" % "5.11.0",
-  "com.typesafe.play" %% "play-json-joda"             % "2.7.4",
-  "uk.gov.hmrc"       %% "govuk-template"             % "5.69.0-play-27",
-  "uk.gov.hmrc"       %% "play-ui"                    % "9.6.0-play-27",
-  "uk.gov.hmrc"       %% "play-partials"              % "8.2.0-play-27",
-  "uk.gov.hmrc"       %% "simple-reactivemongo"       % "8.0.0-play-26",
+  "uk.gov.hmrc"       %% "bootstrap-frontend-play-28" % "5.9.0",
+  "com.typesafe.play" %% "play-json-joda"             % "2.9.2",
+  "uk.gov.hmrc"       %% "govuk-template"             % "5.70.0-play-28",
+  "uk.gov.hmrc"       %% "play-ui"                    % "9.7.0-play-28",
+  "uk.gov.hmrc"       %% "play-partials"              % "8.2.0-play-28",
+  "uk.gov.hmrc"       %% "simple-reactivemongo"       % "8.0.0-play-28",
   "uk.gov.hmrc"       %% "agent-mtd-identifiers"      % "0.25.0-play-27",
-  "uk.gov.hmrc"       %% "agent-kenshoo-monitoring"   % "4.8.0-play-27",
-  "uk.gov.hmrc"       %% "play-language"              % "5.1.0-play-27"
+  "uk.gov.hmrc"       %% "agent-kenshoo-monitoring"   % "4.8.0-play-28",
+  "uk.gov.hmrc"       %% "play-language"              % "5.1.0-play-28"
 )
 
 def testDeps(scope: String) = Seq(
-  "uk.gov.hmrc" %% "hmrctest" % "3.10.0-play-26" % scope,
-  "org.scalatest" %% "scalatest" % "3.0.8" % scope,
-  "org.mockito" % "mockito-core" % "2.27.0" % scope,
-  "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.3" % scope,
-  "com.github.tomakehurst" % "wiremock-jre8" % "2.27.1" % scope,
-  "uk.gov.hmrc" %% "reactivemongo-test" % "5.0.0-play-27" % scope,
-  "org.jsoup" % "jsoup" % "1.14.2" % scope
+  "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % scope,
+  "org.scalatestplus" %% "mockito-3-12" % "3.2.10.0" % scope,
+  "com.github.tomakehurst" % "wiremock-jre8" % "2.26.2" % scope,
+  "uk.gov.hmrc" %% "reactivemongo-test" % "5.0.0-play-28" % scope,
+  "org.jsoup" % "jsoup" % "1.14.2" % scope,
+  "com.vladsch.flexmark" % "flexmark-all" % "0.35.10" % scope
 )
 
 lazy val root = (project in file("."))

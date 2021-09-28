@@ -8,6 +8,7 @@ import uk.gov.hmrc.agentmappingfrontend.stubs.AgentSubscriptionStubs
 import uk.gov.hmrc.agentmappingfrontend.support.{MetricTestSupport, SubscriptionJourneyRecordSamples}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
+import play.api.test.Helpers._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 

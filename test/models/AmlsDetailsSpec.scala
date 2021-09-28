@@ -17,10 +17,9 @@
 package models
 
 import java.time.LocalDate
-
 import play.api.libs.json.Json
 import uk.gov.hmrc.agentmappingfrontend.model.{AmlsDetails, PendingDetails, RegisteredDetails}
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.agentmappingfrontend.support.UnitSpec
 
 class AmlsDetailsSpec extends UnitSpec {
 
