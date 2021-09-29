@@ -27,11 +27,11 @@ clientRelationshipsFound.title=Client relationships found
 clientRelationshipsFound.single.title=Client relationship found
 clientRelationshipsFound.single.p1=Your user ID has the following client relationship that you can copy across.
 clientRelationshipsFound.single.td=VAT and Self Assessment client
-clientRelationshipsFound.single.p2=If you continue, they will be copied across to your new agent services account. You will then be able to sign this client up to Making Tax Digital.
+clientRelationshipsFound.single.p2=By continuing, they will be copied across to your new agent services account. You will then be able to sign this client up to Making Tax Digital.
 clientRelationshipsFound.multi.title=Client relationships found
 clientRelationshipsFound.multi.p1=Your user ID has the following client relationships that you can copy across.
 clientRelationshipsFound.multi.td=VAT and Self Assessment clients
-clientRelationshipsFound.multi.p2=If you continue, they will be copied across to your new agent services account. You will then be able to sign them up to Making Tax Digital.
+clientRelationshipsFound.multi.p2=By continuing, they will be copied across to your new agent services account. You will then be able to sign them up to Making Tax Digital.
 clientRelationshipsFound.max=or more VAT and Self Assessment clients
 
 #gg-tag

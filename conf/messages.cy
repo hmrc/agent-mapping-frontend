@@ -27,11 +27,11 @@ clientRelationshipsFound.title=Perthnasoedd â chleientiaid wedi’u canfod
 clientRelationshipsFound.single.title=Perthynas â chleient wedi’i chanfod
 clientRelationshipsFound.single.p1=Mae gan eich Dynodydd Defnyddiwr (ID) y berthynas ganlynol â chleient y gallwch ei chopïo ar draws.
 clientRelationshipsFound.single.td=Cleient TAW a Hunanasesiad
-clientRelationshipsFound.single.p2=Os byddwch yn mynd yn eich blaen, bydd yn cael ei gopïo ar draws i’ch cyfrif gwasanaethau asiant newydd. Yna, byddwch yn gallu cofrestru’r cleient hwn ar gyfer y cynllun Troi Treth yn Ddigidol.
+clientRelationshipsFound.single.p2=Drwy barhau, bydd yn cael ei gopïo ar draws i’ch cyfrif gwasanaethau asiant newydd. Yna, byddwch yn gallu cofrestru’r cleient hwn ar gyfer y cynllun Troi Treth yn Ddigidol.
 clientRelationshipsFound.multi.title=Perthnasoedd â chleientiaid wedi’u canfod
 clientRelationshipsFound.multi.p1=Mae gan eich Dynodydd Defnyddiwr (ID) y perthnasoedd canlynol â chleientiaid y gallwch eu copïo ar draws.
 clientRelationshipsFound.multi.td=Cleientiaid TAW a Hunanasesiad
-clientRelationshipsFound.multi.p2=Os byddwch yn mynd yn eich blaen, byddant yn cael eu copïo ar draws i’ch cyfrif gwasanaethau asiant newydd. Yna, byddwch yn gallu cofrestru ar gyfer y cynllun Troi Treth yn Ddigidol.
+clientRelationshipsFound.multi.p2=Drwy barhau, byddant yn cael eu copïo ar draws i’ch cyfrif gwasanaethau asiant newydd. Yna, byddwch yn gallu cofrestru ar gyfer y cynllun Troi Treth yn Ddigidol.
 clientRelationshipsFound.max=neu ragor o gleientiaid TAW a Hunanasesiad
 
 #gg-tag
