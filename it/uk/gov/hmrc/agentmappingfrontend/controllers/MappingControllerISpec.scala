@@ -198,6 +198,8 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
       val clientCount = 12
       val id = await(repo.create(arn, clientCount))
       givenAuthorisedFor("IR-SA-AGENT")
+      mappingIsCreated(arn)
+      mappingDetailsAreCreated(arn, MappingDetailsRequest(AuthProviderId("12345-credId"),"12Aa", clientCount))
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = fakeRequest(POST, s"/agent-mapping/tag-gg?id=$id")
         .withFormUrlEncodedBody("ggTag" -> "12Aa")
       val result = callEndpointWith(request)
@@ -226,6 +228,48 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
 
       status(result) shouldBe 200
       checkHtmlResultContainsMsgs(result, "page-not-found.h1", "page-not-found.p1")
+    }
+
+    "redirect to already mapped when mapping creation returns a conflict" in {
+      val arn = Arn("TARN0000001")
+      val clientCount = 12
+      val id = await(repo.create(arn, clientCount))
+      givenAuthorisedFor("IR-SA-AGENT")
+      mappingExists(arn)
+      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = fakeRequest(POST, s"/agent-mapping/tag-gg?id=$id")
+        .withFormUrlEncodedBody("ggTag" -> "1111")
+      val result = callEndpointWith(request)
+
+      status(result) shouldBe 303
+      redirectLocation(result) shouldBe Some(routes.MappingController.alreadyMapped(id).url)
+    }
+
+    "redirect to already mapped when update mapping details creation returns a conflict" in {
+      val arn = Arn("TARN0000001")
+      val clientCount = 12
+      val id = await(repo.create(arn, clientCount))
+      givenAuthorisedFor("IR-SA-AGENT")
+      mappingIsCreated(arn)
+      mappingDetailsCreationFails(arn, MappingDetailsRequest(AuthProviderId("12345-credId"),"1111", clientCount))
+      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = fakeRequest(POST, s"/agent-mapping/tag-gg?id=$id")
+        .withFormUrlEncodedBody("ggTag" -> "1111")
+      val result = callEndpointWith(request)
+
+      status(result) shouldBe 303
+      redirectLocation(result) shouldBe Some(routes.MappingController.alreadyMapped(id).url)
+    }
+
+    "throw an internal server error when the response from mapping creation is unknown" in {
+      val arn = Arn("TARN0000001")
+      val clientCount = 12
+      val id = await(repo.create(arn, clientCount))
+      givenAuthorisedFor("IR-SA-AGENT")
+      mappingKnownFactsIssue(arn)
+      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = fakeRequest(POST, s"/agent-mapping/tag-gg?id=$id")
+        .withFormUrlEncodedBody("ggTag" -> "1111")
+      val result = callEndpointWith(request)
+
+      status(result) shouldBe 500
     }
   }
 
@@ -295,30 +339,9 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
       bodyOf(result) should include(htmlEscapedMessage("copied.table.ggTag", ggTag))
     }
 
-    "redirect to already mapped when mapping creation returns a conflict" in {
-      val arn = Arn("TARN0000001")
-      val clientCount = 12
-      val id = await(repo.create(arn, clientCount))
-      givenAuthorisedFor("IR-SA-AGENT")
-      mappingExists(arn)
-      implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest(GET, s"/agent-mapping/existing-client-relationships?id=$id")
-      val result = callEndpointWith(request)
 
-      status(result) shouldBe 303
-      redirectLocation(result) shouldBe Some(routes.MappingController.alreadyMapped(id).url)
-    }
 
-    "throw an internal server error when the response from mapping creation is unknown" in {
-      val arn = Arn("TARN0000001")
-      val clientCount = 12
-      val id = await(repo.create(arn, clientCount))
-      givenAuthorisedFor("IR-SA-AGENT")
-      mappingKnownFactsIssue(arn)
-      implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest(GET, s"/agent-mapping/existing-client-relationships?id=$id")
-      val result = callEndpointWith(request)
 
-      status(result) shouldBe 500
-    }
 
     "show the page not found page if there is not record" in {
       givenAuthorisedFor("IR-SA-AGENT")

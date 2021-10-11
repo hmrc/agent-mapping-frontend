@@ -18,19 +18,17 @@ package uk.gov.hmrc.agentmappingfrontend.connectors
 
 import com.codahale.metrics.MetricRegistry
 import com.kenshoo.play.metrics.Metrics
-
-import javax.inject.{Inject, Singleton}
 import play.api.Logging
-import play.api.http.Status
 import play.api.http.Status._
 import uk.gov.hmrc.agent.kenshoo.monitoring.HttpAPIMonitor
 import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
 import uk.gov.hmrc.agentmappingfrontend.model.{MappingDetailsRepositoryRecord, MappingDetailsRequest, SaMapping, VatMapping}
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
+import uk.gov.hmrc.http.HttpErrorFunctions._
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HttpClient, _}
-import uk.gov.hmrc.http.HttpErrorFunctions._
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -44,11 +42,6 @@ class MappingConnector @Inject()(http: HttpClient, metrics: Metrics, appConfig: 
       http
         .PUT[String, HttpResponse](createUrl(arn), "")
         .map(_.status)
-        .recover {
-          case e: Upstream4xxResponse if Status.FORBIDDEN.equals(e.upstreamResponseCode) => Status.FORBIDDEN
-          case e: Upstream4xxResponse if Status.CONFLICT.equals(e.upstreamResponseCode)  => Status.CONFLICT
-          case e                                                                         => throw e
-        }
     }
 
   def getClientCount(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Int] =
@@ -91,16 +84,17 @@ class MappingConnector @Inject()(http: HttpClient, metrics: Metrics, appConfig: 
 
   def createOrUpdateMappingDetails(arn: Arn, mappingDetailsRequest: MappingDetailsRequest)(
     implicit hc: HeaderCarrier,
-    ec: ExecutionContext): Future[Int] =
+    ec: ExecutionContext): Future[Unit] =
     monitor("ConsumedAPI-Mapping-createOrUpdateMappingDetails-POST") {
       http
         .POST[MappingDetailsRequest, HttpResponse](detailsUrl(arn), mappingDetailsRequest)
         .map { r =>
           r.status match {
-            case status if is2xx(status) =>
-              status
+            case status if is2xx(status) => ()
+            case status if status == CONFLICT =>
+              throw new ConflictException(s"Failed to create or update mapping details for $arn")
             case status =>
-              logger.error(s"creating or updating mapping details failed for some reason: $status on arn: $arn")
+              logger.error(s"status: $status Failed to create or update mapping details for arn: $arn")
               throw new RuntimeException
           }
         }

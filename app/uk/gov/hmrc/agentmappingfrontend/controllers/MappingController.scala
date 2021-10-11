@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.agentmappingfrontend.controllers
 
-import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import play.api.{Configuration, Environment, Logging}
@@ -24,15 +23,16 @@ import uk.gov.hmrc.agentmappingfrontend.auth.AuthActions
 import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
 import uk.gov.hmrc.agentmappingfrontend.connectors.{AgentSubscriptionConnector, MappingConnector}
 import uk.gov.hmrc.agentmappingfrontend.model.RadioInputAnswer.{No, Yes}
-import uk.gov.hmrc.agentmappingfrontend.model.{AuthProviderId, ExistingClientRelationshipsForm, GGTagForm, MappingDetails, MappingDetailsRequest}
+import uk.gov.hmrc.agentmappingfrontend.model._
 import uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId
-import uk.gov.hmrc.agentmappingfrontend.repository.{ClientCountAndGGTag, MappingArnRepository, MappingArnResult}
+import uk.gov.hmrc.agentmappingfrontend.repository.{ClientCountAndGGTag, MappingArnRepository}
 import uk.gov.hmrc.agentmappingfrontend.util._
 import uk.gov.hmrc.agentmappingfrontend.views.html._
-import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.auth.core._
+import uk.gov.hmrc.http.ConflictException
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.Future.successful
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -125,7 +125,7 @@ class MappingController @Inject()(
   }
 
   def submitGGTag(id: MappingArnResultId): Action[AnyContent] = Action.async { implicit request =>
-    withAuthorisedAgent(id) { _ =>
+    withAuthorisedAgent(id) { providerId =>
       repository.findRecord(id).flatMap {
         case Some(record) =>
           GGTagForm.form.bindFromRequest
@@ -134,65 +134,46 @@ class MappingController @Inject()(
                 Ok(ggTagTemplate(formWithErrors, id))
               },
               ggTag => {
-                val clientCountAndGGTags = if (!record.alreadyMapped) {
-                  ClientCountAndGGTag(record.currentCount, ggTag.value) +: record.clientCountAndGGTags
-                } else {
-                  ClientCountAndGGTag(record.currentCount, ggTag.value) +: record.clientCountAndGGTags.tail
-                }
-                val newRecord = record.copy(clientCountAndGGTags = clientCountAndGGTags, currentGGTag = ggTag.value)
-                for {
-                  _ <- repository.upsert(newRecord, id)
-                } yield Redirect(routes.MappingController.showExistingClientRelationships(id))
+                if (!record.alreadyMapped) {
+                  mappingConnector.createMapping(record.arn).flatMap {
+                    case CREATED =>
+                      val clientCountAndGGTags = ClientCountAndGGTag(record.currentCount, ggTag.value) +: record.clientCountAndGGTags
+                      val newRecord =
+                        record.copy(clientCountAndGGTags = clientCountAndGGTags, currentGGTag = ggTag.value)
+                      for {
+                        _ <- mappingConnector
+                              .createOrUpdateMappingDetails(
+                                record.arn,
+                                MappingDetailsRequest(AuthProviderId(providerId), ggTag.value, record.currentCount))
+                        _ <- repository.updateMappingCompleteStatus(id)
+                        _ <- repository.upsert(newRecord, id)
+                      } yield Redirect(routes.MappingController.showExistingClientRelationships(id))
+                    case CONFLICT => Redirect(routes.MappingController.alreadyMapped(id))
+                    case e =>
+                      logger.warn(s"unexpected response from server $e")
+                      InternalServerError
+                  }
+                } else Redirect(routes.MappingController.showExistingClientRelationships(id))
               }
             )
         case None => Ok(pageNotFoundTemplate())
       }
+    }.recover {
+      case _: ConflictException => Redirect(routes.MappingController.alreadyMapped(id))
     }
   }
 
-  def updateMappingRecordsAndRedirect(
-    arn: Arn,
-    authProviderId: AuthProviderId,
-    record: MappingArnResult,
-    id: MappingArnResultId,
-    backUrl: String)(implicit request: Request[AnyContent]): Future[Result] =
-    for {
-      _ <- mappingConnector
-            .createOrUpdateMappingDetails(
-              arn,
-              MappingDetailsRequest(authProviderId, record.currentGGTag, record.currentCount))
-      _ <- repository.updateMappingCompleteStatus(id)
-    } yield
-      Ok(
-        existingClientRelationshipsTemplate(
-          ExistingClientRelationshipsForm.form,
-          id,
-          record.clientCountAndGGTags,
-          backUrl,
-          taskList = false))
-
   def showExistingClientRelationships(id: MappingArnResultId): Action[AnyContent] = Action.async { implicit request =>
-    withAuthorisedAgent(id) { providerId =>
+    withAuthorisedAgent(id) { _ =>
       repository.findRecord(id).flatMap {
         case Some(record) =>
-          val backUrl = routes.MappingController.showGGTag(id).url
-          if (!record.alreadyMapped) {
-            mappingConnector.createMapping(record.arn).flatMap {
-              case CREATED =>
-                updateMappingRecordsAndRedirect(record.arn, AuthProviderId(providerId), record, id, backUrl)
-              case CONFLICT => Redirect(routes.MappingController.alreadyMapped(id))
-              case e =>
-                logger.warn(s"unexpected response from server $e")
-                InternalServerError
-            }
-          } else
-            Ok(
-              existingClientRelationshipsTemplate(
-                ExistingClientRelationshipsForm.form,
-                id,
-                record.clientCountAndGGTags,
-                backUrl,
-                taskList = false))
+          Ok(
+            existingClientRelationshipsTemplate(
+              ExistingClientRelationshipsForm.form,
+              id,
+              record.clientCountAndGGTags,
+              routes.MappingController.showGGTag(id).url,
+              taskList = false))
 
         case None => Ok(pageNotFoundTemplate())
       }
