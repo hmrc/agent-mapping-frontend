@@ -1,17 +1,15 @@
 package uk.gov.hmrc.agentmappingfrontend.connectors
 
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-
-import play.api.http.Status
+import play.api.test.Helpers._
 import uk.gov.hmrc.agentmappingfrontend.controllers.BaseControllerISpec
 import uk.gov.hmrc.agentmappingfrontend.model.{AuthProviderId, MappingDetails, MappingDetailsRepositoryRecord, MappingDetailsRequest}
 import uk.gov.hmrc.agentmappingfrontend.stubs.MappingStubs._
 import uk.gov.hmrc.agentmappingfrontend.support.MetricTestSupport
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.http.HeaderCarrier
-import play.api.test.Helpers._
+import uk.gov.hmrc.http.{ConflictException, HeaderCarrier}
 
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class MappingConnectorISpec extends BaseControllerISpec with MetricTestSupport {
@@ -88,12 +86,12 @@ class MappingConnectorISpec extends BaseControllerISpec with MetricTestSupport {
     "create mapping details successfully" in {
       val mappingDetailsRequest = MappingDetailsRequest(AuthProviderId("cred-1234"), "1234", 5)
       mappingDetailsAreCreated(arn, mappingDetailsRequest)
-      await(connector.createOrUpdateMappingDetails(arn, mappingDetailsRequest)) shouldBe Status.CREATED
+      await(connector.createOrUpdateMappingDetails(arn, mappingDetailsRequest)) shouldBe (())
     }
     "creation of mapping fails throw a RuntimeException" in {
       val mappingDetailsRequest = MappingDetailsRequest(AuthProviderId("cred-1234"), "1234", 5)
       mappingDetailsCreationFails(arn, mappingDetailsRequest)
-      intercept[RuntimeException] {
+      intercept[ConflictException] {
         await(connector.createOrUpdateMappingDetails(arn, mappingDetailsRequest))
       }
     }
