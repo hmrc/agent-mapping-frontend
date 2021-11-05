@@ -1,3 +1,5 @@
+->         /hmrc-frontend                      hmrcfrontend.Routes
+
 #microservice specific routes
 
 GET         /                                                    uk.gov.hmrc.agentmappingfrontend.controllers.MappingController.root
@@ -36,8 +38,6 @@ GET         /task-list/signed-out-redirect                       uk.gov.hmrc.age
 GET         /task-list/start-submit                              uk.gov.hmrc.agentmappingfrontend.controllers.TaskListMappingController.returnFromGGLogin(id: uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId)
 GET         /task-list/return                                    uk.gov.hmrc.agentmappingfrontend.controllers.SignedOutController.taskList
 GET         /task-list/return-after-mapping                      uk.gov.hmrc.agentmappingfrontend.controllers.SignedOutController.returnAfterMapping()
-
-GET         /accessibility-statement                             uk.gov.hmrc.agentmappingfrontend.controllers.AccessibilityStatementController.showAccessibilityStatement
 
 GET         /finish-sign-out                                     uk.gov.hmrc.agentmappingfrontend.controllers.SignedOutController.signOut
 GET         /keep-alive                                          uk.gov.hmrc.agentmappingfrontend.controllers.SignedOutController.keepAlive
