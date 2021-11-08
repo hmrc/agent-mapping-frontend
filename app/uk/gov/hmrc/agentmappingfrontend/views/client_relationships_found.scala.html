@@ -32,7 +32,7 @@
 @mainTemplate(appConfig, title = Messages("clientRelationshipsFound.title"), bodyClasses = None, taskList = taskList) {
 
 
-    <h1 class="heading-xlarge">@if(clientCount == 1){ @Messages("clientRelationshipsFound.single.title")} else { @Messages("clientRelationshipsFound.multi.title")}
+    <h1 class="govuk-heading-xl">@if(clientCount == 1){ @Messages("clientRelationshipsFound.single.title")} else { @Messages("clientRelationshipsFound.multi.title")}
     </h1>
 
     <p>@if(clientCount == 1){ @Messages("clientRelationshipsFound.single.p1")} else { @Messages("clientRelationshipsFound.multi.p1")}</p>
