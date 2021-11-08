@@ -39,8 +39,8 @@
 @(
     title: String,
     taskList: Boolean = false,
-    backLinkHref: Option[String] = None,
-    hasTimeout: Boolean = true
+    hasTimeout: Boolean = true,
+    backLinkHref: Option[String] = None
 )(mainContent: Html)(implicit request : Request[_], messages: Messages, appConfig: AppConfig)
 
 @beforeContent = {
@@ -53,13 +53,15 @@
 
 @mainContentWithHelpLink = {
     @mainContent
-    @hmrcReportTechnicalIssueHelper()
+    <div>
+        @hmrcReportTechnicalIssueHelper()
+    </div>
 }
 
 @govukLayout(
     pageTitle = Some(title),
     headBlock = Some(head(hasTimeout)),
-    headerBlock = Some(header()),
+    headerBlock = Some(header(taskList)),
     scriptsBlock = Some(hmrcScripts()),
     beforeContentBlock = Some(beforeContent),
     footerBlock = Some(hmrcStandardFooter()),

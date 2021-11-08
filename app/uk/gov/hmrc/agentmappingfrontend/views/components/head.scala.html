@@ -24,8 +24,11 @@
 
 
 @(hasTimeout: Boolean)(implicit appConfig: AppConfig, messages: Messages)
+
 @hmrcTrackingConsentSnippet()
+
 <link rel="stylesheet" type="text/css" href="@controllers.routes.Assets.at("stylesheets/application.css")" media="screen">
+
 @if(hasTimeout) {
  @hmrcTimeoutDialog(TimeoutDialog(
   timeout = Some(appConfig.timeout),
@@ -35,5 +38,4 @@
   timeoutUrl = Some(routes.SignedOutController.timedOut().url),
   language = Some(messages.lang.code)
  ))
-
 }

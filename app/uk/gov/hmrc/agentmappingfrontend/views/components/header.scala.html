@@ -23,7 +23,7 @@ languageSelect: language_select,
 hmrcBanner : HmrcBanner
 )
 
-@()(implicit appConfig: AppConfig, messages: Messages, request: Request[_])
+@(taskList: Boolean)(implicit appConfig: AppConfig, messages: Messages, request: Request[_])
 
 <header role="banner">
     <div class="govuk-header hmrc-header  hmrc-header--with-additional-navigation" data-module="header">
@@ -43,7 +43,11 @@ hmrcBanner : HmrcBanner
             </div>
             <div class="govuk-header__content">
                 <span class="govuk-header__link--service-name">
-                    @Messages("app.name")
+                    @if(taskList) {
+                        @Messages("app.name")
+                    } else {
+                        @Messages("app.name-alreadySubscribed")
+                    }
                 </span>
                 @languageSelect()
             </div>
