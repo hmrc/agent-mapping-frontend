@@ -81,8 +81,8 @@ connectionComplete.banner.header=Client relationships copied
 connectionComplete.banner.single.paragraph=You copied 1 client relationship to your agent services account
 connectionComplete.banner.multi.paragraph=You copied {0} client relationships to your agent services account
 connectionComplete.h3.1=What you can do next
-connectionComplete.p1=To submit VAT returns digitally for a client, you now need to {0}{1}{2}
-connectionComplete.mtdLink=sign your client up for Making Tax Digital for VAT (opens in a new tab).
+connectionComplete.p1=To submit VAT returns digitally for a client, you now need to
+connectionComplete.mtdLink=sign your client up for Making Tax Digital for VAT (opens in a new tab)
 connectionComplete.finish=Finish and sign out
 
 #Buttons/links

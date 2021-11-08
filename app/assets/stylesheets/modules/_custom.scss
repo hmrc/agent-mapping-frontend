@@ -11,16 +11,3 @@
   text-decoration: none;
 }
 
-/*
-***********TODO review below ***********
-*/
-
-.no-border td{
-    border-bottom: none;
-}
-
-@media (min-width: 641px) {
-    .content__body {
-        width: 65.5%;
-    }
-}

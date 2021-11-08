@@ -20,41 +20,49 @@
 
 @import uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId
 
-@this(mainTemplate: main_template
-)
+@this(mainTemplate: MainTemplate)
 
-@(clientCount: Int, id: MappingArnResultId, taskList: Boolean = false)(implicit request: Request[_],appConfig: AppConfig, messages: Messages)
+@(
+clientCount: Int,
+id: MappingArnResultId,
+taskList: Boolean = false)(implicit request: Request[_],appConfig: AppConfig, messages: Messages)
 
 @returnUrl=@{s"/task-list/client-relationships-found/?id=$id"}
 
-    @maxRecords=@{appConfig.clientCountMaxRecords}
+@maxRecords=@{appConfig.clientCountMaxRecords}
 
-@mainTemplate(appConfig, title = Messages("clientRelationshipsFound.title"), bodyClasses = None, taskList = taskList) {
+@mainTemplate(title = Messages("clientRelationshipsFound.title"), taskList = taskList) {
 
-
-    <h1 class="govuk-heading-xl">@if(clientCount == 1){ @Messages("clientRelationshipsFound.single.title")} else { @Messages("clientRelationshipsFound.multi.title")}
+    <h1 class="govuk-heading-xl">
+        @if(clientCount == 1){ @Messages("clientRelationshipsFound.single.title")} else { @Messages("clientRelationshipsFound.multi.title")}
     </h1>
 
     <p>@if(clientCount == 1){ @Messages("clientRelationshipsFound.single.p1")} else { @Messages("clientRelationshipsFound.multi.p1")}</p>
 
-    <table>
-        <tbody>
-            <tr class="no-border">
-                <td>
-                    <span class="bold-xxlarge">@if(clientCount >= maxRecords){ @maxRecords} else { @clientCount}</span>
-                </td>
-                <td class="bold">
+    <dl class="govuk-summary-list govuk-summary-list--no-border">
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                <span class="govuk-!-font-size-80">
+                    @if(clientCount >= maxRecords){ @maxRecords} else { @clientCount}
+                </span>
+            </dt>
+            <dd class="govuk-summary-list__value">
+                <span class="govuk-!-font-weight-bold">
                     @if(clientCount == 1){ @Messages("clientRelationshipsFound.single.td")} else {@if(clientCount >= appConfig.clientCountMaxRecords){ @Messages("clientRelationshipsFound.max")} else { @Messages("clientRelationshipsFound.multi.td")}}
-                </td>
-            </tr>
-        </tbody>
-    </table>
+                </span>
+            </dd>
+        </div>
+    </dl>
+
     <p>@if(clientCount == 1) { @Messages("clientRelationshipsFound.single.p2")} else {@Messages("clientRelationshipsFound.multi.p2")}</p>
+
     @if(taskList){
-        <a class="button margin-right-5 margin-bottom-10" name="submit" id="clients-found-continue" href="@routes.TaskListMappingController.showGGTag(id)" role="button" draggable="false">@Messages("button.saveContinue")</a>
-        <a class="button--secondary" name="submit" id="clients-found-save" href='@appConfig.agentSubscriptionFrontendProgressSavedUrl@returnUrl' draggable="false">@Messages("button.saveComeBackLater")</a>
+        <div class="govuk-button-group">
+            <a class="govuk-button govuk-!-margin-right-1 govuk-!-margin-bottom-2" name="submit" id="clients-found-continue" href="@routes.TaskListMappingController.showGGTag(id)" role="button" draggable="false">@Messages("button.saveContinue")</a>
+            <a class="govuk-button--secondary" name="submit" id="clients-found-save" href='@appConfig.agentSubscriptionFrontendProgressSavedUrl@returnUrl' draggable="false">@Messages("button.saveComeBackLater")</a>
+        </div>
     } else {
-        <a class="button" name="clients" id="clients" href="@routes.MappingController.showGGTag(id)" role="button" draggable="false">@Messages("button.continue")</a>
+        <a class="govuk-button" name="clients" id="clients" href="@routes.MappingController.showGGTag(id)" role="button" draggable="false">@Messages("button.continue")</a>
     }
 
 }

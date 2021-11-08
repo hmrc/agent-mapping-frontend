@@ -19,14 +19,14 @@
 @import uk.gov.hmrc.agentmappingfrontend.controllers.routes
 @import uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId
 
-@this(
-mainTemplate: main_template
-)
+@this(mainTemplate: MainTemplate)
 
-@(idRefForArn: MappingArnResultId, taskList: Boolean = false)(implicit request: Request[_],messages: Messages,
-        appConfig: AppConfig)
+@(
+idRefForArn: MappingArnResultId,
+taskList: Boolean = false
+)(implicit request: Request[_],messages: Messages, appConfig: AppConfig)
 
-@mainTemplate(appConfig, title = Messages("notEnrolled.h1"), bodyClasses = None, taskList = taskList) {
+@mainTemplate(title = Messages("notEnrolled.h1"), taskList = taskList) {
 
     <h1 class="govuk-heading-xl">@Messages("notEnrolled.h1")</h1>
 
@@ -34,8 +34,8 @@ mainTemplate: main_template
     <p>@Messages("notEnrolled.p2")</p>
 
     @if(taskList){
-        <a href="@routes.SignedOutController.taskListSignOutAndRedirect(idRefForArn)" id="buttonSignOut" class="button" role="button" draggable="false">@Messages("button.signInAlt")</a>
+        <a href="@routes.SignedOutController.taskListSignOutAndRedirect(idRefForArn)" id="buttonSignOut" class="govuk-button" role="button" draggable="false">@Messages("button.signInAlt")</a>
     } else {
-        <a href="@routes.SignedOutController.signOutAndRedirect(idRefForArn)" id="buttonSignOut" class="button" role="button" draggable="false">@Messages("button.signInAlt")</a>
+        <a href="@routes.SignedOutController.signOutAndRedirect(idRefForArn)" id="buttonSignOut" class="govuk-button" role="button" draggable="false">@Messages("button.signInAlt")</a>
     }
 }

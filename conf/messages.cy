@@ -81,8 +81,8 @@ connectionComplete.banner.header=Perthnasoedd â chleientiaid wedi’u copïo
 connectionComplete.banner.single.paragraph=Rydych wedi copïo 1 berthynas â chleient i’ch cyfrif gwasanaethau asiant
 connectionComplete.banner.multi.paragraph=Rydych wedi copïo {0} o berthnasoedd â chleientiaid i’ch cyfrif gwasanaethau asiant
 connectionComplete.h3.1=Yr hyn y gallwch ei wneud nesaf
-connectionComplete.p1=I gyflwyno Ffurflenni TAW drwy ddull digidol ar gyfer cleient, mae angen i chi wneud y canlynol nawr: {0}{1}{2}
-connectionComplete.mtdLink=cofrestru’ch cleient ar gyfer Troi Treth yn Ddigidol ar gyfer TAW (yn agor tab newydd).
+connectionComplete.p1=I gyflwyno Ffurflenni TAW drwy ddull digidol ar gyfer cleient, mae angen i chi wneud y canlynol nawr:
+connectionComplete.mtdLink=cofrestru’ch cleient ar gyfer Troi Treth yn Ddigidol ar gyfer TAW (yn agor tab newydd)
 connectionComplete.finish=Gorffen ac allgofnodi
 
 #Buttons/links

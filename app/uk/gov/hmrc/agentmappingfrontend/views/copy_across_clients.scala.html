@@ -21,27 +21,28 @@
 @import uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId
 
 
-@this(mainTemplate: main_template
-)
+@this(mainTemplate: MainTemplate)
 
+@(
+idRefForArn: MappingArnResultId,
+backUrl: String,
+taskList: Boolean = false
+)(implicit request: Request[_],messages: Messages,appConfig: AppConfig)
 
-@(idRefForArn: MappingArnResultId, backUrl: String, taskList: Boolean = false)(implicit request: Request[_],messages: Messages,
-        appConfig: AppConfig)
 @call = @{if(taskList)routes.SignedOutController.taskListSignOutAndRedirect(idRefForArn) else {routes.SignedOutController.signOutAndRedirect(idRefForArn)}}
 
-@mainTemplate(appConfig, title = Messages("copyAcross.h1"), bodyClasses = None, taskList = taskList) {
+@mainTemplate(
+title = Messages("copyAcross.h1"),
+taskList = taskList,
+backLinkHref = Some(backUrl)
+) {
 
- <a href="@backUrl" class="link-back">@Messages("button.back")</a>
+<h1 class="govuk-heading-xl">@Messages("copyAcross.h1")</h1>
 
-    <h1 class="govuk-heading-xl">@Messages("copyAcross.h1")</h1>
+ <h2 class="govuk-heading-m">@Messages("copyAcross.heading")</h2>
+  <p>@Messages("copyAcross.p1")</p>
+  <p>@Messages("copyAcross.p2")</p>
 
-   <h2 class="govuk-heading-m">@Messages("copyAcross.heading")</h2>
-
- <p>@Messages("copyAcross.p1")</p>
-
- <p>@Messages("copyAcross.p2")</p>
-
- <a href="@call" class="button"  role="button" id="copyAcross">@Messages("button.continue")</a>
-
+ <a href="@call" class="govuk-button" role="button" id="copyAcross">@Messages("button.continue")</a>
 
 }

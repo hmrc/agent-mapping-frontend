@@ -15,26 +15,32 @@
  *@
 
 @import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
-@import uk.gov.hmrc.agentmappingfrontend.views.html
+@import uk.gov.hmrc.agentmappingfrontend.views.html.MainTemplate
 @import uk.gov.hmrc.agentmappingfrontend.controllers.routes
 @import uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId
 
-@this(
- mainTemplate: main_template
-        )
+@this(mainTemplate: MainTemplate)
 
-@(id: Option[MappingArnResultId] = None, taskList: Boolean = false, hasTimeout: Boolean = false)(implicit request: Request[_],appConfig: AppConfig,
-        messages: Messages)
+@(
+id: Option[MappingArnResultId] = None,
+taskList: Boolean = false,
+hasTimeout: Boolean = false
+)(implicit request: Request[_], appConfig: AppConfig, messages: Messages)
 
-@mainTemplate(appConfig, title = Messages("start.not-signed-in.title"), bodyClasses = None, taskList = taskList, hasTimeout = hasTimeout) {
+@mainTemplate(
+title = Messages("start.not-signed-in.title"),
+taskList = taskList,
+hasTimeout = hasTimeout
+) {
+
  <h1 class="govuk-heading-xl">@Messages("start.not-signed-in.title")</h1>
 
  <p>@Messages("start.not-signed-in.p1")</p>
 
  @if(taskList) {
-  <a class="button" href="@routes.SignedOutController.taskListSignOutAndRedirect(id.getOrElse("unknown"))" role="button">@Messages("button.signIn")</a>
-
+  <a class="govuk-button" href="@routes.SignedOutController.taskListSignOutAndRedirect(id.getOrElse("unknown"))" role="button">@Messages("button.signIn")</a>
  } else {
-  <a class="button" href="@routes.SignedOutController.reLogForMappingStart()" role="button">@Messages("button.signIn")</a>
+  <a class="govuk-button" href="@routes.SignedOutController.reLogForMappingStart()" role="button">@Messages("button.signIn")</a>
  }
+
 }
