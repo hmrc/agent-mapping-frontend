@@ -15,21 +15,20 @@
  */
 
 import play.Logger
-
-import javax.inject.{Inject, Singleton}
 import play.api.http.HeaderNames.CACHE_CONTROL
 import play.api.i18n.MessagesApi
 import play.api.mvc.Results._
 import play.api.mvc.{Request, RequestHeader, Result}
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
-import uk.gov.hmrc.agentmappingfrontend.views.html.{error_template, error_template_5xx}
+import uk.gov.hmrc.agentmappingfrontend.views.html.{ErrorTemplate, ErrorTemplate5xx}
 import uk.gov.hmrc.http.{JsValidationException, NotFoundException}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.config.{AuthRedirects, HttpAuditEvent}
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -37,8 +36,8 @@ class ErrorHandler @Inject()(
   val env: Environment,
   val messagesApi: MessagesApi,
   val auditConnector: AuditConnector,
-  errorTemplate: error_template,
-  errorTemplate5xx: error_template_5xx)(implicit val config: Configuration, ec: ExecutionContext, appConfig: AppConfig)
+  errorTemplate: ErrorTemplate,
+  errorTemplate5xx: ErrorTemplate5xx)(implicit val config: Configuration, ec: ExecutionContext, appConfig: AppConfig)
     extends FrontendErrorHandler with AuthRedirects with ErrorAuditing {
 
   val appName: String = appConfig.appName
@@ -50,7 +49,7 @@ class ErrorHandler @Inject()(
     super.onClientError(request, statusCode, message)
   }
 
-  override def resolveError(request: RequestHeader, exception: Throwable) = {
+  override def resolveError(request: RequestHeader, exception: Throwable): Result = {
     auditServerError(request, exception)
     implicit val r: Request[String] = Request(request, "")
     logger.error(s"resolveError $exception")
@@ -58,7 +57,7 @@ class ErrorHandler @Inject()(
   }
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(
-    implicit request: Request[_]) = {
+    implicit request: Request[_])= {
     logger.error(s"$message")
     errorTemplate(pageTitle, heading, message)
   }
