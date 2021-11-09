@@ -57,7 +57,7 @@ class ErrorHandler @Inject()(
   }
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(
-    implicit request: Request[_])= {
+    implicit request: Request[_]) = {
     logger.error(s"$message")
     errorTemplate(pageTitle, heading, message)
   }

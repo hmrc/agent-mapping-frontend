@@ -50,7 +50,7 @@ taskList: Boolean = false
     taskList = taskList
 ) {
 
-    if(addClientsForm.errors.nonEmpty) {
+    @if(addClientsForm.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummary().withFormErrorsAsText(addClientsForm))
     }
 

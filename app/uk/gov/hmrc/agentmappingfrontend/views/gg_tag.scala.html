@@ -19,74 +19,77 @@
 @import uk.gov.hmrc.agentmappingfrontend.controllers.routes
 @import uk.gov.hmrc.agentmappingfrontend.model.GGTag
 @import uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId
+@import uk.gov.hmrc.govukfrontend.views.html.components.{GovukInput, GovukErrorSummary}
+@import uk.gov.hmrc.govukfrontend.views.html.components.{Legend, Text, Hint, ErrorLink, ErrorSummary, ErrorMessage, FormWithCSRF}
+@import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.implicits._
+@import uk.gov.hmrc.agentmappingfrontend.views.html.helpers.{error_prefix}
 
 @this(
-        mainTemplate: main_template,
-        uiErrorSummary: uk.gov.hmrc.play.views.html.helpers.ErrorSummary,
-        uiXCustomInput: x_custom_input,
-        formHelper: uk.gov.hmrc.play.views.html.helpers.FormWithCSRF,
-        errorPrefix: error_prefix
-
+    mainTemplate: MainTemplate,
+    govukInput: GovukInput,
+    govukErrorSummary: GovukErrorSummary,
+    formHelper: FormWithCSRF,
+    errorPrefix: error_prefix
 )
 
-@(ggTagForm: Form[GGTag], id: MappingArnResultId, taskList: Boolean = false)(implicit request: Request[_], messages: Messages,
-        appConfig: AppConfig)
+@(
+ggTagForm: Form[GGTag],
+id: MappingArnResultId,
+taskList: Boolean = false)(implicit request: Request[_], messages: Messages,appConfig: AppConfig)
 
-@mainTemplate(appConfig, title = errorPrefix(ggTagForm) + Messages("gg-tag.title"), bodyClasses = None, taskList = taskList) {
+@mainTemplate(title = errorPrefix(ggTagForm) + Messages("gg-tag.title"), taskList = taskList,
+backLinkHref = if(taskList) Some(routes.TaskListMappingController.showClientRelationshipsFound(id).url) else Some(routes.MappingController.showClientRelationshipsFound(id).url)
+) {
 
-    <a href="@{
-        if(taskList) routes.TaskListMappingController.showClientRelationshipsFound(id) else routes.MappingController.showClientRelationshipsFound(id)
-    }" class="link-back">@Messages("button.back")</a>
+    @formHelper(action = if(taskList) routes.TaskListMappingController.submitGGTag(id) else routes.MappingController.submitGGTag(id), 'id -> "gg-tag-form") {
 
-    @if(ggTagForm.hasErrors) {
-        @uiErrorSummary(Messages("error.summary.heading"), ggTagForm, Seq.empty, Some("gg-tag"))
-    }
+        @if(ggTagForm.errors.nonEmpty) {
+        @govukErrorSummary(ErrorSummary().withFormErrorsAsText(ggTagForm))
+        }
 
-        @formHelper(action = if(taskList) routes.TaskListMappingController.submitGGTag(id) else routes.MappingController.submitGGTag(id), 'class -> "form js-form", 'id -> "gg-tag-form") {
+        <div class="govuk-form-group">
+        <h1>
+            <label class="govuk-heading-xl" for="ggTag">
+                @Messages("gg-tag.title")
+            </label>
+        </h1>
 
+        <p>@Messages("gg-tag.p1")</p>
 
+        <span class="govuk-hint" id="ggTag-hint">@Messages("gg-tag.form.hint")</span>
+        @ggTagForm.error("ggTag").map { error =>
+            <span class="govuk-error-message" id="ggTag-error">
+            <span class="govuk-visually-hidden">@Messages("error.prefix")</span>
+                @Messages(error.message)
+            </span>
+        }
 
-            <div class="form-group @if(ggTagForm.hasErrors){form-field--error error-container}">
-                <h1>
-                    <label class="govuk-heading-xl" for="ggTag">
-                        @Messages("gg-tag.title")
-                    </label>
-                </h1>
-                <p>@Messages("gg-tag.p1")</p>
-
-                <span class="form-hint" id="ggTag-hint">@Messages("gg-tag.form.hint")</span>
-                @ggTagForm.error("ggTag").map { error =>
-                    <span class="error-message" id="ggTag-error">
-                    <span class="visuallyhidden">@Messages("error.prefix")</span>
-                        @Messages(error.message)
-                    </span>}
-                <div>
-                    <span>@Messages("gg-tag.xs")</span>
+            <div class="govuk-input__wrapper">
+                <div class="govuk-input__prefix" aria-hidden="true">@Messages("gg-tag.xs")</div>
                 <input
-                class="govuk-input--width-4"
+                class="govuk-input govuk-input--width-4"
                 name="ggTag"
-                    type="text"
+                type="text"
                 id="ggTag"
                 spellcheck="false"
+                inputmode="numeric"
+                pattern="[0-9]*"
                 aria-describedby="ggTag-hint @if(ggTagForm.error("ggTag")){ggTag-error}"
                 @ggTagForm.data.get("ggTag").map { v => value="@v" }
                 >
             </div>
-                </div>
 
+        </div>
 
-
-
-
-    </fieldset>
-    <div class="form-field">
-    @if(taskList) {
-        <button type="submit" class="button margin-right-5 margin-bottom-10" id="gg-tag-continue" name="submit" value="continue">@Messages("button.saveContinue")</button>
-        <button type="submit" class="button--secondary" id="gg-tag-save" name="submit" value="save">@Messages("button.saveComeBackLater")</button>
-    } else {
-        <button class="button" type="submit" id="submit-gg-tag">@Messages("button.continue")</button>
+        @if(taskList) {
+            <div class="govuk-button-group">
+                <button type="submit" class="govuk-button govuk-!-margin-right-1 govuk-!-margin-bottom-2" id="gg-tag-continue" name="submit" value="continue">@Messages("button.saveContinue")</button>
+                <button type="submit" class="govuk-button--secondary" id="gg-tag-save" name="submit" value="save">@Messages("button.saveComeBackLater")</button>
+            </div>
+        } else {
+            <button type="submit" class="govuk-button" id="submit-gg-tag">@Messages("button.continue")</button>
+        }
     }
-    </div>
-}
 
 }
