@@ -52,6 +52,15 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
       bodyOf(result) should include(htmlEscapedMessage("copied.table.multi.th", 5))
       bodyOf(result) should include(htmlEscapedMessage("copied.table.ggTag", "1234"))
       bodyOf(result) should include("/signed-out-redirect?id=")
+      bodyOf(result) should include("/agent-services-account") //default backlink
+    }
+
+    "get the backLink from the request.session OriginForMapping key" in {
+      givenUserIsAuthenticated(mtdAsAgent)
+      val request = FakeRequest(GET, "/agent-mapping/start").withSession("OriginForMapping" -> "/invitations/foo")
+      val result = callEndpointWith(request)
+      status(result) shouldBe 200
+      bodyOf(result) should include("/invitations/foo")
     }
 
     "303 the /sign-in-required for unAuthenticated" in {
