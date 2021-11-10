@@ -30,17 +30,21 @@ mainTemplate: main_template)
     <div class="transaction-banner--complete with-govuk-success-colour">
         <h1 class="transaction-banner__heading">
             @Messages("connectionComplete.banner.header")
-            <p>@if(totalClients == 1){
-                @Messages("connectionComplete.banner.single.paragraph")
-            } else {
-                @Messages("connectionComplete.banner.multi.paragraph",s"${totalClients.toString}")
-            }</p>
         </h1>
+        <p>
+            @if(totalClients == 1){
+            @Messages("connectionComplete.banner.single.paragraph")
+            } else {
+            @Messages("connectionComplete.banner.multi.paragraph",s"${totalClients.toString}")
+            }
+        </p>
     </div>
 
     <h2 class="heading-medium">@Messages("connectionComplete.h3.1")</h2>
 
     <p>@Html(Messages("connectionComplete.p1",Html("<a target='_blank' href='https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat'>"),Messages("connectionComplete.mtdLink"),Html("</a>")))</p>
+
+    <p>@Messages("connectionComplete.p2")</p>
 
     <a target="_blank" href="@routes.SignedOutController.reLogForMappingStart()">@Messages("connectionComplete.finish")</a>
 
