@@ -19,8 +19,7 @@
 @import uk.gov.hmrc.hmrcfrontend.views.html.components._
 
 @this(
-languageSelect: language_select,
-hmrcBanner : HmrcBanner
+languageSelect: language_select
 )
 
 @(taskList: Boolean)(implicit appConfig: AppConfig, messages: Messages, request: Request[_])
@@ -54,5 +53,3 @@ hmrcBanner : HmrcBanner
         </div>
     </div>
 </header>
-
-@hmrcBanner(Banner())

@@ -17,6 +17,7 @@
 @import uk.gov.hmrc.agentmappingfrontend.views.html
 @import uk.gov.hmrc.govukfrontend.views.html.components.{GovukLayout, GovukBackLink}
 @import uk.gov.hmrc.govukfrontend.views.html.components.{BackLink, Text}
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.{HmrcBanner, Banner}
 @import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
 @import uk.gov.hmrc.agentmappingfrontend.controllers.routes
 @import uk.gov.hmrc.agentmappingfrontend.views.html.components.{header, head}
@@ -31,6 +32,7 @@
     govukBackLink: GovukBackLink,
     hmrcStandardFooter: HmrcStandardFooter,
     hmrcScripts: HmrcScripts,
+    hmrcBanner : HmrcBanner,
     hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper
 )
 
@@ -42,6 +44,9 @@
 )(mainContent: Html)(implicit request : Request[_], messages: Messages, appConfig: AppConfig)
 
 @beforeContent = {
+
+    @hmrcBanner(Banner())
+
     @if(backLinkHref.nonEmpty){
         <nav aria-label="Back Link">
             @backLinkHref.map(url =>

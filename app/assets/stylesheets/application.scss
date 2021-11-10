@@ -1,11 +1,10 @@
-$govuk-assets-path: "/agent-services-account/assets/lib/govuk-frontend/govuk/assets/";
-$hmrc-assets-path: "/agent-services-account/assets/lib/hmrc-frontend/hmrc/";
+$govuk-assets-path: "/agent-mapping/assets/lib/govuk-frontend/govuk/assets/";
+$hmrc-assets-path: "/agent-mapping/assets/lib/hmrc-frontend/hmrc/";
 
 @import "lib/govuk-frontend/govuk/all";
 @import "lib/hmrc-frontend/hmrc/all";
 
 @import 'modules/_custom';
-@import 'partials/accessible-autocomplete.min';
 // @import 'partials/_checkAnswers';
 // @import 'partials/_taskList';
 //@import 'partials/_dateFields';
@@ -33,68 +32,3 @@ h3 {
  @extend .govuk-heading-s;
 }
 
-// TODO remove below
-
-.error-container {
-  padding-top: 0;
-  padding-bottom: 0
-}
-
-.flash.error-summary {
-  border: 5px solid #d4351c;
-  margin-top: 30px;
-  margin-bottom: 30px;
-  padding: 20px 15px 15px;
-}
-
-@media (min-width: 641px) {
-  .flash.error-summary {
-    border: 5px solid #d4351c;
-    margin-top: 30px;
-    margin-bottom: 30px;
-    padding: 20px 15px 15px;
-  }
-}
-
-.flash.error-summary a {
-  font-weight: bold;
-  color: #d4351c;
-}
-
-#error-summary-heading {
-  font-size: 24px;
-}
-
-.form-field--error .error-notification {
-  font-weight: bold;
-  font-size: 19px;
-  line-height: 1.31579;
-}
-
-.form-field--error {
-  border-left: 5px solid #d4351c;
-  padding-left: 15px;
-  margin-right: 15px;
-}
-
-.form-field--error input[type="text"] {
-  border: 4px solid #d4351c;
-  height: 40px;
-}
-
-/* no js style for dates */
-.no-js .form-date .form-field--error {
-  border-left: none;
-  padding: inherit;
-  -webkit-box-sizing: inherit;
-  box-sizing: inherit;
-}
-
-.flash.error-summary a, .flash.error-summary .link-style, .flash.error-summary .button--link-style {
-  color: #d4351c;
-}
-
-
-.form-field--error legend h1, .form-field--error legend h2 {
-  margin-top: 0 !important
-}
