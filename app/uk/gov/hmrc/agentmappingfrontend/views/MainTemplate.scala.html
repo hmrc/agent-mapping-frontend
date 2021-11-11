@@ -54,6 +54,8 @@
     }
 }
 
+@serviceName = {@if(taskList) {@messages("app.name")} else {@messages("app.name-alreadySubscribed")}}
+
 @mainContentWithHelpLink = {
     @mainContent
     <div>
@@ -66,7 +68,7 @@
 }
 
 @govukLayout(
-    pageTitle = Some(title),
+    pageTitle = Some(title + " - " + serviceName + " " + messages("servicename.titleSuffix")),
     headBlock = Some(head(hasTimeout)),
     headerBlock = Some(header(taskList)),
     scriptsBlock = Some(hmrcScripts(scriptsBlock = Some(additionalScripts))),
