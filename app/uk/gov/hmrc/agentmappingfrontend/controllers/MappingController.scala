@@ -62,6 +62,11 @@ class MappingController @Inject()(
     Redirect(routes.MappingController.start())
   }
 
+  private def getBackLinkForStart(implicit request: Request[_]): String =
+    request.session
+      .get("OriginForMapping") //set in AIF (agent journey & fastTrack) and the dashboard
+      .getOrElse(appConfig.agentServicesFrontendBaseUrl)
+
   val start: Action[AnyContent] = Action.async { implicit request =>
     withCheckForArn {
       case Some(arn) =>
@@ -74,7 +79,7 @@ class MappingController @Inject()(
           countsAndTags =>
             repository
               .create(arn)
-              .map(id => Ok(startTemplate(id, countsAndTags, appConfig.agentServicesFrontendBaseUrl))))
+              .map(id => Ok(startTemplate(id, countsAndTags, getBackLinkForStart))))
 
       case None => successful(Redirect(routes.MappingController.needAgentServicesAccount()))
     }
