@@ -16,9 +16,9 @@
 
 package uk.gov.hmrc.agentmappingfrontend.controllers
 
+import uk.gov.hmrc.agentmappingfrontend.util.SimpleObjectBinder
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.play.binders.SimpleObjectBinder
 
 object UrlBinders {
-  implicit val arnBinder = new SimpleObjectBinder[Arn](Arn.apply, _.value)
+  implicit val arnBinder: SimpleObjectBinder[Arn] = new SimpleObjectBinder[Arn](Arn.apply, _.value)
 }

@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,23 +12,20 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
-@import uk.gov.hmrc.agentmappingfrontend.views.html
-@this(
-        uiGovUkWrapper: govuk_wrapper
-)
+package uk.gov.hmrc.agentmappingfrontend.util
 
-@(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages,
-        appConfig: AppConfig)
+import play.api.mvc.PathBindable
 
-@contentHeader = {
-    <h1>@heading</h1>
+// Taken from play-ui library
+class SimpleObjectBinder[T](bind: String => T, unbind: T => String)(implicit m: Manifest[T]) extends PathBindable[T] {
+  override def bind(key: String, value: String): Either[String, T] =
+    try Right(bind(value))
+    catch {
+      case e: Throwable =>
+        Left(s"Cannot parse parameter '$key' with value '$value' as '${m.runtimeClass.getSimpleName}'")
+    }
+
+  def unbind(key: String, value: T): String = unbind(value)
 }
-
-@mainContent = {
-    <p>@message</p>
-}
-
-@uiGovUkWrapper(appConfig = appConfig, title = pageTitle, contentHeader = Some(contentHeader), mainContent = mainContent)

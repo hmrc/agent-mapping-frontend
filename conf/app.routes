@@ -1,4 +1,7 @@
+->         /hmrc-frontend                      hmrcfrontend.Routes
+
 #microservice specific routes
+GET         /assets/*file                                        controllers.Assets.versioned(path = "/public", file: Asset)
 
 GET         /                                                    uk.gov.hmrc.agentmappingfrontend.controllers.MappingController.root
 GET         /start                                               uk.gov.hmrc.agentmappingfrontend.controllers.MappingController.start
@@ -19,9 +22,7 @@ GET         /error/incorrect-account                             uk.gov.hmrc.age
 GET         /signed-out-redirect                                 uk.gov.hmrc.agentmappingfrontend.controllers.SignedOutController.signOutAndRedirect(id: uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId)
 GET         /re-log-in-redirect                                  uk.gov.hmrc.agentmappingfrontend.controllers.SignedOutController.reLogForMappingStart
 
-GET         /assets/*file                                        controllers.Assets.at(path="/public", file)
-
-GET         /task-list                                          uk.gov.hmrc.agentmappingfrontend.controllers.TaskListMappingController.root(continueId: String)
+GET         /task-list                                           uk.gov.hmrc.agentmappingfrontend.controllers.TaskListMappingController.root(continueId: String)
 GET         /task-list/start                                     uk.gov.hmrc.agentmappingfrontend.controllers.TaskListMappingController.start(continueId: String)
 GET         /task-list/error/incorrect-account                   uk.gov.hmrc.agentmappingfrontend.controllers.TaskListMappingController.incorrectAccount(id: uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId)
 GET         /task-list/error/already-linked                      uk.gov.hmrc.agentmappingfrontend.controllers.TaskListMappingController.alreadyMapped(id: uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId)
@@ -36,8 +37,6 @@ GET         /task-list/signed-out-redirect                       uk.gov.hmrc.age
 GET         /task-list/start-submit                              uk.gov.hmrc.agentmappingfrontend.controllers.TaskListMappingController.returnFromGGLogin(id: uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId)
 GET         /task-list/return                                    uk.gov.hmrc.agentmappingfrontend.controllers.SignedOutController.taskList
 GET         /task-list/return-after-mapping                      uk.gov.hmrc.agentmappingfrontend.controllers.SignedOutController.returnAfterMapping()
-
-GET         /accessibility-statement                             uk.gov.hmrc.agentmappingfrontend.controllers.AccessibilityStatementController.showAccessibilityStatement
 
 GET         /finish-sign-out                                     uk.gov.hmrc.agentmappingfrontend.controllers.SignedOutController.signOut
 GET         /keep-alive                                          uk.gov.hmrc.agentmappingfrontend.controllers.SignedOutController.keepAlive

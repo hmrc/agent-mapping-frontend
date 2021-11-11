@@ -23,12 +23,12 @@ import play.api.mvc.Call
 import uk.gov.hmrc.agentmappingfrontend.controllers.routes
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import views.html.helper.urlEncode
+import uk.gov.hmrc.hmrcfrontend.config.ContactFrontendConfig
 
 @ImplementedBy(classOf[FrontendAppConfig])
 trait AppConfig {
   val reportAProblemPartialUrl: String
   val reportAProblemNonJSUrl: String
-  def accessibilityUrl(userAction: String): String
   val signOutRedirectUrl: String
   val taskListSignOutRedirectUrl: String
   val signInAndContinue: String
@@ -49,7 +49,8 @@ trait AppConfig {
   val routeToSwitchLanguage: String => Call
 }
 @Singleton
-class FrontendAppConfig @Inject()(servicesConfig: ServicesConfig) extends AppConfig {
+class FrontendAppConfig @Inject()(servicesConfig: ServicesConfig, contactFrontendConfig: ContactFrontendConfig)
+    extends AppConfig {
 
   override val appName = "agent-mapping-frontend"
 
@@ -63,8 +64,6 @@ class FrontendAppConfig @Inject()(servicesConfig: ServicesConfig) extends AppCon
     s"$contactFrontendHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
   override lazy val reportAProblemNonJSUrl =
     s"$contactFrontendHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
-  override def accessibilityUrl(userAction: String): String =
-    s"$contactFrontendHost/contact/accessibility?service=$contactFormServiceIdentifier&userAction=$userAction"
 
   //base urls
   override lazy val companyAuthFrontendBaseUrl: String =
