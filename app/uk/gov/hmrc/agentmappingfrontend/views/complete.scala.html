@@ -33,12 +33,11 @@ totalClients: Int
 )(implicit request: Request[_],messages: Messages, appConfig: AppConfig)
 
 @panelContent = {
-<p>@if(totalClients == 1){
+@if(totalClients == 1){
     @Messages("connectionComplete.banner.single.paragraph")
     } else {
     @Messages("connectionComplete.banner.multi.paragraph",s"${totalClients.toString}")
     }
-</p>
 }
 
 @mainTemplate(title = Messages("connectionComplete.title")) {
