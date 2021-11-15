@@ -59,7 +59,7 @@ taskList: Boolean = false
     <dl class="govuk-summary-list govuk-!-margin-bottom-6">
         @for(clientCountAndGGTag <- clientCountAndGGTags) {
         <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
+            <dt class="govuk-summary-list__key agent-summary-list__key--long">
                 @if(clientCountAndGGTag.clientCount == 1) {
                     @Messages("copied.table.single.th", clientCountAndGGTag.clientCount)
                 } else {
@@ -70,7 +70,7 @@ taskList: Boolean = false
                     }
                 }
             </dt>
-            <dd class="govuk-summary-list__value">
+            <dd class="govuk-summary-list__value agent-summary-list__value--long">
             @Messages("copied.table.ggTag", clientCountAndGGTag.ggTag)
             </dd>
         </div>

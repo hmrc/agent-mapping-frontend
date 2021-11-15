@@ -11,3 +11,27 @@
   text-decoration: none;
 }
 
+// Custom summary list widths for Agents
+.agent-summary-list__key--long {
+    @include govuk-media-query($from: tablet) {
+    width: 80%
+    }
+}
+
+.agent-summary-list__value--long {
+    @include govuk-media-query($from: tablet) {
+    width: 20%
+    }
+}
+
+.agent-summary-list__key--short {
+    @include govuk-media-query($from: tablet) {
+    width: 10%
+    }
+}
+
+.agent-summary-list__value--short {
+    @include govuk-media-query($from: tablet) {
+    width: 90%
+    }
+}
