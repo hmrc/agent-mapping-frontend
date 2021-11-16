@@ -37,16 +37,16 @@ taskList: Boolean = false)(implicit request: Request[_],appConfig: AppConfig, me
         @if(clientCount == 1){ @Messages("clientRelationshipsFound.single.title")} else { @Messages("clientRelationshipsFound.multi.title")}
     </h1>
 
-    <p>@if(clientCount == 1){ @Messages("clientRelationshipsFound.single.p1")} else { @Messages("clientRelationshipsFound.multi.p1")}</p>
+    <p class="govuk-!-margin-bottom-2">@if(clientCount == 1){ @Messages("clientRelationshipsFound.single.p1")} else { @Messages("clientRelationshipsFound.multi.p1")}</p>
 
-    <dl class="govuk-summary-list govuk-summary-list--no-border">
+    <dl class="govuk-summary-list govuk-summary-list--no-border govuk-!-margin-bottom-2">
         <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
+            <dt class="govuk-summary-list__key agent-summary-list__key--short">
                 <span class="govuk-!-font-size-80">
                     @if(clientCount >= maxRecords){ @maxRecords} else { @clientCount}
                 </span>
             </dt>
-            <dd class="govuk-summary-list__value">
+            <dd class="govuk-summary-list__value agent-summary-list__value--short">
                 <span class="govuk-!-font-weight-bold">
                     @if(clientCount == 1){ @Messages("clientRelationshipsFound.single.td")} else {@if(clientCount >= appConfig.clientCountMaxRecords){ @Messages("clientRelationshipsFound.max")} else { @Messages("clientRelationshipsFound.multi.td")}}
                 </span>
