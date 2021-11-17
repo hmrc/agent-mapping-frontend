@@ -38,7 +38,6 @@ taskList: Boolean = false
   <a href="@routes.SignedOutController.signOutAndRedirect(idRefForArn)" class="govuk-button" id="buttonTryAgain" role="button" draggable="false">@Messages("button.tryAgain")</a>
  }
 
-<p>
-<a class="govuk-link" href="@appConfig.agentServicesFrontendBaseUrl" id="linkToASAccount">@Messages("link.goToASAccount")</a>
-</p>
+<a class="govuk-link govuk-!-margin-bottom-9" href="@appConfig.agentServicesFrontendBaseUrl" id="linkToASAccount">@Messages("link.goToASAccount")</a>
+
 }
