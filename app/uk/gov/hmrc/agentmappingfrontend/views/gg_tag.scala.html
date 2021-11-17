@@ -48,7 +48,7 @@ backLinkHref = if(taskList) Some(routes.TaskListMappingController.showClientRela
         @govukErrorSummary(ErrorSummary().withFormErrorsAsText(ggTagForm))
         }
 
-        <div class="govuk-form-group">
+        <div class="govuk-form-group @if(ggTagForm.errors.nonEmpty){govuk-form-group--error}">
         <h1>
             <label class="govuk-heading-xl" for="ggTag">
                 @Messages("gg-tag.title")
@@ -68,14 +68,14 @@ backLinkHref = if(taskList) Some(routes.TaskListMappingController.showClientRela
             <div class="govuk-input__wrapper">
                 <div class="govuk-input__prefix" aria-hidden="true">@Messages("gg-tag.xs")</div>
                 <input
-                class="govuk-input govuk-input--width-4"
+                class="govuk-input govuk-input--width-4@ if(ggTagForm.errors.nonEmpty){govuk-input--error}"
                 name="ggTag"
                 type="text"
                 id="ggTag"
                 spellcheck="false"
                 inputmode="numeric"
                 pattern="[0-9]*"
-                aria-describedby="ggTag-hint @if(ggTagForm.error("ggTag")){ggTag-error}"
+                aria-describedby="ggTag-hint @if(ggTagForm.errors.nonEmpty){ggTag-error}"
                 @ggTagForm.data.get("ggTag").map { v => value="@v" }
                 >
             </div>
