@@ -59,7 +59,7 @@ taskList: Boolean = false)(implicit request: Request[_],appConfig: AppConfig, me
     @if(taskList){
         <div class="govuk-button-group">
             <a class="govuk-button govuk-!-margin-right-1 govuk-!-margin-bottom-2" name="submit" id="clients-found-continue" href="@routes.TaskListMappingController.showGGTag(id)" role="button" draggable="false">@Messages("button.saveContinue")</a>
-            <a class="govuk-button--secondary" name="submit" id="clients-found-save" href='@appConfig.agentSubscriptionFrontendProgressSavedUrl@returnUrl' draggable="false">@Messages("button.saveComeBackLater")</a>
+            <a class="govuk-button govuk-button--secondary" name="submit" id="clients-found-save" href='@appConfig.agentSubscriptionFrontendProgressSavedUrl@returnUrl' draggable="false">@Messages("button.saveComeBackLater")</a>
         </div>
     } else {
         <a class="govuk-button" name="clients" id="clients" href="@routes.MappingController.showGGTag(id)" role="button" draggable="false">@Messages("button.continue")</a>
