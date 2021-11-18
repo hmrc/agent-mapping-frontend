@@ -27,6 +27,7 @@ import uk.gov.hmrc.hmrcfrontend.config.ContactFrontendConfig
 
 @ImplementedBy(classOf[FrontendAppConfig])
 trait AppConfig {
+  val betaFeedbackUrl: String
   val reportAProblemPartialUrl: String
   val reportAProblemNonJSUrl: String
   val signOutRedirectUrl: String
@@ -56,10 +57,10 @@ class FrontendAppConfig @Inject()(servicesConfig: ServicesConfig, contactFronten
 
   def getConf(key: String): String = servicesConfig.getString(key)
 
+  override val betaFeedbackUrl: String = getConf("betaFeedbackUrl")
+
   private val contactFormServiceIdentifier = "AOSS"
-
   private lazy val contactFrontendHost: String = servicesConfig.getString("contact-frontend.host")
-
   override lazy val reportAProblemPartialUrl =
     s"$contactFrontendHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
   override lazy val reportAProblemNonJSUrl =
