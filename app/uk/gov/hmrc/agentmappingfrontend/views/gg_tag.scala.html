@@ -84,7 +84,7 @@ backLinkHref = if(taskList) Some(routes.TaskListMappingController.showClientRela
 
         @if(taskList) {
             <div class="govuk-button-group">
-                <button type="submit" class="govuk-button govuk-!-margin-right-1 govuk-!-margin-bottom-2" id="gg-tag-continue" name="submit" value="continue">@Messages("button.saveContinue")</button>
+                <button type="submit" class="govuk-button" id="gg-tag-continue" name="submit" value="continue">@Messages("button.saveContinue")</button>
                 <button type="submit" class="govuk-button govuk-button--secondary" id="gg-tag-save" name="submit" value="save">@Messages("button.saveComeBackLater")</button>
             </div>
         } else {
