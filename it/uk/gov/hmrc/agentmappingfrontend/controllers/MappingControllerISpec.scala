@@ -500,8 +500,8 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
           else result should containSubstrings("You copied 12 client relationships to your agent services account")
 
           result should containSubstrings(
-            "To submit VAT returns for a client through your agent services account, you can",
-            "sign your client up for Making Tax Digital for VAT if you need to (opens in new tab)")
+            "To submit VAT returns digitally for a client, you now need to",
+            "sign your client up for Making Tax Digital for VAT (opens in a new tab)")
         }
 
         s"return an exception when repository does not hold the record for the user with enrolment ${user.activeEnrolments
