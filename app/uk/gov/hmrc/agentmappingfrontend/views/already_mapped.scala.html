@@ -24,18 +24,18 @@
 
 @(
 idRefForArn: MappingArnResultId,
-taskList: Boolean = false)(implicit request: Request[_],messages: Messages, appConfig: AppConfig)
+taskList: Boolean = false)(implicit request: Request[_],msgs: Messages, appConfig: AppConfig)
 
-@mainTemplate(title = Messages("alreadyMapped.h1"), taskList = taskList) {
+@mainTemplate(title = msgs("alreadyMapped.h1"), taskList = taskList) {
 
- <h1 class="govuk-heading-xl">@Messages("alreadyMapped.h1")</h1>
+ <h1 class="govuk-heading-xl">@msgs("alreadyMapped.h1")</h1>
 
- <p>@Messages("alreadyMapped.p1")</p>
+ <p>@msgs("alreadyMapped.p1")</p>
 
  @if(taskList) {
-  <a href="@routes.SignedOutController.taskListSignOutAndRedirect(idRefForArn)" class="govuk-button" id="buttonSignOut" role="button">@Messages("button.tryAgain")</a>
+  <a href="@routes.SignedOutController.taskListSignOutAndRedirect(idRefForArn)" class="govuk-button" id="buttonSignOut" role="button">@msgs("button.tryAgain")</a>
  } else {
-  <a href="@routes.SignedOutController.signOutAndRedirect(idRefForArn)" class="govuk-button" id="buttonSignOut" role="button">@Messages("button.tryAgain")</a>
+  <a href="@routes.SignedOutController.signOutAndRedirect(idRefForArn)" class="govuk-button" id="buttonSignOut" role="button">@msgs("button.tryAgain")</a>
  }
 
 }

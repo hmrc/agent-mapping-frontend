@@ -25,13 +25,13 @@ mainTemplate: MainTemplate,
 formHelper: FormWithCSRF
 )
 
-@(arn: Arn, mappings: Seq[SaMapping])(implicit request: Request[_],messages: Messages,
+@(arn: Arn, mappings: Seq[SaMapping])(implicit request: Request[_],msgs: Messages,
         appConfig: AppConfig)
 
-@mainTemplate(title = Messages("view.mappings.title")) {
+@mainTemplate(title = msgs("view.mappings.title")) {
 
   <header>
-    <h1 class="govuk-heading-xl">@Messages("view.mappings.title")</h1>
+    <h1 class="govuk-heading-xl">@msgs("view.mappings.title")</h1>
   </header>
 
   @formHelper(action = uk.gov.hmrc.agentmappingfrontend.controllers.testOnly.routes.TestOnlyController.deleteAllMappings(arn)) {

@@ -30,28 +30,28 @@ govukPanel: GovukPanel
 @(
 idRefForArn: MappingArnResultId,
 totalClients: Int
-)(implicit request: Request[_],messages: Messages, appConfig: AppConfig)
+)(implicit request: Request[_],msgs: Messages, appConfig: AppConfig)
 
 @panelContent = {
 @if(totalClients == 1){
-    @Messages("connectionComplete.banner.single.paragraph")
+    @msgs("connectionComplete.banner.single.paragraph")
     } else {
-    @Messages("connectionComplete.banner.multi.paragraph",s"${totalClients.toString}")
+    @msgs("connectionComplete.banner.multi.paragraph",s"${totalClients.toString}")
     }
 }
 
-@mainTemplate(title = Messages("connectionComplete.title")) {
+@mainTemplate(title = msgs("connectionComplete.title")) {
 
     @govukPanel(Panel(
-    title = Text(Messages("connectionComplete.banner.header")),
+    title = Text(msgs("connectionComplete.banner.header")),
     content = HtmlContent(panelContent)
     ))
 
-    <h2 class="govuk-heading-m">@Messages("connectionComplete.h3.1")</h2>
+    <h2 class="govuk-heading-m">@msgs("connectionComplete.h3.1")</h2>
 
-    <p>@Messages("connectionComplete.p1") <a class="govuk-link" target="_blank" rel="noreferrer noopener" href="https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat">@Messages("connectionComplete.mtdLink")</a>.</p>
+    <p>@msgs("connectionComplete.p1") <a class="govuk-link" target="_blank" rel="noreferrer noopener" href="https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat">@msgs("connectionComplete.mtdLink")</a>.</p>
 
     <p>
-        <a class="govuk-link" target="_blank" rel="noreferrer noopener" href="@routes.SignedOutController.reLogForMappingStart()">@Messages("connectionComplete.finish")</a>
+        <a class="govuk-link" target="_blank" rel="noreferrer noopener" href="@routes.SignedOutController.reLogForMappingStart()">@msgs("connectionComplete.finish")</a>
     </p>
 }

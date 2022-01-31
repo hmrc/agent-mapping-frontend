@@ -24,22 +24,22 @@
 @(
 idRefForArn: MappingArnResultId,
 taskList: Boolean = false
-)(implicit request: Request[_],messages: Messages, appConfig: AppConfig)
+)(implicit request: Request[_],msgs: Messages, appConfig: AppConfig)
 
-@mainTemplate(title = Messages("incorrectAccount.h1"), taskList = taskList) {
+@mainTemplate(title = msgs("incorrectAccount.h1"), taskList = taskList) {
 
-<h1 class="govuk-heading-xl">@Messages("incorrectAccount.h1")</h1>
+<h1 class="govuk-heading-xl">@msgs("incorrectAccount.h1")</h1>
 
-<p>@Messages("incorrectAccount.p1")</p>
+<p>@msgs("incorrectAccount.p1")</p>
 
  @if(taskList){
-  <a href="@routes.SignedOutController.taskListSignOutAndRedirect(idRefForArn)" class="govuk-button" id="buttonTryAgain" role="button" draggable="false">@Messages("button.tryAgain")</a>
+  <a href="@routes.SignedOutController.taskListSignOutAndRedirect(idRefForArn)" class="govuk-button" id="buttonTryAgain" role="button" draggable="false">@msgs("button.tryAgain")</a>
  } else {
-  <a href="@routes.SignedOutController.signOutAndRedirect(idRefForArn)" class="govuk-button" id="buttonTryAgain" role="button" draggable="false">@Messages("button.tryAgain")</a>
+  <a href="@routes.SignedOutController.signOutAndRedirect(idRefForArn)" class="govuk-button" id="buttonTryAgain" role="button" draggable="false">@msgs("button.tryAgain")</a>
  }
 
 <p class="govuk-!-margin-bottom-9">
- <a class="govuk-link" href="@appConfig.agentServicesFrontendBaseUrl" id="linkToASAccount">@Messages("link.goToASAccount")</a>
+ <a class="govuk-link" href="@appConfig.agentServicesFrontendBaseUrl" id="linkToASAccount">@msgs("link.goToASAccount")</a>
 </p>
 
 }
