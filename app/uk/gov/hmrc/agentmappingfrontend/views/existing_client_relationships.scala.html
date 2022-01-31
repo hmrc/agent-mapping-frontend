@@ -42,10 +42,10 @@ id: MappingArnResultId,
 clientCountAndGGTags: Seq[ClientCountAndGGTag],
 backUrl: String,
 taskList: Boolean = false
-)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
 @mainTemplate(
-    title = errorPrefix(addClientsForm) + Messages("existingClientRelationships.title"),
+    title = errorPrefix(addClientsForm) + msgs("existingClientRelationships.title"),
     backLinkHref = Some(backUrl),
     taskList = taskList
 ) {
@@ -54,24 +54,24 @@ taskList: Boolean = false
         @govukErrorSummary(ErrorSummary().withFormErrorsAsText(addClientsForm))
     }
 
-    <h1 class="govuk-heading-xl">@Messages("existingClientRelationships.title")</h1>
+    <h1 class="govuk-heading-xl">@msgs("existingClientRelationships.title")</h1>
 
     <dl class="govuk-summary-list govuk-!-margin-bottom-6">
         @for(clientCountAndGGTag <- clientCountAndGGTags) {
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key agent-summary-list__key--long">
                 @if(clientCountAndGGTag.clientCount == 1) {
-                    @Messages("copied.table.single.th", clientCountAndGGTag.clientCount)
+                    @msgs("copied.table.single.th", clientCountAndGGTag.clientCount)
                 } else {
                     @if(clientCountAndGGTag.clientCount < appConfig.clientCountMaxRecords) {
-                        @Messages("copied.table.multi.th", clientCountAndGGTag.clientCount)
+                        @msgs("copied.table.multi.th", clientCountAndGGTag.clientCount)
                     } else {
-                        @Messages("copied.table.max.th", appConfig.clientCountMaxRecords)
+                        @msgs("copied.table.max.th", appConfig.clientCountMaxRecords)
                     }
                 }
             </dt>
             <dd class="govuk-summary-list__value agent-summary-list__value--long">
-            @Messages("copied.table.ggTag", clientCountAndGGTag.ggTag)
+            @msgs("copied.table.ggTag", clientCountAndGGTag.ggTag)
             </dd>
         </div>
         }
@@ -82,21 +82,21 @@ taskList: Boolean = false
 
         @govukRadios(Radios(
             classes = "govuk-radios--inline",
-            hint = Some(Hint(content = Text(Messages("existingClientRelationships.p1")))),
+            hint = Some(Hint(content = Text(msgs("existingClientRelationships.p1")))),
             fieldset = Some(Fieldset(
                 legend = Some(Legend(
-                    content = Text(Messages("existingClientRelationships.heading")),
+                    content = Text(msgs("existingClientRelationships.heading")),
                     classes = "govuk-fieldset__legend--m",
                     isPageHeading = false
                 ))
             )),
             items = Seq(
                 RadioItem(
-                    content = Text(Messages("button.yes")),
+                    content = Text(msgs("button.yes")),
                     value = Some("yes")
                 ),
                 RadioItem(
-                    content = Text(Messages("button.no")),
+                    content = Text(msgs("button.no")),
                     value = Some("no")
                 )
             )
@@ -104,11 +104,11 @@ taskList: Boolean = false
 
         @if(taskList) {
         <div class="govuk-button-group">
-            <button type="submit" class="govuk-button" id="existing-client-relationships-continue" name="submit" value="continue">@Messages("button.saveContinue")</button>
-            <button type="submit" class="govuk-button govuk-button--secondary" id="existing-client-relationships-save" name="submit" value="save">@Messages("button.saveComeBackLater")</button>
+            <button type="submit" class="govuk-button" id="existing-client-relationships-continue" name="submit" value="continue">@msgs("button.saveContinue")</button>
+            <button type="submit" class="govuk-button govuk-button--secondary" id="existing-client-relationships-save" name="submit" value="save">@msgs("button.saveComeBackLater")</button>
         </div>
         } else {
-            <button type="submit" class="govuk-button" id="submit-existing-clients">@Messages("button.continue")</button>
+            <button type="submit" class="govuk-button" id="submit-existing-clients">@msgs("button.continue")</button>
         }
 
     }

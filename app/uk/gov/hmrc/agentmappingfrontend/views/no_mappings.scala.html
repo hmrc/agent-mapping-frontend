@@ -20,11 +20,11 @@
 
 @this(mainTemplate: MainTemplate)
 
-@(arn: Arn)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(arn: Arn)(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
-@mainTemplate(title = Messages("no.mappings.title")) {
+@mainTemplate(title = msgs("no.mappings.title")) {
 
-<h1 class="govuk-heading-xl">@Messages("no.mappings.title")</h1>
+<h1 class="govuk-heading-xl">@msgs("no.mappings.title")</h1>
 
 <p>No mappings found for @arn.value</p>
 

@@ -25,22 +25,22 @@
 id: Option[MappingArnResultId] = None,
 taskList: Boolean = false,
 hasTimeout: Boolean = false
-)(implicit request: Request[_], appConfig: AppConfig, messages: Messages)
+)(implicit request: Request[_], appConfig: AppConfig, msgs: Messages)
 
 @mainTemplate(
-title = Messages("start.not-signed-in.title"),
+title = msgs("start.not-signed-in.title"),
 taskList = taskList,
 hasTimeout = hasTimeout
 ) {
 
- <h1 class="govuk-heading-xl">@Messages("start.not-signed-in.title")</h1>
+ <h1 class="govuk-heading-xl">@msgs("start.not-signed-in.title")</h1>
 
- <p>@Messages("start.not-signed-in.p1")</p>
+ <p>@msgs("start.not-signed-in.p1")</p>
 
  @if(taskList) {
-  <a class="govuk-button" href="@routes.SignedOutController.taskListSignOutAndRedirect(id.getOrElse("unknown"))" role="button">@Messages("button.signIn")</a>
+  <a class="govuk-button" href="@routes.SignedOutController.taskListSignOutAndRedirect(id.getOrElse("unknown"))" role="button">@msgs("button.signIn")</a>
  } else {
-  <a class="govuk-button" href="@routes.SignedOutController.reLogForMappingStart()" role="button">@Messages("button.signIn")</a>
+  <a class="govuk-button" href="@routes.SignedOutController.reLogForMappingStart()" role="button">@msgs("button.signIn")</a>
  }
 
 }

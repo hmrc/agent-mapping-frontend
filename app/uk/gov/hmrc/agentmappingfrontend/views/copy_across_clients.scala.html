@@ -27,22 +27,22 @@
 idRefForArn: MappingArnResultId,
 backUrl: String,
 taskList: Boolean = false
-)(implicit request: Request[_],messages: Messages,appConfig: AppConfig)
+)(implicit request: Request[_],msgs: Messages,appConfig: AppConfig)
 
 @call = @{if(taskList)routes.SignedOutController.taskListSignOutAndRedirect(idRefForArn) else {routes.SignedOutController.signOutAndRedirect(idRefForArn)}}
 
 @mainTemplate(
-title = Messages("copyAcross.h1"),
+title = msgs("copyAcross.h1"),
 taskList = taskList,
 backLinkHref = Some(backUrl)
 ) {
 
-<h1 class="govuk-heading-xl">@Messages("copyAcross.h1")</h1>
+<h1 class="govuk-heading-xl">@msgs("copyAcross.h1")</h1>
 
- <h2 class="govuk-heading-m">@Messages("copyAcross.heading")</h2>
-  <p>@Messages("copyAcross.p1")</p>
-  <p>@Messages("copyAcross.p2")</p>
+ <h2 class="govuk-heading-m">@msgs("copyAcross.heading")</h2>
+  <p>@msgs("copyAcross.p1")</p>
+  <p>@msgs("copyAcross.p2")</p>
 
- <a href="@call" class="govuk-button" role="button" id="copyAcross">@Messages("button.continue")</a>
+ <a href="@call" class="govuk-button" role="button" id="copyAcross">@msgs("button.continue")</a>
 
 }
