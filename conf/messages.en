@@ -84,7 +84,6 @@ connectionComplete.h3.1=What happens next
 connectionComplete.p1=To submit VAT returns digitally for a client, you now need to
 connectionComplete.mtdLink=sign your client up for Making Tax Digital for VAT (opens in a new tab)
 connectionComplete.p2=You can still submit returns for a client if they are not signed up for Making Tax Digital for VAT.
-connectionComplete.finish=Finish and sign out
 
 #Buttons/links
 button.repeatProcess=Sign in to link another account
