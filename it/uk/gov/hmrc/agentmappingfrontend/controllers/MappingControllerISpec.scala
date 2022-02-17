@@ -488,9 +488,9 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
             "connectionComplete.title",
             "connectionComplete.banner.header",
             "connectionComplete.h3.1",
-            "connectionComplete.finish")
+            "link.finishSignOut")
 
-          result should containLink("connectionComplete.finish", routes.SignedOutController.reLogForMappingStart().url)
+          result should containLink("link.finishSignOut", routes.SignedOutController.reLogForMappingStart().url)
           result should containLink(
             "connectionComplete.mtdLink",
             "https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat")
