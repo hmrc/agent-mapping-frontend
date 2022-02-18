@@ -49,7 +49,7 @@ taskList = true
         <p>@msgs("start.task-list.need-to-do.p2")</p>
 
     <div class="govuk-button-group">
-        <a class="govuk-button" name="submit" id="clients-found-continue" href="@routes.TaskListMappingController.showClientRelationshipsFound(id)" role="button" draggable="false">@msgs("button.saveContinue")</a>
-        <a class="govuk-button govuk-button--secondary" name="submit" id="clients-found-save" href='@appConfig.agentSubscriptionFrontendProgressSavedUrl@returnUrl' draggable="false">@msgs("button.saveComeBackLater")</a>
+        <a class="govuk-button"  id="clients-found-continue" href="@routes.TaskListMappingController.showClientRelationshipsFound(id)" role="button" draggable="false">@msgs("button.saveContinue")</a>
+        <a class="govuk-button govuk-button--secondary"  id="clients-found-save" href='@appConfig.agentSubscriptionFrontendProgressSavedUrl@returnUrl' draggable="false">@msgs("button.saveComeBackLater")</a>
     </div>
 }
