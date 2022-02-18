@@ -72,6 +72,8 @@ backLinkHref = if(taskList) Some(routes.TaskListMappingController.showClientRela
                 name="ggTag"
                 type="text"
                 id="ggTag"
+                spellcheck="false"
+                inputmode="numeric"
                 pattern="[0-9]*"
                 aria-describedby="ggTag-hint @if(ggTagForm.errors.nonEmpty){ggTag-error}"
                 @ggTagForm.data.get("ggTag").map { v => value="@v" }
