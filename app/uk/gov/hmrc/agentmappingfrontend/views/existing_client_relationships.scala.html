@@ -105,11 +105,13 @@ taskList: Boolean = false
         @if(taskList) {
         <div class="govuk-button-group">
             <button type="submit"
+                    name="submit"
                     class="govuk-button"
                     id="existing-client-relationships-continue"
                     value="continue">@msgs("button.saveContinue")</button>
 
             <button type="submit"
+                    name="submit"
                     class="govuk-button govuk-button--secondary"
                     id="existing-client-relationships-save"
                     value="save">@msgs("button.saveComeBackLater")</button>
