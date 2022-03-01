@@ -19,6 +19,7 @@
 @import uk.gov.hmrc.govukfrontend.views.html.components.GovukPhaseBanner
 @import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.{HmrcLayout, HmrcReportTechnicalIssueHelper}
+@import views.html.helper.CSPNonce
 
 @this(
         head: head,
@@ -44,11 +45,6 @@
     </div>
 }
 
-@additionalScripts = {
-    <script src="@controllers.routes.Assets.versioned("javascripts/agent-mapping.js")"></script>
-}
-
-
 @hmrcLayout(
     pageTitle = Some(title + " - " + serviceName + " " + msgs("servicename.titleSuffix")),
     serviceName = Some(serviceName),
@@ -58,8 +54,8 @@
     serviceUrl = None,
     signOutUrl = None,
     additionalHeadBlock = Some(head(hasTimeout)),
-    additionalScriptsBlock = Some(additionalScripts),
     backLinkUrl = backLinkHref,
+    nonce = CSPNonce.get
 )(mainContentWithHelpLink)
 
 
