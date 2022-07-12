@@ -26,7 +26,7 @@ class AmlsDetailsSpec extends UnitSpec {
   "AmlsDetails" should {
     "serialize to json" when {
       "pending amls details" in {
-        Json.toJson(AmlsDetails("supervisory", Left(PendingDetails(LocalDate.parse("2019-01-01"))))) shouldBe
+        Json.toJson(AmlsDetails("supervisory", Left(PendingDetails(Option(LocalDate.parse("2019-01-01")))))) shouldBe
           Json.parse("""{"supervisoryBody": "supervisory", "appliedOn": "2019-01-01"}""")
       }
       "registered amls details" in {
@@ -45,7 +45,7 @@ class AmlsDetailsSpec extends UnitSpec {
     "deserialize from json" when {
       "pending amls details" in {
         Json.parse("""{"supervisoryBody": "supervisory", "appliedOn": "2019-01-01"}""").as[AmlsDetails] shouldBe
-          AmlsDetails("supervisory", Left(PendingDetails(LocalDate.parse("2019-01-01"))))
+          AmlsDetails("supervisory", Left(PendingDetails(Option(LocalDate.parse("2019-01-01")))))
       }
 
       "registered amls details" in {

@@ -33,7 +33,7 @@ object RegisteredDetails {
   implicit val format: OFormat[RegisteredDetails] = Json.format
 }
 
-case class PendingDetails(appliedOn: LocalDate)
+case class PendingDetails(appliedOn: Option[LocalDate])
 
 object PendingDetails {
   implicit val format: OFormat[PendingDetails] = Json.format
@@ -65,7 +65,7 @@ object AmlsDetails {
               Right(RegisteredDetails(membershipNumber, membershipExpiresOn, amlsSafeId, agentBPRSafeId))))
 
         case None =>
-          val appliedOn = LocalDate.parse((json \ "appliedOn").as[String], formatter)
+          val appliedOn = (json \ "appliedOn").asOpt[String].map(LocalDate.parse(_, formatter))
           JsSuccess(AmlsDetails(supervisoryBody, Left(PendingDetails(appliedOn))))
       }
     }
