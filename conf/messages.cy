@@ -146,7 +146,7 @@ global.error.500.heading=Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth
 global.error.500.message=Rhowch gynnig arall arni yn nes ymlaen.
 global.error.500.p2=Efallai nad ydym wedi cadw’ch atebion. Pan fydd y gwasanaeth ar gael, efallai y bydd yn rhaid i chi ddechrau eto.
 global.error.500.vat_helpline.link=Ffoniwch linell Ymholiadau TAW, Tollau ac Ecséis CThEM
-global.error.500.vat_helpline=os oes angen help arnoch gyda’r cynllun Troi Treth yn Ddigidol ar gyfer TAW.
+global.error.500.vat_helpline=os oes angen help arnoch gyda’r cynllun TAW.
 global.error.500.sa_helpline.link=Ffoniwch Wasanaeth Cwsmeriaid Cymraeg CThEM
 global.error.500.sa_helpline=os oes angen help arnoch gyda’r cynllun Troi Treth yn Ddigidol ar gyfer Treth Incwm.
 
