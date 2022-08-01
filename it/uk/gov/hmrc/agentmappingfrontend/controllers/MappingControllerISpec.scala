@@ -487,7 +487,6 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
             result,
             "connectionComplete.title",
             "connectionComplete.banner.header",
-            "connectionComplete.h3.1",
             "link.finishSignOut")
 
           result should containLink("link.finishSignOut", routes.SignedOutController.reLogForMappingStart().url)
