@@ -80,11 +80,6 @@ connectionComplete.title=Perthnasoedd â chleientiaid wedi’u copïo
 connectionComplete.banner.header=Perthnasoedd â chleientiaid wedi’u copïo
 connectionComplete.banner.single.paragraph=Rydych wedi copïo 1 berthynas â chleient i’ch cyfrif gwasanaethau asiant
 connectionComplete.banner.multi.paragraph=Rydych wedi copïo {0} o berthnasoedd â chleientiaid i’ch cyfrif gwasanaethau asiant
-connectionComplete.h3.1=Yr hyn sy’n digwydd nesaf
-connectionComplete.p1=I gyflwyno Ffurflenni TAW drwy ddull digidol ar gyfer cleient, mae angen i chi wneud y canlynol nawr
-connectionComplete.mtdLink=cofrestru’ch cleient ar gyfer Troi Treth yn Ddigidol ar gyfer TAW (yn agor tab newydd)
-connectionComplete.p2=Gallwch gyflwyno Ffurflenni TAW ar gyfer cleient o hyd os nad yw wedi cofrestru ar gyfer y cynllun Troi Treth yn Ddigidol ar gyfer TAW.
-connectionComplete.finish=Gorffen ac allgofnodi
 
 #Buttons/links
 button.repeatProcess=Mewngofnodi i gysylltu cyfrif arall
@@ -151,7 +146,7 @@ global.error.500.heading=Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth
 global.error.500.message=Rhowch gynnig arall arni yn nes ymlaen.
 global.error.500.p2=Efallai nad ydym wedi cadw’ch atebion. Pan fydd y gwasanaeth ar gael, efallai y bydd yn rhaid i chi ddechrau eto.
 global.error.500.vat_helpline.link=Ffoniwch linell Ymholiadau TAW, Tollau ac Ecséis CThEM
-global.error.500.vat_helpline=os oes angen help arnoch gyda’r cynllun Troi Treth yn Ddigidol ar gyfer TAW.
+global.error.500.vat_helpline=os oes angen help arnoch gyda’r cynllun TAW.
 global.error.500.sa_helpline.link=Ffoniwch Wasanaeth Cwsmeriaid Cymraeg CThEM
 global.error.500.sa_helpline=os oes angen help arnoch gyda’r cynllun Troi Treth yn Ddigidol ar gyfer Treth Incwm.
 

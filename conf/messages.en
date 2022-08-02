@@ -80,10 +80,6 @@ connectionComplete.title=Client relationships copied
 connectionComplete.banner.header=Client relationships copied
 connectionComplete.banner.single.paragraph=You copied 1 client relationship to your agent services account
 connectionComplete.banner.multi.paragraph=You copied {0} client relationships to your agent services account
-connectionComplete.h3.1=What happens next
-connectionComplete.p1=To submit VAT returns digitally for a client, you now need to
-connectionComplete.mtdLink=sign your client up for Making Tax Digital for VAT (opens in a new tab)
-connectionComplete.p2=You can still submit returns for a client if they are not signed up for Making Tax Digital for VAT.
 
 #Buttons/links
 button.repeatProcess=Sign in to link another account
@@ -150,7 +146,7 @@ global.error.500.heading=Sorry, there is a problem with the service
 global.error.500.message=Try again later.
 global.error.500.p2=We may not have saved your answers. When the service is available, you may have to start again.
 global.error.500.vat_helpline.link=Call the VAT online services helpline
-global.error.500.vat_helpline=if you need help with Making Tax Digital for VAT.
+global.error.500.vat_helpline=if you need help with VAT.
 global.error.500.sa_helpline.link=Call the HMRC Self Assessment online services helpline
 global.error.500.sa_helpline=if you need help with Making Tax Digital for Income Tax.
 

@@ -487,21 +487,14 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
             result,
             "connectionComplete.title",
             "connectionComplete.banner.header",
-            "connectionComplete.h3.1",
             "link.finishSignOut")
 
           result should containLink("link.finishSignOut", routes.SignedOutController.reLogForMappingStart().url)
-          result should containLink(
-            "connectionComplete.mtdLink",
-            "https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-vat")
 
           if (singleClientCountResponse)
             bodyOf(result) should include(htmlEscapedMessage("You copied 1 client relationship to your agent services account"))
           else result should containSubstrings("You copied 12 client relationships to your agent services account")
 
-          result should containSubstrings(
-            "To submit VAT returns digitally for a client, you now need to",
-            "sign your client up for Making Tax Digital for VAT (opens in a new tab)")
         }
 
         s"return an exception when repository does not hold the record for the user with enrolment ${user.activeEnrolments
