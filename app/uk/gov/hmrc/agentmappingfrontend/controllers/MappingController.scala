@@ -27,7 +27,7 @@ import uk.gov.hmrc.agentmappingfrontend.model._
 import uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId
 import uk.gov.hmrc.agentmappingfrontend.repository.{ClientCountAndGGTag, MappingArnRepository}
 import uk.gov.hmrc.agentmappingfrontend.util._
-import uk.gov.hmrc.agentmappingfrontend.views.html._
+import uk.gov.hmrc.agentmappingfrontend.views.html.{already_mapped, client_relationships_found, complete, copy_across_clients, existing_client_relationships, gg_tag, incorrect_account, not_enrolled, page_not_found, start, start_sign_in_required}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.http.ConflictException
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -59,7 +59,7 @@ class MappingController @Inject()(
     extends FrontendController(mcc) with I18nSupport with AuthActions with Logging {
 
   val root: Action[AnyContent] = Action {
-    Redirect(routes.MappingController.start())
+    Redirect(routes.MappingController.start)
   }
 
   private def getBackLinkForStart(implicit request: Request[_]): String =
@@ -81,13 +81,13 @@ class MappingController @Inject()(
               .create(arn)
               .map(id => Ok(startTemplate(id, countsAndTags, getBackLinkForStart))))
 
-      case None => successful(Redirect(routes.MappingController.needAgentServicesAccount()))
+      case None => successful(Redirect(routes.MappingController.needAgentServicesAccount))
     }
   }
 
   def needAgentServicesAccount: Action[AnyContent] = Action.async { implicit request =>
     withCheckForArn {
-      case Some(_) => successful(Redirect(routes.MappingController.start()))
+      case Some(_) => successful(Redirect(routes.MappingController.start))
       case None    => successful(Ok(signInTemplate()))
     }
   }
@@ -107,7 +107,7 @@ class MappingController @Inject()(
 
         case None =>
           logger.warn(s"could not find a record for id $id")
-          Redirect(routes.MappingController.start())
+          Redirect(routes.MappingController.start)
       }
     }
   }
@@ -202,7 +202,7 @@ class MappingController @Inject()(
 
               case None =>
                 logger.info(s"no record found for id $id")
-                Redirect(routes.MappingController.start())
+                Redirect(routes.MappingController.start)
             }
           }, {
             case Yes => Redirect(routes.MappingController.showCopyAcrossClients(id))

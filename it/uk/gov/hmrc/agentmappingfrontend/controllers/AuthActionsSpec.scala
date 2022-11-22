@@ -19,6 +19,7 @@ package uk.gov.hmrc.agentmappingfrontend.controllers
 import play.api.mvc.Result
 import play.api.mvc.Results._
 import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import play.api.{Configuration, Environment}
 import play.mvc.Http.HeaderNames
 import uk.gov.hmrc.agentmappingfrontend.auth.AuthActions
@@ -28,8 +29,7 @@ import uk.gov.hmrc.agentmappingfrontend.model.{AuthProviderId, LegacyAgentEnrolm
 import uk.gov.hmrc.agentmappingfrontend.stubs.{AgentSubscriptionStubs, AuthStubs}
 import uk.gov.hmrc.agentmappingfrontend.support.SubscriptionJourneyRecordSamples
 import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
-import play.api.test.Helpers._
+import uk.gov.hmrc.http.SessionKeys
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -41,8 +41,8 @@ class AuthActionsSpec extends BaseControllerISpec with AuthStubs with AgentSubsc
     override def authConnector: AuthConnector = app.injector.instanceOf[AuthConnector]
     override def agentSubscriptionConnector: AgentSubscriptionConnector = app.injector.instanceOf[AgentSubscriptionConnector]
 
-    implicit val hc = HeaderCarrier()
-    implicit val request = FakeRequest("GET", "/foo").withSession(SessionKeys.authToken -> "Bearer XYZ")
+    implicit val request = FakeRequest("GET", "/foo")
+      .withSession(SessionKeys.authToken -> "Bearer XYZ")
 
     val env = app.injector.instanceOf[Environment]
     lazy val config = app.injector.instanceOf[Configuration]

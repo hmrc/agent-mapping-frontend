@@ -1,7 +1,6 @@
 package uk.gov.hmrc.agentmappingfrontend.controllers
 
-import java.time.LocalDateTime
-
+import com.google.inject.AbstractModule
 import play.api.http.Writeable
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Request, Result}
 import play.api.test.FakeRequest
@@ -12,12 +11,24 @@ import uk.gov.hmrc.agentmappingfrontend.stubs.AuthStubs
 import uk.gov.hmrc.agentmappingfrontend.stubs.MappingStubs._
 import uk.gov.hmrc.agentmappingfrontend.support.SampleUsers._
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
+import uk.gov.hmrc.http.{SessionKeys, UpstreamErrorResponse}
+import uk.gov.hmrc.mongo.MongoComponent
+import uk.gov.hmrc.mongo.test.MongoSupport
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import java.time.LocalDateTime
 
-class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
+class MappingControllerISpec extends BaseControllerISpec with AuthStubs
+  with MongoSupport {
 
   private lazy val repo = app.injector.instanceOf[MappingArnRepository]
+
+  override def additionalConfig: Map[String, String] = Map("mongodb.uri" -> mongoUri)
+
+  override def moduleWithOverrides: AbstractModule = new AbstractModule {
+    override def configure(): Unit = {
+      bind(classOf[MongoComponent]).toInstance(mongoComponent)
+    }
+  }
 
   val arn: Arn = Arn("TARN0000001")
 
@@ -25,7 +36,7 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
 
   "context root" should {
     "redirect to the start page" in {
-      val request = FakeRequest(GET, "/agent-mapping/")
+      val request = fakeRequest(GET, "/agent-mapping/")
       val result = callEndpointWith(request)
       status(result) shouldBe 303
       redirectLocation(result).head should include("/start")
@@ -37,7 +48,7 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
       val mappingDetailsRepositoryRecord = MappingDetailsRepositoryRecord(Arn("TARN0000001"), Seq(MappingDetails(AuthProviderId("12345-credId"), "1234", 5, LocalDateTime.now())))
       givenUserIsAuthenticated(mtdAsAgent)
       givenMappingDetailsExistFor(arn, mappingDetailsRepositoryRecord)
-      val request = FakeRequest(GET, "/agent-mapping/start")
+      val request = FakeRequest(GET, "/agent-mapping/start").withSession(SessionKeys.authToken -> "Bearer XYZ")
       val result = callEndpointWith(request)
       status(result) shouldBe 200
       checkHtmlResultContainsEscapedMsgs(
@@ -57,7 +68,7 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
 
     "get the backLink from the request.session OriginForMapping key" in {
       givenUserIsAuthenticated(mtdAsAgent)
-      val request = FakeRequest(GET, "/agent-mapping/start").withSession("OriginForMapping" -> "/invitations/foo")
+      val request = fakeRequest(GET, "/agent-mapping/start")
       val result = callEndpointWith(request)
       status(result) shouldBe 200
       bodyOf(result) should include("/invitations/foo")
@@ -65,24 +76,24 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
 
     "303 the /sign-in-required for unAuthenticated" in {
       givenUserIsNotAuthenticated()
-      val request = FakeRequest(GET, "/agent-mapping/start")
+      val request = fakeRequest(GET, "/agent-mapping/start")
       val result = callEndpointWith(request)
-      redirectLocation(result) shouldBe Some(routes.MappingController.needAgentServicesAccount().url)
+      redirectLocation(result) shouldBe Some(routes.MappingController.needAgentServicesAccount.url)
     }
 
     "303 to /sign-in-required when user without HMRC-AS-AGENT/ARN" in {
       givenAuthorisedFor("notHMRCASAGENT")
-      val request = FakeRequest(GET, "/agent-mapping/start")
+      val request = fakeRequest(GET, "/agent-mapping/start")
       val result = callEndpointWith(request)
       status(result) shouldBe 303
-      redirectLocation(result) shouldBe Some(routes.MappingController.needAgentServicesAccount().url)
+      redirectLocation(result) shouldBe Some(routes.MappingController.needAgentServicesAccount.url)
     }
   }
 
   "/sign-in-required" should {
     "200 the /start/sign-in-required page when not logged in" in {
       givenUserIsNotAuthenticated()
-      val request = FakeRequest(GET, "/agent-mapping/sign-in-required")
+      val request = fakeRequest(GET, "/agent-mapping/sign-in-required")
       val result = callEndpointWith(request)
       status(result) shouldBe 200
       checkHtmlResultContainsEscapedMsgs(result, "start.not-signed-in.title")
@@ -90,7 +101,7 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
 
     "200 the /sign-in-required page as NO ARN is found" in {
       givenAuthorisedFor("notHMRCASAGENT")
-      val request = FakeRequest(GET, "/agent-mapping/sign-in-required")
+      val request = fakeRequest(GET, "/agent-mapping/sign-in-required")
       val result = callEndpointWith(request)
       status(result) shouldBe 200
       checkHtmlResultContainsEscapedMsgs(result, "start.not-signed-in.title", "button.signIn")
@@ -98,9 +109,9 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
 
     "303 the /start page when user has HMRC-AS-AGENT/ARN and 'Sign in with another account' button holds idReference to agent's ARN" in {
       givenUserIsAuthenticated(mtdAsAgent)
-      val request = FakeRequest(GET, "/agent-mapping/sign-in-required")
+      val request = fakeRequest(GET, "/agent-mapping/sign-in-required")
       val result = callEndpointWith(request)
-      redirectLocation(result) shouldBe Some(routes.MappingController.start().url)
+      redirectLocation(result) shouldBe Some(routes.MappingController.start.url)
     }
   }
 
@@ -133,7 +144,7 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
       val result = callEndpointWith(request)
 
       status(result) shouldBe 303
-      redirectLocation(result) shouldBe Some(routes.MappingController.start().url)
+      redirectLocation(result) shouldBe Some(routes.MappingController.start.url)
     }
   }
 
@@ -180,6 +191,14 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
 
       status(result) shouldBe 200
       checkHtmlResultContainsEscapedMsgs(result, "page-not-found.title", "page-not-found.h1", "page-not-found.p1")
+    }
+
+    "throw exception when auth is not responding" in {
+      givenAuthorisationFailsWith5xx()
+      implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest(GET, s"/agent-mapping/client-relationships-found?id=foo")
+      intercept[UpstreamErrorResponse] {
+        callEndpointWith(request)
+      }
     }
   }
 
@@ -439,7 +458,7 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
       val result = callEndpointWith(request)
 
       status(result) shouldBe 303
-      redirectLocation(result) shouldBe Some(routes.MappingController.start().url)
+      redirectLocation(result) shouldBe Some(routes.MappingController.start.url)
     }
   }
 
@@ -489,7 +508,7 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs {
             "connectionComplete.banner.header",
             "link.finishSignOut")
 
-          result should containLink("link.finishSignOut", routes.SignedOutController.reLogForMappingStart().url)
+          result should containLink("link.finishSignOut", routes.SignedOutController.reLogForMappingStart.url)
 
           if (singleClientCountResponse)
             bodyOf(result) should include(htmlEscapedMessage("You copied 1 client relationship to your agent services account"))

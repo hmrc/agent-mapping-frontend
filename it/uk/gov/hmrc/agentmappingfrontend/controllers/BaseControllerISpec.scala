@@ -17,6 +17,7 @@
 package uk.gov.hmrc.agentmappingfrontend.controllers
 
 import akka.stream.Materializer
+import com.google.inject.AbstractModule
 import org.jsoup.Jsoup
 import org.scalatest.matchers.{MatchResult, Matcher}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -25,6 +26,7 @@ import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Result
 import play.api.test.FakeRequest
+import play.api.test.Helpers.GET
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.agentmappingfrontend.support.{EndpointBehaviours, UnitSpec, WireMockSupport}
 import uk.gov.hmrc.http.SessionKeys
@@ -33,6 +35,10 @@ abstract class BaseControllerISpec
     extends UnitSpec with GuiceOneAppPerSuite with WireMockSupport with EndpointBehaviours {
 
   override implicit lazy val app: Application = appBuilder.build()
+
+  def additionalConfig: Map[String, String] = Map.empty
+  def moduleWithOverrides: AbstractModule = new AbstractModule{}
+
 
   protected def appBuilder: GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
@@ -43,11 +49,14 @@ abstract class BaseControllerISpec
         "application.router"                       -> "testOnlyDoNotUseInAppConf.Routes",
         "clientCount.maxRecords" -> 15
       )
+      .configure(additionalConfig)
+      .overrides(moduleWithOverrides)
 
   protected implicit val materializer: Materializer = app.materializer
 
-  protected def fakeRequest(endpointMethod: String, endpointPath: String) =
-    FakeRequest(endpointMethod, endpointPath).withSession(SessionKeys.authToken -> "Bearer XYZ")
+  protected def fakeRequest(endpointMethod: String = GET, endpointPath: String = "") =
+    FakeRequest(endpointMethod, endpointPath)
+      .withSession(SessionKeys.authToken -> "Bearer XYZ", "OriginForMapping" -> "/invitations/foo")
 
   private val messagesApi = app.injector.instanceOf[MessagesApi]
   private implicit val messages: Messages = messagesApi.preferred(Seq.empty[Lang])

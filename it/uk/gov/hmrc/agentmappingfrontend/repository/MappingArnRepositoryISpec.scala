@@ -1,47 +1,47 @@
 package uk.gov.hmrc.agentmappingfrontend.repository
 
+import org.mongodb.scala.model.Filters
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
-import uk.gov.hmrc.agentmappingfrontend.support.{MongoApp, UnitSpec}
-import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import play.api.test.Helpers._
-
+import uk.gov.hmrc.agentmappingfrontend.support.UnitSpec
+import uk.gov.hmrc.agentmtdidentifiers.model.Arn
+import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
+import uk.gov.hmrc.mongo.test.DefaultPlayMongoRepositorySupport
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class MappingArnRepositoryISpec extends UnitSpec with GuiceOneAppPerSuite with MongoApp {
+class MappingArnRepositoryISpec extends UnitSpec with GuiceOneAppPerSuite with DefaultPlayMongoRepositorySupport[MappingArnResult] {
 
   protected def builder: GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
-      .configure(mongoConfiguration)
+      .configure("mongodb.uri" -> mongoUri)
 
   override implicit lazy val app: Application = builder.build()
 
-  private lazy val repo = app.injector.instanceOf[MappingArnRepository]
+  val repository: PlayMongoRepository[MappingArnResult] = new MappingArnRepository(mongoComponent)
 
-  override def beforeEach() {
-    super.beforeEach()
-    await(repo.ensureIndexes)
-    ()
-  }
+  val mappingArnRepository = repository.asInstanceOf[MappingArnRepository]
+
+
   private val arn = Arn("TARN0000001")
 
   "MappingArnRepository" should {
 
     "create a MappingArnResult record" in {
-      val result = await(repo.create(arn))
+      val result = await(mappingArnRepository.create(arn))
       result should not be empty
 
-      val mappingArnResult = await(repo.find("id" -> result)).head
+      val mappingArnResult = await(repository.collection.find(Filters.equal("id",result)).head)
       mappingArnResult should have('id (result), 'arn (arn))
       mappingArnResult.id.size shouldBe 32
     }
 
     "find a MappingArnResult record by Id" in {
       val record = MappingArnResult(arn, 0, Seq.empty)
-      await(repo.insert(record))
+      await(repository.collection.insertOne(record).toFuture())
 
-      val result = await(repo.findRecord(record.id))
+      val result = await(mappingArnRepository.findRecord(record.id))
 
       result shouldBe Some(record)
     }
@@ -49,9 +49,9 @@ class MappingArnRepositoryISpec extends UnitSpec with GuiceOneAppPerSuite with M
     "update client count and ggTag" in {
       val record = MappingArnResult(arn, 0, Seq.empty)
 
-      await(repo.insert(record))
-      await(repo.upsert(record.copy(clientCountAndGGTags = record.clientCountAndGGTags :+ ClientCountAndGGTag(12,"")), record.id))
-      val result = await(repo.findRecord(record.id)).get.clientCountAndGGTags.head.clientCount
+      await(repository.collection.insertOne(record).toFuture())
+      await(mappingArnRepository.upsert(record.copy(clientCountAndGGTags = record.clientCountAndGGTags :+ ClientCountAndGGTag(12,"")), record.id))
+      val result = await(mappingArnRepository.findRecord(record.id)).get.clientCountAndGGTags.head.clientCount
 
       result shouldBe 12
     }
@@ -59,9 +59,9 @@ class MappingArnRepositoryISpec extends UnitSpec with GuiceOneAppPerSuite with M
     "update current ggTag" in {
       val record = MappingArnResult(arn, 0, Seq.empty)
 
-      await(repo.insert(record))
-      await(repo.updateCurrentGGTag(record.id, "6666"))
-      val result = await(repo.findRecord(record.id)).get.currentGGTag
+      await(repository.collection.insertOne(record).toFuture())
+      await(mappingArnRepository.updateCurrentGGTag(record.id, "6666"))
+      val result = await(mappingArnRepository.findRecord(record.id)).get.currentGGTag
 
       result shouldBe "6666"
     }
@@ -69,9 +69,9 @@ class MappingArnRepositoryISpec extends UnitSpec with GuiceOneAppPerSuite with M
     "update mapping complete status to true" in {
       val record = MappingArnResult(arn, 0, Seq.empty)
 
-      await(repo.insert(record))
-      await(repo.updateMappingCompleteStatus(record.id))
-      val result = await(repo.findRecord(record.id)).get.alreadyMapped
+      await(repository.collection.insertOne(record).toFuture())
+      await(mappingArnRepository.updateMappingCompleteStatus(record.id))
+      val result = await(mappingArnRepository.findRecord(record.id)).get.alreadyMapped
 
       result shouldBe true
     }
@@ -79,11 +79,11 @@ class MappingArnRepositoryISpec extends UnitSpec with GuiceOneAppPerSuite with M
 
     "delete a MappingArnResult record by Id" in {
       val record = MappingArnResult(arn, 0, Seq.empty)
-      await(repo.insert(record))
+      await(repository.collection.insertOne(record).toFuture())
 
-      await(repo.delete(record.id))
+      await(mappingArnRepository.delete(record.id))
 
-      await(repo.find("id" -> record.id)) shouldBe empty
+      await(repository.collection.find(Filters.equal("id",record.id)).headOption()) shouldBe empty
     }
   }
 }

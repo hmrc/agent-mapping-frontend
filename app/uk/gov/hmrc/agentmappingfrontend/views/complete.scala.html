@@ -19,7 +19,7 @@
 @import uk.gov.hmrc.govukfrontend.views.html.components.GovukPanel
 @import uk.gov.hmrc.govukfrontend.views.html.components.{Panel, Text, HtmlContent}
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
-@import uk.gov.hmrc.agentmappingfrontend.views.html
+@import uk.gov.hmrc.agentmappingfrontend.views.html.MainTemplate
 @import uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId
 
 @this(
@@ -49,6 +49,6 @@ totalClients: Int
 
     <p>
         <a class="govuk-link" target="_blank" rel="noreferrer noopener"
-        href="@routes.SignedOutController.reLogForMappingStart()">@msgs("link.finishSignOut")</a>
+        href="@routes.SignedOutController.reLogForMappingStart">@msgs("link.finishSignOut")</a>
     </p>
 }

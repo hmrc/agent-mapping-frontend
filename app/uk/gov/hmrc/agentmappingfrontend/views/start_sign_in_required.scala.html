@@ -40,7 +40,7 @@ hasTimeout = hasTimeout
  @if(taskList) {
   <a class="govuk-button" href="@routes.SignedOutController.taskListSignOutAndRedirect(id.getOrElse("unknown"))" role="button">@msgs("button.signIn")</a>
  } else {
-  <a class="govuk-button" href="@routes.SignedOutController.reLogForMappingStart()" role="button">@msgs("button.signIn")</a>
+  <a class="govuk-button" href="@routes.SignedOutController.reLogForMappingStart" role="button">@msgs("button.signIn")</a>
  }
 
 }

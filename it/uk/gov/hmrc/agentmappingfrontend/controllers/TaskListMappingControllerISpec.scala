@@ -1,26 +1,40 @@
 package uk.gov.hmrc.agentmappingfrontend.controllers
 
+import com.google.inject.AbstractModule
+import play.api.Application
 import play.api.http.Writeable
 import play.api.mvc.{AnyContentAsEmpty, Request, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.agentmappingfrontend.config.FrontendAppConfig
+import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
 import uk.gov.hmrc.agentmappingfrontend.model._
 import uk.gov.hmrc.agentmappingfrontend.repository.TaskListMappingRepository
 import uk.gov.hmrc.agentmappingfrontend.stubs.{AgentSubscriptionStubs, AuthStubs, MappingStubs}
 import uk.gov.hmrc.agentmappingfrontend.support.SampleUsers.{agentNotEnrolled, mtdAsAgent, vatEnrolledAgent}
 import uk.gov.hmrc.agentmappingfrontend.support.SubscriptionJourneyRecordSamples
 import uk.gov.hmrc.domain.AgentCode
+import uk.gov.hmrc.mongo.MongoComponent
+import uk.gov.hmrc.mongo.test.MongoSupport
 
-import scala.concurrent.ExecutionContext.Implicits.global
+class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs with AgentSubscriptionStubs with SubscriptionJourneyRecordSamples
+with MongoSupport {
 
-class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs with AgentSubscriptionStubs with SubscriptionJourneyRecordSamples {
+  val repo = app.injector.instanceOf[TaskListMappingRepository]
 
-  private lazy val repo = app.injector.instanceOf[TaskListMappingRepository]
+  override def additionalConfig: Map[String, String] = Map("mongodb.uri" -> mongoUri)
+
+  override def moduleWithOverrides: AbstractModule = new AbstractModule {
+    override def configure(): Unit = {
+      bind(classOf[MongoComponent]).toInstance(mongoComponent)
+    }
+  }
+
+  override implicit lazy val app: Application = appBuilder.build()
 
   private lazy val controller = app.injector.instanceOf[TaskListMappingController]
 
-  private lazy val appConfig = app.injector.instanceOf[FrontendAppConfig]
+  lazy val appConfig = app.injector.instanceOf[AppConfig]
+
 
   val mappingStubs = MappingStubs
 
@@ -45,7 +59,7 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
     "303 to /task-list/error/incorrect-account if user has HMRC-AS-AGENT" in {
       givenUserIsAuthenticated(mtdAsAgent)
       givenSubscriptionJourneyRecordExistsForContinueId("continue-id", sjrWithNoUserMappings)
-      val request = FakeRequest(GET, "/agent-mapping/task-list/start/?continueId=continue-id")
+      val request = fakeRequest(GET, "/agent-mapping/task-list/start/?continueId=continue-id")
       val result = callEndpointWith(request)
       val id = await(repo.findByContinueId("continue-id")).get.id
       status(result) shouldBe 303
@@ -55,7 +69,7 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
     "throw RuntimeException if subscription journey record does not exist for that user" in {
       givenUserIsAuthenticated(vatEnrolledAgent)
       givenNoSubscriptionJourneyRecordFoundForContinueId("continue-id")
-      val request = FakeRequest(GET, "/agent-mapping/task-list/start/?continueId=continue-id")
+      val request = fakeRequest(GET, "/agent-mapping/task-list/start/?continueId=continue-id")
 
       intercept[RuntimeException] {
         await(controller.start("continue-id")(request))
@@ -64,7 +78,7 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
 
     "400 BadRequest if url is missing a continueId" in {
       givenUserIsAuthenticated(vatEnrolledAgent)
-      val request = FakeRequest(GET, "/agent-mapping/task-list/start/")
+      val request = fakeRequest(GET, "/agent-mapping/task-list/start/")
       val result = callEndpointWith(request)
       status(result) shouldBe 400
     }
@@ -73,7 +87,7 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
       givenUserIsAuthenticated(vatEnrolledAgent)
       givenSubscriptionJourneyRecordExistsForAuthProviderId(AuthProviderId("12345-credId"), sjrWithNoUserMappings)
       givenSubscriptionJourneyRecordExistsForContinueId("continue-id", sjrWithNoUserMappings)
-      val request = FakeRequest(GET, "/agent-mapping/task-list/start/?continueId=continue-id")
+      val request = fakeRequest(GET, "/agent-mapping/task-list/start/?continueId=continue-id")
       val result = callEndpointWith(request)
       status(result) shouldBe 200
       checkHtmlResultContainsEscapedMsgs(result,
@@ -89,7 +103,7 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
       givenUserIsAuthenticated(vatEnrolledAgent)
       givenNoSubscriptionJourneyRecordFoundForAuthProviderId(AuthProviderId("12345-credId"))
       givenSubscriptionJourneyRecordExistsForContinueId("continue-id", sjrWithMapping)
-      val request = FakeRequest(GET, "/agent-mapping/task-list/start/?continueId=continue-id")
+      val request = fakeRequest(GET, "/agent-mapping/task-list/start/?continueId=continue-id")
       val result = callEndpointWith(request)
       status(result) shouldBe 303
       val id = await(repo.findByContinueId("continue-id")).get.id
@@ -101,7 +115,7 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
       givenUserIsAuthenticated(vatEnrolledAgent)
       givenSubscriptionJourneyRecordExistsForAuthProviderId(AuthProviderId("12345-credId"), sjrWithUserAlreadyMapped)
       givenSubscriptionJourneyRecordExistsForContinueId("continue-id", sjrWithUserAlreadyMapped)
-      val request = FakeRequest(GET, "/agent-mapping/task-list/start/?continueId=continue-id")
+      val request = fakeRequest(GET, "/agent-mapping/task-list/start/?continueId=continue-id")
       val result = callEndpointWith(request)
       status(result) shouldBe 303
       val id = await(repo.findByContinueId("continue-id")).get.id
@@ -117,7 +131,7 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
       givenNoSubscriptionJourneyRecordFoundForAuthProviderId(AuthProviderId("12345-credId"))
       val id = await(repo.create("continue-id"))
       mappingStubs.givenClientCountRecordsFound(4)
-      val request = FakeRequest(GET, s"/agent-mapping/task-list/client-relationships-found/?id=$id")
+      val request = fakeRequest(GET, s"/agent-mapping/task-list/client-relationships-found/?id=$id")
       val result = callEndpointWith(request)
       status(result) shouldBe 200
 
@@ -139,7 +153,7 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
       val id = await(repo.create("continue-id"))
       val record = await(repo.findRecord(id)).get
       await(repo.upsert(record.copy(clientCount = 12, alreadyMapped = true), "continue-id"))
-      val request = FakeRequest(GET, s"/agent-mapping/task-list/client-relationships-found/?id=$id")
+      val request = fakeRequest(GET, s"/agent-mapping/task-list/client-relationships-found/?id=$id")
       val result = callEndpointWith(request)
       status(result) shouldBe 200
 
@@ -160,7 +174,7 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
       val id = await(repo.create("continue-id"))
       val record = await(repo.findRecord(id)).get
       await(repo.upsert(record.copy(clientCount = 16, alreadyMapped = true), "continue-id"))
-      val request = FakeRequest(GET, s"/agent-mapping/task-list/client-relationships-found/?id=$id")
+      val request = fakeRequest(GET, s"/agent-mapping/task-list/client-relationships-found/?id=$id")
       val result = callEndpointWith(request)
       status(result) shouldBe 200
 
@@ -180,7 +194,7 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
       givenNoSubscriptionJourneyRecordFoundForAuthProviderId(AuthProviderId("12345-credId"))
 
       intercept[RuntimeException] {
-        await(controller.showClientRelationshipsFound("SOMETHING")(FakeRequest()))
+        await(controller.showClientRelationshipsFound("SOMETHING")(fakeRequest()))
       }.getMessage should be("no task-list mapping record found for agent code HZ1234")
     }
   }
@@ -191,7 +205,7 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
       givenSubscriptionJourneyRecordExistsForAuthProviderId(AuthProviderId("12345-credId"), sjrWithMapping)
       val id = await(repo.create("continue-id"))
 
-      val request = FakeRequest(GET, s"/agent-mapping/task-list/tag-gg/?id=$id")
+      val request = fakeRequest(GET, s"/agent-mapping/task-list/tag-gg/?id=$id")
       val result = callEndpointWith(request)
 
       checkHtmlResultContainsEscapedMsgs(result, "gg-tag.title",
@@ -218,7 +232,7 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
             legacyEnrolments =  Seq(AgentEnrolment(AgentRefNo, IdentifierValue("HZ1234"))),
             ggTag= "1234") :: sjrWithNoUserMappings.userMappings))
 
-      val request = FakeRequest(POST, s"/agent-mapping/task-list/tag-gg/?id=$id").withFormUrlEncodedBody(
+      val request = fakeRequest(POST, s"/agent-mapping/task-list/tag-gg/?id=$id").withFormUrlEncodedBody(
         "ggTag" -> "1234", "submit" -> "continue"
       )
       val result = callEndpointWith(request)
@@ -232,7 +246,7 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
       givenSubscriptionJourneyRecordExistsForAuthProviderId(AuthProviderId("12345-credId"), sjrWithMapping)
       val id = await(repo.create("continue-id"))
 
-      val request = FakeRequest(POST, s"/agent-mapping/task-list/tag-gg/?id=$id").withFormUrlEncodedBody(
+      val request = fakeRequest(POST, s"/agent-mapping/task-list/tag-gg/?id=$id").withFormUrlEncodedBody(
         "ggTag" -> "ab!7", "submit" -> "continue"
       )
       val result = callEndpointWith(request)
@@ -257,7 +271,7 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
             legacyEnrolments =  Seq(AgentEnrolment(AgentRefNo, IdentifierValue("HZ1234"))),
             ggTag= "1234") :: sjrWithNoUserMappings.userMappings))
 
-      val request = FakeRequest(POST, s"/agent-mapping/task-list/tag-gg/?id=$id").withFormUrlEncodedBody(
+      val request = fakeRequest(POST, s"/agent-mapping/task-list/tag-gg/?id=$id").withFormUrlEncodedBody(
         "ggTag" -> "1234", "submit" -> "continue"
       )
       intercept[RuntimeException] {
@@ -270,7 +284,7 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
       givenNoSubscriptionJourneyRecordFoundForAuthProviderId(AuthProviderId("12345-credId"))
       givenSubscriptionJourneyRecordNotFoundForContinueId("continue-id")
 
-      val request = FakeRequest(POST, s"/agent-mapping/task-list/tag-gg/?id=foo").withFormUrlEncodedBody(
+      val request = fakeRequest(POST, s"/agent-mapping/task-list/tag-gg/?id=foo").withFormUrlEncodedBody(
         "ggTag" -> "1234", "submit" -> "continue"
       )
 
@@ -289,7 +303,7 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
       val record = await(repo.findRecord(id)).get
       await(repo.upsert(record.copy(clientCount = 1, alreadyMapped = true), "continue-id"))
 
-      val request = FakeRequest(GET, s"/agent-mapping/task-list/existing-client-relationships/?id=$id")
+      val request = fakeRequest(GET, s"/agent-mapping/task-list/existing-client-relationships/?id=$id")
       val result = callEndpointWith(request)
       status(result) shouldBe 200
 
@@ -315,7 +329,7 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
       val record = await(repo.findRecord(id)).get
       await(repo.upsert(record.copy(clientCount = 1, alreadyMapped = false), "continue-id"))
 
-      val request = FakeRequest(GET, s"/agent-mapping/task-list/existing-client-relationships/?id=$id")
+      val request = fakeRequest(GET, s"/agent-mapping/task-list/existing-client-relationships/?id=$id")
       val result = callEndpointWith(request)
       status(result) shouldBe 200
 
@@ -332,7 +346,7 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
       val record = await(repo.findRecord(id)).get
       await(repo.upsert(record.copy(clientCount = 1, alreadyMapped = true), "continue-id"))
 
-      val request = FakeRequest(POST, s"/agent-mapping/task-list/existing-client-relationships/?id=$id").withFormUrlEncodedBody(
+      val request = fakeRequest(POST, s"/agent-mapping/task-list/existing-client-relationships/?id=$id").withFormUrlEncodedBody(
         "additional-clients" -> "no", "submit" -> "continue"
       )
 
@@ -350,7 +364,7 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
       val record = await(repo.findRecord(id)).get
       await(repo.upsert(record.copy(clientCount = 1, alreadyMapped = true), "continue-id"))
 
-      val request = FakeRequest(POST, s"/agent-mapping/task-list/existing-client-relationships/?id=$id").withFormUrlEncodedBody(
+      val request = fakeRequest(POST, s"/agent-mapping/task-list/existing-client-relationships/?id=$id").withFormUrlEncodedBody(
         "additional-clients" -> "yes", "submit" -> "continue"
       )
 
@@ -368,7 +382,7 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
       val record = await(repo.findRecord(id)).get
       await(repo.upsert(record.copy(clientCount = 1, alreadyMapped = true), "continue-id"))
 
-      val request = FakeRequest(POST, s"/agent-mapping/task-list/existing-client-relationships/?id=$id").withFormUrlEncodedBody(
+      val request = fakeRequest(POST, s"/agent-mapping/task-list/existing-client-relationships/?id=$id").withFormUrlEncodedBody(
         "additional-clients" -> "yes", "submit" -> "save"
       )
 
@@ -386,7 +400,7 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
       val record = await(repo.findRecord(id)).get
       await(repo.upsert(record.copy(clientCount = 1, alreadyMapped = true), "continue-id"))
 
-      val request = FakeRequest(POST, s"/agent-mapping/task-list/existing-client-relationships/?id=$id").withFormUrlEncodedBody(
+      val request = fakeRequest(POST, s"/agent-mapping/task-list/existing-client-relationships/?id=$id").withFormUrlEncodedBody(
         "additional-clients" -> "no", "submit" -> "save"
       )
 
@@ -404,7 +418,7 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
       val record = await(repo.findRecord(id)).get
       await(repo.upsert(record.copy(clientCount = 1, alreadyMapped = true), "continue-id"))
 
-      val request = FakeRequest(POST, s"/agent-mapping/task-list/existing-client-relationships/?id=$id").withFormUrlEncodedBody(
+      val request = fakeRequest(POST, s"/agent-mapping/task-list/existing-client-relationships/?id=$id").withFormUrlEncodedBody(
         "additional-clients" -> "foo", "submit" -> "save"
       )
 
@@ -438,7 +452,7 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
       val id = await(repo.create("continue-id"))
       givenSubscriptionJourneyRecordExistsForContinueId("continue-id", sjrWithMapping.copy(authProviderId = AuthProviderId("123-credId")))
 
-      val request = FakeRequest(GET, s"/agent-mapping/task-list/start-submit/?id=$id")
+      val request = fakeRequest(GET, s"/agent-mapping/task-list/start-submit/?id=$id")
       val result = callEndpointWith(request)
       val newId = await(repo.findByContinueId("continue-id")).get.id
 
@@ -460,7 +474,7 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
           ggTag="") :: sjrWithMapping.userMappings)
       )
 
-      val request = FakeRequest(GET, s"/agent-mapping/task-list/start-submit/?id=$id")
+      val request = fakeRequest(GET, s"/agent-mapping/task-list/start-submit/?id=$id")
       val result = callEndpointWith(request)
 
       status(result) shouldBe 303
@@ -471,7 +485,7 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
       givenUserIsAuthenticated(vatEnrolledAgent)
       givenSubscriptionJourneyRecordNotFoundForAuthProviderId(AuthProviderId("12345-credId"))
 
-      val request = FakeRequest(GET, s"/agent-mapping/task-list/start-submit/?id=foo")
+      val request = fakeRequest(GET, s"/agent-mapping/task-list/start-submit/?id=foo")
       intercept[RuntimeException] {
         callEndpointWith(request)
       }.getMessage should startWith("no task-list mapping record")
@@ -483,7 +497,7 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
       val id = await(repo.create("continue-id"))
       givenNoSubscriptionJourneyRecordFoundForContinueId("continue-id")
 
-      val request = FakeRequest(GET, s"/agent-mapping/task-list/start-submit/?id=$id")
+      val request = fakeRequest(GET, s"/agent-mapping/task-list/start-submit/?id=$id")
       intercept[RuntimeException] {
         callEndpointWith(request)
       }.getMessage should startWith("no subscription journey record found")
@@ -496,7 +510,7 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
       val id = await(repo.create("continue-id"))
       givenSubscriptionJourneyRecordExistsForContinueId("continue-id", sjrWithMapping.copy(authProviderId = AuthProviderId("123-credId")))
 
-      val request = FakeRequest(GET, s"/agent-mapping/task-list/start-submit/?id=$id")
+      val request = fakeRequest(GET, s"/agent-mapping/task-list/start-submit/?id=$id")
       val result = callEndpointWith(request)
       val newId = await(repo.findByContinueId("continue-id")).get.id
 
@@ -508,7 +522,7 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
   "200 /task-list/error/incorrect-account" should {
     "display the correct content" in {
       givenUserIsAuthenticated(vatEnrolledAgent)
-      val request = FakeRequest(GET, s"/agent-mapping/task-list/error/incorrect-account/?id=SOMETHING")
+      val request = fakeRequest(GET, s"/agent-mapping/task-list/error/incorrect-account/?id=SOMETHING")
       val result = callEndpointWith(request)
 
       status(result) shouldBe 200
@@ -522,7 +536,7 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
   "200 /task-list/already-linked" should {
     "display the correct content" in {
       givenUserIsAuthenticated(vatEnrolledAgent)
-      val request = FakeRequest(GET, s"/agent-mapping/task-list/error/already-linked/?id=SOMETHING")
+      val request = fakeRequest(GET, s"/agent-mapping/task-list/error/already-linked/?id=SOMETHING")
       val result = callEndpointWith(request)
 
       status(result) shouldBe 200
@@ -535,7 +549,7 @@ class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs 
   "200 /task-list/not-enrolled" should {
     "display the not enrolled page" in {
       givenUserIsAuthenticated(agentNotEnrolled)
-      val request = FakeRequest(GET, s"/agent-mapping/task-list/error/not-enrolled/?id=SOMETHING")
+      val request = fakeRequest(GET, s"/agent-mapping/task-list/error/not-enrolled/?id=SOMETHING")
       val result = callEndpointWith(request)
 
       status(result) shouldBe 200
