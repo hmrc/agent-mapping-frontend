@@ -193,7 +193,7 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs
       checkHtmlResultContainsEscapedMsgs(result, "page-not-found.title", "page-not-found.h1", "page-not-found.p1")
     }
 
-    "display" in {
+    "throw exception when auth is not responding" in {
       givenAuthorisationFailsWith5xx()
       implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest(GET, s"/agent-mapping/client-relationships-found?id=foo")
       intercept[UpstreamErrorResponse] {
