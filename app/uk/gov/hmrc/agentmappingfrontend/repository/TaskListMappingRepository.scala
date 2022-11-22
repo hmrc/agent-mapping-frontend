@@ -16,30 +16,28 @@
 
 package uk.gov.hmrc.agentmappingfrontend.repository
 
-import java.util.UUID
-
-import javax.inject.{Inject, Singleton}
-import org.joda.time.{DateTime, DateTimeZone}
-import play.api.libs.json.JodaWrites._
-import play.api.libs.json.JodaReads._
-import play.api.libs.json.{JsObject, Json, OFormat}
-import play.modules.reactivemongo.ReactiveMongoComponent
-import reactivemongo.api.commands.WriteResult
-import reactivemongo.api.indexes.{Index, IndexType}
-import reactivemongo.bson.{BSONDocument, BSONObjectID}
-import reactivemongo.play.json.ImplicitBSONHandlers._
-import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
+import org.mongodb.scala.model.Filters.equal
+import org.mongodb.scala.model.Indexes.ascending
+import org.mongodb.scala.model.Updates.set
+import org.mongodb.scala.model.{FindOneAndReplaceOptions, IndexModel, IndexOptions, ReplaceOptions}
+import play.api.Logging
+import play.api.libs.json.{Json, OFormat}
+import uk.gov.hmrc.agentmappingfrontend.model.MongoLocalDateTimeFormat
 import uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId
-import uk.gov.hmrc.mongo.ReactiveRepository
-import uk.gov.hmrc.mongo.json.ReactiveMongoFormats
+import uk.gov.hmrc.mongo.MongoComponent
+import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
 
+import java.time.{Instant, LocalDateTime, ZoneOffset}
+import java.util.UUID
+import java.util.concurrent.TimeUnit
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 case class TaskListMappingResult(
   id: MappingArnResultId,
   continueId: String,
   clientCount: Int = 0,
-  createdDate: DateTime = DateTime.now(DateTimeZone.UTC),
+  createdDate: LocalDateTime = Instant.now().atZone(ZoneOffset.UTC).toLocalDateTime,
   alreadyMapped: Boolean = false
 )
 
@@ -50,74 +48,64 @@ object TaskListMappingResult {
     TaskListMappingResult(id = id, continueId = continueId)
   }
 
+  implicit val localDateTimeFormat = MongoLocalDateTimeFormat.localDateTimeFormat
   implicit val format: OFormat[TaskListMappingResult] = Json.format[TaskListMappingResult]
+
 }
 
 @Singleton
-class TaskListMappingRepository @Inject()(appConfig: AppConfig, mongoComponent: ReactiveMongoComponent)
-    extends ReactiveRepository[TaskListMappingResult, BSONObjectID](
-      "mapping-task-list",
-      mongoComponent.mongoConnector.db,
-      TaskListMappingResult.format,
-      ReactiveMongoFormats.objectIdFormats) {
-
-  def findRecord(id: MappingArnResultId)(implicit ec: ExecutionContext): Future[Option[TaskListMappingResult]] =
-    find("id" -> id).map(_.headOption)
-
-  override def indexes: Seq[Index] =
-    Seq(
-      Index(key = Seq("id" -> IndexType.Ascending), name = Some("idUnique"), unique = true),
-      Index(
-        key = Seq("createdDate" -> IndexType.Ascending),
-        name = Some("createDate"),
-        unique = false,
-        options = BSONDocument("expireAfterSeconds" -> 86400)
+class TaskListMappingRepository @Inject()(mongoComponent: MongoComponent)(implicit ec: ExecutionContext)
+    extends PlayMongoRepository[TaskListMappingResult](
+      mongoComponent = mongoComponent,
+      collectionName = "mapping-task-list",
+      domainFormat = TaskListMappingResult.format,
+      indexes = Seq(
+        IndexModel(ascending("id"), IndexOptions().name("idUnique").unique(true)),
+        IndexModel(
+          ascending("createdDate"),
+          IndexOptions().name("createdDate").unique(false).expireAfter(86400, TimeUnit.SECONDS))
       )
-    )
+    ) with Logging {
 
-  def create(continueId: String)(implicit ec: ExecutionContext): Future[MappingArnResultId] = {
+  private val ID = "id"
+  private val CONTINUE_ID = "continueId"
+  private val CLIENT_COUNT = "clientCount"
 
-    val newRecord = TaskListMappingResult(continueId)
-    findByContinueId(continueId).flatMap {
-      case Some(record) => delete(record.id).flatMap(_ => insert(newRecord).map(_ => newRecord.id))
-      case None         => insert(newRecord).map(_ => newRecord.id)
-    }
-  }
-
-  def findByContinueId(continueId: String)(implicit ec: ExecutionContext): Future[Option[TaskListMappingResult]] =
-    find("continueId" -> continueId).map(_.headOption)
-
-  def updateFor(id: MappingArnResultId, clientCount: Int)(implicit ec: ExecutionContext): Future[Unit] =
-    findRecord(id).flatMap {
-      case Some(record) => {
-        val updatedClientCount = clientCount
-        val updatedRecord = Json.toJson(record.copy(clientCount = updatedClientCount)).as[JsObject]
-
-        findAndUpdate(
-          Json.obj("id" -> id),
-          updatedRecord
-        ).map(_ => ())
-      }
-      case _ => throw new RuntimeException(s"could not find record with id $id")
-    }
-
-  def upsert(taskListMappingResult: TaskListMappingResult, continueId: String)(
-    implicit ec: ExecutionContext): Future[Unit] =
+  def findRecord(id: MappingArnResultId): Future[Option[TaskListMappingResult]] =
     collection
-      .update(ordered = false)
-      .one(Json.obj("continueId" -> continueId), taskListMappingResult, upsert = true)
-      .checkResult
+      .find(equal(ID, id))
+      .headOption()
 
-  private implicit class WriteResultChecker(future: Future[WriteResult]) {
-    def checkResult(implicit ec: ExecutionContext): Future[Unit] = future.map { writeResult =>
-      if (hasProblems(writeResult)) throw new RuntimeException(writeResult.toString)
-      else ()
-    }
+  def create(continueId: String): Future[MappingArnResultId] = {
+    val newRecord = TaskListMappingResult(continueId)
+    collection
+      .replaceOne(equal(CONTINUE_ID, continueId), newRecord, ReplaceOptions().upsert(true))
+      .toFuture()
+      .map(_ => newRecord.id)
   }
 
-  def delete(id: MappingArnResultId)(implicit ec: ExecutionContext): Future[Unit] =
-    remove("id" -> id).map(_ => ())
+  def findByContinueId(continueId: String): Future[Option[TaskListMappingResult]] =
+    collection
+      .find(equal(CONTINUE_ID, continueId))
+      .headOption()
 
-  private def hasProblems(writeResult: WriteResult): Boolean =
-    !writeResult.ok || writeResult.writeErrors.nonEmpty || writeResult.writeConcernError.isDefined
+  def updateFor(id: MappingArnResultId, clientCount: Int): Future[Unit] =
+    collection
+      .updateOne(equal(ID, id), set(CLIENT_COUNT, clientCount))
+      .toFuture()
+      .map(ur =>
+        logger.info(s"UpdateFor was acknowledged: ${ur.wasAcknowledged()}. " +
+          s"Matched documents: ${ur.getMatchedCount}. Updated count: ${ur.getModifiedCount}"))
+
+  def upsert(taskListMappingResult: TaskListMappingResult, continueId: String): Future[Unit] =
+    collection
+      .findOneAndReplace(equal(CONTINUE_ID, continueId), taskListMappingResult, FindOneAndReplaceOptions().upsert(true))
+      .toFuture()
+      .map(_ => ())
+
+  def delete(id: MappingArnResultId): Future[Unit] =
+    collection
+      .deleteOne(equal(ID, id))
+      .toFuture()
+      .map(_ => ())
 }

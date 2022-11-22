@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.agentmappingfrontend.auth
 
-import play.api.mvc.Results._
+import play.api.mvc.Results.{Forbidden, _}
 import play.api.mvc.{Request, Result, _}
 import play.api.{Configuration, Environment, Logging}
 import uk.gov.hmrc.agentmappingfrontend.auth.EnrolmentHelper._
@@ -32,6 +32,7 @@ import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.{agentCode, allEnrolments, c
 import uk.gov.hmrc.auth.core.retrieve.{Credentials, ~}
 import uk.gov.hmrc.domain.AgentCode
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -45,20 +46,19 @@ trait AuthActions extends AuthorisedFunctions with Logging {
 
   def agentSubscriptionConnector: AgentSubscriptionConnector
 
-  def withBasicAuth(body: => Future[Result])(
-    implicit request: Request[AnyContent],
-    hc: HeaderCarrier,
-    ec: ExecutionContext): Future[Result] =
+  def withBasicAuth(
+    body: => Future[Result])(implicit request: Request[AnyContent], ec: ExecutionContext): Future[Result] = {
+    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
     authorised(AuthProviders(GovernmentGateway)) {
       body
     } recover {
       handleException
     }
+  }
 
-  def withAuthorisedAgent(idRefToArn: MappingArnResultId)(body: String => Future[Result])(
-    implicit request: Request[AnyContent],
-    hc: HeaderCarrier,
-    ec: ExecutionContext): Future[Result] =
+  def withAuthorisedAgent(idRefToArn: MappingArnResultId)(
+    body: String => Future[Result])(implicit request: Request[AnyContent], ec: ExecutionContext): Future[Result] = {
+    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
     authorised(AuthProviders(GovernmentGateway))
       .retrieve(allEnrolments and credentials) {
         case agentEnrolments ~ Some(Credentials(providerId, _)) =>
@@ -85,11 +85,12 @@ trait AuthActions extends AuthorisedFunctions with Logging {
       .recover {
         handleException
       }
+  }
 
   def withCheckForArn(body: Option[Arn] => Future[Result])(
     implicit request: Request[AnyContent],
-    hc: HeaderCarrier,
-    ec: ExecutionContext): Future[Result] =
+    ec: ExecutionContext): Future[Result] = {
+    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
     authorised(AuthProviders(GovernmentGateway) and AffinityGroup.Agent)
       .retrieve(allEnrolments) { agentEnrolments =>
         body(getArn(agentEnrolments))
@@ -99,21 +100,21 @@ trait AuthActions extends AuthorisedFunctions with Logging {
 
         case e => Future.successful(handleException.apply(e))
       }
+  }
 
-  def withBasicAgentAuth[A](body: => Future[Result])(
-    implicit request: Request[AnyContent],
-    hc: HeaderCarrier,
-    ec: ExecutionContext): Future[Result] =
+  def withBasicAgentAuth[A](
+    body: => Future[Result])(implicit request: Request[AnyContent], ec: ExecutionContext): Future[Result] = {
+    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
     authorised(AuthProviders(GovernmentGateway) and AffinityGroup.Agent) {
       body
     } recover {
       handleException
     }
+  }
 
-  def withSubscribingAgent(id: MappingArnResultId)(body: Agent => Future[Result])(
-    implicit request: Request[AnyContent],
-    hc: HeaderCarrier,
-    ec: ExecutionContext): Future[Result] =
+  def withSubscribingAgent(id: MappingArnResultId)(
+    body: Agent => Future[Result])(implicit request: Request[AnyContent], ec: ExecutionContext): Future[Result] = {
+    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
     authorised(AuthProviders(GovernmentGateway) and AffinityGroup.Agent)
       .retrieve(credentials and agentCode and allEnrolments) {
         case Some(Credentials(providerId, _)) ~ agentCodeOpt ~ enrols =>
@@ -139,10 +140,12 @@ trait AuthActions extends AuthorisedFunctions with Logging {
             }
             Future.successful(Redirect(redirectRoute))
           }
+        case ~(~(None, _), _) => Future.successful(Forbidden)
       }
       .recover {
         handleException
       }
+  }
 
   private def agentEnrolmentsFromEligibleEnrolments(eligibleEnrolments: Set[Enrolment]): Seq[AgentEnrolment] =
     eligibleEnrolments

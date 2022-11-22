@@ -16,22 +16,22 @@
 
 package uk.gov.hmrc.agentmappingfrontend.repository
 
-import java.util.UUID
-
-import javax.inject.{Inject, Singleton}
-import org.joda.time.{DateTime, DateTimeZone}
+import org.mongodb.scala.model.Updates.set
+import org.mongodb.scala.model.Filters.equal
+import org.mongodb.scala.model.Indexes.ascending
+import org.mongodb.scala.model.{IndexModel, IndexOptions, ReplaceOptions}
+import play.api.Logging
 import play.api.libs.json.{Format, Json, OFormat}
-import play.modules.reactivemongo.ReactiveMongoComponent
-import reactivemongo.api.commands.WriteResult
-import reactivemongo.api.indexes.{Index, IndexType}
-import reactivemongo.bson.{BSONDocument, BSONObjectID}
-import reactivemongo.play.json.ImplicitBSONHandlers._
-import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
+import uk.gov.hmrc.agentmappingfrontend.model.MongoLocalDateTimeFormat
 import uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
-import uk.gov.hmrc.mongo.ReactiveRepository
-import uk.gov.hmrc.mongo.json.ReactiveMongoFormats
+import uk.gov.hmrc.mongo.MongoComponent
+import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
 
+import java.time.{Instant, LocalDateTime, ZoneOffset}
+import java.util.UUID
+import java.util.concurrent.TimeUnit
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 case class ClientCountAndGGTag(clientCount: Int, ggTag: String)
@@ -43,7 +43,7 @@ case object ClientCountAndGGTag {
 case class MappingArnResult(
   id: MappingArnResultId,
   arn: Arn,
-  createdDate: DateTime = DateTime.now(DateTimeZone.UTC),
+  createdDate: LocalDateTime = Instant.now().atZone(ZoneOffset.UTC).toLocalDateTime,
   currentCount: Int,
   currentGGTag: String = "",
   clientCountAndGGTags: Seq[ClientCountAndGGTag] = Seq.empty,
@@ -51,7 +51,6 @@ case class MappingArnResult(
 
 object MappingResult {
   type MappingArnResultId = String
-
 }
 
 object MappingArnResult {
@@ -61,64 +60,81 @@ object MappingArnResult {
     MappingArnResult(id = id, arn = arn, currentCount = currentCount, clientCountAndGGTags = clientCountAndGGTags)
   }
 
-  implicit val dateFormat: Format[DateTime] = ReactiveMongoFormats.dateTimeFormats
+  implicit val localDateTimeFormat: Format[LocalDateTime] = MongoLocalDateTimeFormat.localDateTimeFormat
   implicit val format: OFormat[MappingArnResult] = Json.format
 }
 
 @Singleton
-class MappingArnRepository @Inject()(appConfig: AppConfig, mongoComponent: ReactiveMongoComponent)
-    extends ReactiveRepository[MappingArnResult, BSONObjectID](
-      "mapping-arn",
-      mongoComponent.mongoConnector.db,
-      MappingArnResult.format,
-      ReactiveMongoFormats.objectIdFormats) {
-
-  override def indexes: Seq[Index] =
-    Seq(
-      Index(key = Seq("id" -> IndexType.Ascending), name = Some("idUnique"), unique = true),
-      Index(
-        key = Seq("createdDate" -> IndexType.Ascending),
-        name = Some("createDate"),
-        unique = false,
-        options = BSONDocument("expireAfterSeconds" -> 86400)
+class MappingArnRepository @Inject()(mongoComponent: MongoComponent)(implicit ec: ExecutionContext)
+    extends PlayMongoRepository[MappingArnResult](
+      mongoComponent = mongoComponent,
+      collectionName = "mapping-arn",
+      domainFormat = MappingArnResult.format,
+      indexes = Seq(
+        IndexModel(ascending("id"), IndexOptions().name("idUnique").unique(true)),
+        IndexModel(
+          ascending("createdDate"),
+          IndexOptions().name("createDate").unique(false).expireAfter(86400, TimeUnit.SECONDS))
       )
-    )
+    ) with Logging {
 
-  def create(arn: Arn, currentCount: Int = 0, clientCountAndGGTags: Seq[ClientCountAndGGTag] = Seq.empty)(
-    implicit ec: ExecutionContext): Future[MappingArnResultId] = {
+  def create(
+    arn: Arn,
+    currentCount: Int = 0,
+    clientCountAndGGTags: Seq[ClientCountAndGGTag] = Seq.empty): Future[MappingArnResultId] = {
     val record = MappingArnResult(arn = arn, currentCount = currentCount, clientCountAndGGTags = clientCountAndGGTags)
-    insert(record).map(_ => record.id)
-  }
-
-  def findRecord(id: MappingArnResultId)(implicit ec: ExecutionContext): Future[Option[MappingArnResult]] =
-    find("id" -> id).map(_.headOption)
-
-  def upsert(mappingArnResult: MappingArnResult, id: MappingArnResultId)(implicit ec: ExecutionContext): Future[Unit] =
     collection
-      .update(ordered = true)
-      .one(Json.obj("id" -> id), mappingArnResult, upsert = true)
-      .checkResult
-
-  def updateCurrentGGTag(id: MappingArnResultId, ggTag: String)(implicit ec: ExecutionContext): Future[Unit] = {
-    val updateOp = Json.obj("$set" -> Json.obj("currentGGTag" -> ggTag))
-    collection.update(ordered = false).one(Json.obj("id" -> id), updateOp).checkResult
+      .insertOne(record)
+      .toFuture()
+      .map(_ => record.id)
   }
 
-  def updateMappingCompleteStatus(id: MappingArnResultId)(implicit ec: ExecutionContext): Future[Unit] = {
-    val updateOp = Json.obj("$set" -> Json.obj("alreadyMapped" -> true))
-    collection.update(ordered = false).one(Json.obj("id" -> id), updateOp).checkResult
-  }
+  def findRecord(id: MappingArnResultId): Future[Option[MappingArnResult]] =
+    collection
+      .find(equal("id", id))
+      .headOption()
 
-  def delete(id: MappingArnResultId)(implicit ec: ExecutionContext): Future[Unit] =
-    remove("id" -> id).map(_ => ())
+  def upsert(mappingArnResult: MappingArnResult, id: MappingArnResultId): Future[Unit] =
+    collection
+      .replaceOne(
+        equal("id", id),
+        mappingArnResult,
+        ReplaceOptions()
+          .upsert(true))
+      .toFuture()
+      .map(
+        wr =>
+          if (!wr.wasAcknowledged()) throw new RuntimeException("Something went wrong with upsert.")
+          else
+            logger.info(s"Upsert success. Found ${wr.getMatchedCount} matching documents. " +
+              s"${wr.getModifiedCount} were modified."))
 
-  implicit class WriteResultChecker(future: Future[WriteResult]) {
-    def checkResult(implicit ec: ExecutionContext): Future[Unit] = future.map { writeResult =>
-      if (hasProblems(writeResult)) throw new RuntimeException(writeResult.toString)
-      else ()
-    }
-  }
+  def updateCurrentGGTag(id: MappingArnResultId, ggTag: String): Future[Unit] =
+    collection
+      .updateOne(equal("id", id), set("currentGGTag", ggTag))
+      .toFuture()
+      .map(
+        wr =>
+          if (!wr.wasAcknowledged()) throw new RuntimeException("Something went wrong with updateCurrentGGTag.")
+          else
+            logger.info(s"updateCurrentGGTag success. Found ${wr.getMatchedCount} matching documents. " +
+              s"${wr.getModifiedCount} were modified."))
 
-  private def hasProblems(writeResult: WriteResult): Boolean =
-    !writeResult.ok || writeResult.writeErrors.nonEmpty || writeResult.writeConcernError.isDefined
+  def updateMappingCompleteStatus(id: MappingArnResultId): Future[Unit] =
+    collection
+      .updateOne(equal("id", id), set("alreadyMapped", true))
+      .toFuture()
+      .map(
+        wr =>
+          if (!wr.wasAcknowledged())
+            throw new RuntimeException("Something went wrong with updateMappingCompleteStatus.")
+          else
+            logger.info(s"updateMappingCompleteStatus success. Found ${wr.getMatchedCount} matching documents. " +
+              s"${wr.getModifiedCount} were modified."))
+
+  def delete(id: MappingArnResultId): Future[Unit] =
+    collection
+      .deleteOne(equal("id", id))
+      .toFuture()
+      .map(_ => ())
 }

@@ -15,7 +15,7 @@
  *@
 
 @import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
-@import uk.gov.hmrc.agentmappingfrontend.views.html
+@import uk.gov.hmrc.agentmappingfrontend.views.html.MainTemplate
 @import uk.gov.hmrc.agentmappingfrontend.controllers.routes
 
 @this(mainTemplate: MainTemplate)
@@ -27,5 +27,5 @@
 
     <p>@msgs("page-not-found.p1")</p>
 
-    <a class="govuk-button" role="button" name="continue" id="continue" href="@routes.SignedOutController.reLogForMappingStart()" draggable="false">@msgs("button.continue")</a>
+    <a class="govuk-button" role="button" name="continue" id="continue" href="@routes.SignedOutController.reLogForMappingStart" draggable="false">@msgs("button.continue")</a>
 }
