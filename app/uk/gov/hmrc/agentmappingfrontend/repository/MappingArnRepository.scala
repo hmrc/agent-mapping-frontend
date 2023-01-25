@@ -75,7 +75,8 @@ class MappingArnRepository @Inject()(mongoComponent: MongoComponent)(implicit ec
         IndexModel(
           ascending("createdDate"),
           IndexOptions().name("createDate").unique(false).expireAfter(86400, TimeUnit.SECONDS))
-      )
+      ),
+      replaceIndexes = true
     ) with Logging {
 
   def create(

@@ -64,7 +64,8 @@ class TaskListMappingRepository @Inject()(mongoComponent: MongoComponent)(implic
         IndexModel(
           ascending("createdDate"),
           IndexOptions().name("createdDate").unique(false).expireAfter(86400, TimeUnit.SECONDS))
-      )
+      ),
+      replaceIndexes = true
     ) with Logging {
 
   private val ID = "id"
