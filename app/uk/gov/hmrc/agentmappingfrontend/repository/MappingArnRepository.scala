@@ -27,6 +27,7 @@ import uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResul
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
+import java.time.temporal.ChronoUnit.MILLIS
 
 import java.time.{Instant, LocalDateTime, ZoneOffset}
 import java.util.UUID
@@ -43,7 +44,7 @@ case object ClientCountAndGGTag {
 case class MappingArnResult(
   id: MappingArnResultId,
   arn: Arn,
-  createdDate: LocalDateTime = Instant.now().atZone(ZoneOffset.UTC).toLocalDateTime,
+  createdDate: LocalDateTime = Instant.now().atZone(ZoneOffset.UTC).toLocalDateTime.truncatedTo(MILLIS),
   currentCount: Int,
   currentGGTag: String = "",
   clientCountAndGGTags: Seq[ClientCountAndGGTag] = Seq.empty,
