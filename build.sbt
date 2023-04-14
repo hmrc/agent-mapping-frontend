@@ -1,5 +1,4 @@
 import sbt.Keys.resolvers
-import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
 
 lazy val scoverageSettings = {
   import scoverage.ScoverageKeys
@@ -56,5 +55,7 @@ lazy val root = (project in file("."))
     IntegrationTest / scalafmtOnCompile := true
   )
   .enablePlugins(PlayScala, SbtDistributablesPlugin)
+  //v Required to prevent https://github.com/scalatest/scalatest/issues/1427 (unstable build due to failure to read test reports)
+  .disablePlugins(JUnitXmlReportPlugin)
 
 inConfig(IntegrationTest)(scalafmtCoreSettings)

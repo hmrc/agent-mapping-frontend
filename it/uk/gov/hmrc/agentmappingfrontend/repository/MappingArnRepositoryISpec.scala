@@ -9,6 +9,9 @@ import uk.gov.hmrc.agentmappingfrontend.support.UnitSpec
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
 import uk.gov.hmrc.mongo.test.DefaultPlayMongoRepositorySupport
+
+import java.time.{Instant, ZoneOffset}
+import java.time.temporal.ChronoUnit.MILLIS
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class MappingArnRepositoryISpec extends UnitSpec with GuiceOneAppPerSuite with DefaultPlayMongoRepositorySupport[MappingArnResult] {
@@ -29,12 +32,15 @@ class MappingArnRepositoryISpec extends UnitSpec with GuiceOneAppPerSuite with D
   "MappingArnRepository" should {
 
     "create a MappingArnResult record" in {
+      val now = Instant.now().atZone(ZoneOffset.UTC).toLocalDateTime.truncatedTo(MILLIS)
       val result = await(mappingArnRepository.create(arn))
       result should not be empty
 
       val mappingArnResult = await(repository.collection.find(Filters.equal("id",result)).head)
       mappingArnResult should have('id (result), 'arn (arn))
       mappingArnResult.id.size shouldBe 32
+      mappingArnResult.createdDate shouldBe now
+      mappingArnResult.currentCount shouldBe 0
     }
 
     "find a MappingArnResult record by Id" in {
