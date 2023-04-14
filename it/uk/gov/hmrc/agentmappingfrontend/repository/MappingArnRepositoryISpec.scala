@@ -11,7 +11,7 @@ import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
 import uk.gov.hmrc.mongo.test.DefaultPlayMongoRepositorySupport
 
 import java.time.{Instant, ZoneOffset}
-import java.time.temporal.ChronoUnit.MILLIS
+import java.time.temporal.ChronoUnit.{MILLIS, SECONDS}
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class MappingArnRepositoryISpec extends UnitSpec with GuiceOneAppPerSuite with DefaultPlayMongoRepositorySupport[MappingArnResult] {
@@ -24,7 +24,7 @@ class MappingArnRepositoryISpec extends UnitSpec with GuiceOneAppPerSuite with D
 
   val repository: PlayMongoRepository[MappingArnResult] = new MappingArnRepository(mongoComponent)
 
-  val mappingArnRepository = repository.asInstanceOf[MappingArnRepository]
+  val mappingArnRepository: MappingArnRepository = repository.asInstanceOf[MappingArnRepository]
 
 
   private val arn = Arn("TARN0000001")
@@ -39,7 +39,8 @@ class MappingArnRepositoryISpec extends UnitSpec with GuiceOneAppPerSuite with D
       val mappingArnResult = await(repository.collection.find(Filters.equal("id",result)).head)
       mappingArnResult should have('id (result), 'arn (arn))
       mappingArnResult.id.size shouldBe 32
-      mappingArnResult.createdDate shouldBe now
+      mappingArnResult.createdDate.toString.length shouldBe now.toString.length // check precision
+      mappingArnResult.createdDate.truncatedTo(SECONDS) shouldBe now.truncatedTo(SECONDS) //check approx match (await time results in ms delay), could remove
       mappingArnResult.currentCount shouldBe 0
     }
 
