@@ -31,9 +31,11 @@ lazy val root = (project in file("."))
       "-language:implicitConversions",
       "-P:silencer:pathFilters=views;routes"),
     PlayKeys.playDefaultPort := 9438,
-    resolvers += Resolver.typesafeRepo("releases"),
-    resolvers += "HMRC-open-artefacts-maven" at "https://open.artefacts.tax.service.gov.uk/maven2",
-    resolvers += Resolver.url("HMRC-open-artefacts-ivy", url("https://open.artefacts.tax.service.gov.uk/ivy2"))(Resolver.ivyStylePatterns),
+    resolvers ++= Seq(
+      Resolver.typesafeRepo("releases"),
+      "HMRC-open-artefacts-maven" at "https://open.artefacts.tax.service.gov.uk/maven2",
+      Resolver.url("HMRC-open-artefacts-ivy", url("https://open.artefacts.tax.service.gov.uk/ivy2"))(Resolver.ivyStylePatterns),
+    ),
     libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test,
     libraryDependencies ++= Seq(
       compilerPlugin("com.github.ghik" % "silencer-plugin" % silencerVersion cross CrossVersion.full),
