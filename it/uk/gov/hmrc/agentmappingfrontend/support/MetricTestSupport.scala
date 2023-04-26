@@ -7,7 +7,7 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters.IteratorHasAsScala
 
 trait MetricTestSupport {
   self: GuiceOneAppPerSuite with Matchers =>

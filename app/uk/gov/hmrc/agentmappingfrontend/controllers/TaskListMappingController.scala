@@ -128,7 +128,8 @@ class TaskListMappingController @Inject()(
 
   def submitGGTag(id: MappingArnResultId): Action[AnyContent] = Action.async { implicit request =>
     withSubscribingAgent(id) { agent =>
-      GGTagForm.form.bindFromRequest
+      GGTagForm.form
+        .bindFromRequest()
         .fold(
           formWithErrors => {
             Ok(ggTagTemplate(formWithErrors, id, taskList = true))
@@ -191,7 +192,8 @@ class TaskListMappingController @Inject()(
 
   def submitExistingClientRelationships(id: MappingArnResultId): Action[AnyContent] = Action.async { implicit request =>
     withSubscribingAgent(id) { agent =>
-      ExistingClientRelationshipsForm.form.bindFromRequest
+      ExistingClientRelationshipsForm.form
+        .bindFromRequest()
         .fold(
           formWithErrors => {
             backUrl(id).flatMap(

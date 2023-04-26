@@ -36,8 +36,8 @@ class MappingArnRepositoryISpec extends UnitSpec with GuiceOneAppPerSuite with D
       val result = await(mappingArnRepository.create(arn))
       result should not be empty
 
-      val mappingArnResult = await(repository.collection.find(Filters.equal("id",result)).head)
-      mappingArnResult should have('id (result), 'arn (arn))
+      val mappingArnResult = await(repository.collection.find(Filters.equal("id",result)).head())
+      mappingArnResult should have(Symbol("id") (result), Symbol("arn") (arn))
       mappingArnResult.id.size shouldBe 32
       mappingArnResult.createdDate.toString.length shouldBe now.toString.length // check precision
       mappingArnResult.createdDate.truncatedTo(SECONDS) shouldBe now.truncatedTo(SECONDS) //check approx match (await time results in ms delay), could remove
