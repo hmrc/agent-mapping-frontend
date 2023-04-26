@@ -375,7 +375,7 @@ class AuthActionsSpec extends BaseControllerISpec with AuthStubs with AgentSubsc
     }
 
     "return None no Bearer Token" in {
-      givenUserIsNotAuthenticated
+      givenUserIsNotAuthenticated()
 
       val result = TestController.testWithCheckForArn
       status(result) shouldBe 200

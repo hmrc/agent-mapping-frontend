@@ -133,7 +133,8 @@ class MappingController @Inject()(
     withAuthorisedAgent(id) { providerId =>
       repository.findRecord(id).flatMap {
         case Some(record) =>
-          GGTagForm.form.bindFromRequest
+          GGTagForm.form
+            .bindFromRequest()
             .fold(
               formWithErrors => {
                 Ok(ggTagTemplate(formWithErrors, id))
@@ -187,7 +188,8 @@ class MappingController @Inject()(
 
   def submitExistingClientRelationships(id: MappingArnResultId): Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedAgent(id) { _ =>
-      ExistingClientRelationshipsForm.form.bindFromRequest
+      ExistingClientRelationshipsForm.form
+        .bindFromRequest()
         .fold(
           formWithErrors => {
             repository.findRecord(id).flatMap {

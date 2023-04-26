@@ -13,17 +13,16 @@ lazy val scoverageSettings = {
   )
 }
 
-val silencerVersion = "1.7.8"
+val silencerVersion = "1.7.12"
 
 lazy val root = (project in file("."))
   .settings(
     name := "agent-mapping-frontend",
     organization := "uk.gov.hmrc",
-    scalaVersion := "2.12.15",
+    scalaVersion := "2.13.10",
     scalacOptions ++= Seq(
       "-Xfatal-warnings",
       "-Xlint:-missing-interpolator,_",
-      "-Yno-adapted-args",
       "-Ywarn-dead-code",
       "-deprecation",
       "-feature",
@@ -37,6 +36,7 @@ lazy val root = (project in file("."))
       Resolver.url("HMRC-open-artefacts-ivy", url("https://open.artefacts.tax.service.gov.uk/ivy2"))(Resolver.ivyStylePatterns),
     ),
     libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test,
+    libraryDependencySchemes ++= Seq("org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always),
     libraryDependencies ++= Seq(
       compilerPlugin("com.github.ghik" % "silencer-plugin" % silencerVersion cross CrossVersion.full),
       "com.github.ghik" % "silencer-lib" % silencerVersion % Provided cross CrossVersion.full
