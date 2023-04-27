@@ -23,7 +23,6 @@ import play.api.mvc.Call
 import uk.gov.hmrc.agentmappingfrontend.controllers.routes
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import views.html.helper.urlEncode
-import uk.gov.hmrc.hmrcfrontend.config.ContactFrontendConfig
 
 @ImplementedBy(classOf[FrontendAppConfig])
 trait AppConfig {
@@ -50,8 +49,7 @@ trait AppConfig {
   val routeToSwitchLanguage: String => Call
 }
 @Singleton
-class FrontendAppConfig @Inject()(servicesConfig: ServicesConfig, contactFrontendConfig: ContactFrontendConfig)
-    extends AppConfig {
+class FrontendAppConfig @Inject()(servicesConfig: ServicesConfig) extends AppConfig {
 
   override val appName = "agent-mapping-frontend"
 

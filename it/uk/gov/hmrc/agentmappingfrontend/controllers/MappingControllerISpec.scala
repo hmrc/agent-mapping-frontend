@@ -483,8 +483,7 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs
 
     behave like anEndpointReachableIfSignedInWithEligibleEnrolment(
       GET,
-      routes.MappingController.complete(id = "someArnRefForMapping").url,
-      expectCheckAgentRefCodeAudit = false)(callEndpointWith)
+      routes.MappingController.complete(id = "someArnRefForMapping").url)(callEndpointWith)
 
     testsForComplete(true)
     testsForComplete(false)

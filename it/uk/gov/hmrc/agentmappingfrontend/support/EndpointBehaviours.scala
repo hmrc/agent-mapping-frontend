@@ -32,8 +32,7 @@ trait EndpointBehaviours extends AuthStubs {
 
   protected def anEndpointReachableIfSignedInWithEligibleEnrolment(
     endpointMethod: String,
-    endpointPath: String,
-    expectCheckAgentRefCodeAudit: Boolean)(doRequest: Request[AnyContentAsEmpty.type] => Result): Unit = {
+    endpointPath: String)(doRequest: Request[AnyContentAsEmpty.type] => Result): Unit = {
     behave like anAuthenticatedEndpoint(endpointMethod, endpointPath, doRequest)
 
     "redirect to /not-enrolled page if the current user has an ineligible enrolment" in {
