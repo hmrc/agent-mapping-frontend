@@ -50,7 +50,7 @@ class AuthActionsSpec extends BaseControllerISpec with AuthStubs with AgentSubsc
     val appConfig = app.injector.instanceOf[AppConfig]
 
     def testWithAuthorisedAgent =
-      await(withAuthorisedAgent("arnRefToTryAgain") { providerId => Future.successful(Ok("Done.")) })
+      await(withAuthorisedAgent("arnRefToTryAgain") { _ => Future.successful(Ok("Done.")) })
 
     def testWithBasicAuth =
       await(withBasicAuth { Future.successful(Ok("Done."))})
@@ -62,7 +62,7 @@ class AuthActionsSpec extends BaseControllerISpec with AuthStubs with AgentSubsc
       await(withCheckForArn { optEnrolmentIdentifier => Future.successful(Ok(optEnrolmentIdentifier.toString))})
 
     def testWithSubscribingAgent =
-      await(withSubscribingAgent("mappingArnResultId"){ agent => Future.successful(Ok("Done."))})
+      await(withSubscribingAgent("mappingArnResultId"){ _ => Future.successful(Ok("Done."))})
 
   }
 
