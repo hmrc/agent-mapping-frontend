@@ -16,16 +16,13 @@
 
 @import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
 @import uk.gov.hmrc.agentmappingfrontend.views.html.components.head
-@import uk.gov.hmrc.govukfrontend.views.html.components.GovukPhaseBanner
-@import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
-@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.{HmrcLayout, HmrcReportTechnicalIssueHelper}
-@import views.html.helper.CSPNonce
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.{HmrcStandardPage, HmrcReportTechnicalIssueHelper}
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage._
+@import uk.gov.hmrc.govukfrontend.views.html.components._
 
 @this(
         head: head,
-        hmrcLayout: HmrcLayout,
-        govukPhaseBanner: GovukPhaseBanner,
-        standardBetaBanner: StandardBetaBanner,
+        hmrcStandardPage: HmrcStandardPage,
         hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper
 )
 
@@ -45,17 +42,17 @@
     </div>
 }
 
-@hmrcLayout(
+@hmrcStandardPage(HmrcStandardPageParams(
     pageTitle = Some(title + " - " + serviceName + " " + msgs("servicename.titleSuffix")),
     serviceName = Some(serviceName),
-    phaseBanner = Some(standardBetaBanner(appConfig.betaFeedbackUrl)),
+    serviceURLs = ServiceURLs(
+        serviceUrl = None,
+        signOutUrl = None
+    ),
+    banners = Banners(displayHmrcBanner = true),
+    templateOverrides = TemplateOverrides(
+        additionalHeadBlock = Some(head(hasTimeout))
+    ),
     isWelshTranslationAvailable = true,
-    displayHmrcBanner = true,
-    serviceUrl = None,
-    signOutUrl = None,
-    additionalHeadBlock = Some(head(hasTimeout)),
-    backLinkUrl = backLinkHref,
-    nonce = CSPNonce.get
-)(mainContentWithHelpLink)
-
-
+    backLink = if(backLinkHref.isDefined) Some(BackLink(href = backLinkHref.get)) else None
+))(mainContentWithHelpLink)
