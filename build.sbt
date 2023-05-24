@@ -1,11 +1,10 @@
 import sbt.Keys.resolvers
 
-val silencerVersion = "1.7.12"
-
 lazy val root = (project in file("."))
   .settings(
     name := "agent-mapping-frontend",
     organization := "uk.gov.hmrc",
+    majorVersion := 1,
     scalaVersion := "2.13.10",
     scalacOptions ++= Seq(
       "-Werror",
@@ -34,7 +33,6 @@ lazy val root = (project in file("."))
   )
   .configs(IntegrationTest)
   .settings(
-    majorVersion := 0,
     IntegrationTest / Keys.fork := false,
     Defaults.itSettings,
     IntegrationTest / unmanagedSourceDirectories += baseDirectory(_ / "it").value,
