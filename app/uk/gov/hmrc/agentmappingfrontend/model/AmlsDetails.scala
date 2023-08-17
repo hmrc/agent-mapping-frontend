@@ -29,7 +29,6 @@ case class AmlsDetails(
   membershipExpiresOn: Option[LocalDate]) {
   val isPending: Boolean = membershipExpiresOn.isEmpty
   val isRegistered: Boolean = !isPending
-  val safeIdsMatch: Option[Boolean] = amlsSafeId.flatMap(amls => agentBPRSafeId.map(_ == amls))
 }
 
 object AmlsDetails {
