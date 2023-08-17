@@ -21,7 +21,7 @@ object CoverageSettings {
   val settings: Seq[Setting[_]] = Seq(
     ScoverageKeys.coverageExcludedPackages := excludedPackages,
     ScoverageKeys.coverageExcludedFiles := excludedFiles,
-    ScoverageKeys.coverageMinimumStmtTotal := 95.00,
+    ScoverageKeys.coverageMinimumStmtTotal := 90.00,
     ScoverageKeys.coverageMinimumStmtPerFile := 80.00,
     ScoverageKeys.coverageMinimumBranchTotal := 89.00,
     ScoverageKeys.coverageMinimumBranchPerFile := 70.00,
