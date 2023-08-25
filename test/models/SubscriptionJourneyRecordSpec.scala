@@ -30,8 +30,23 @@ class SubscriptionJourneyRecordSpec extends UnitSpec {
       val sjr: SubscriptionJourneyRecord = SubscriptionJourneyRecord(
         authProviderId = AuthProviderId("12345"),
         continueId = Some("continueId"), // once allocated, should not be changed?
-        businessDetails =
-          BusinessDetails(BusinessType.SoleTrader, Utr("utr"), Postcode("SW1 1AA"), None, None, None, None, None),
+        businessDetails = BusinessDetails(
+          BusinessType.SoleTrader,
+          Utr("utr"),
+          Postcode("SW1 1AA"),
+          Some(
+            Registration(
+              Some("taxpayer"),
+              false,
+              false,
+              BusinessAddress("1 Any st", None, None, None, Some("W1N2 2TD"), "GB"),
+              Some("email@email.com"),
+              Some("01273111111"))),
+          None,
+          None,
+          None,
+          None
+        ),
         amlsData = Some(
           AmlsData(true, Some(false), Some(AmlsDetails("body", Some("foo"), None, None, None, Some(LocalDate.now()))))),
       )
