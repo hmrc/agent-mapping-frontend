@@ -43,11 +43,13 @@ abstract class BaseControllerISpec
   protected def appBuilder: GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .configure(
-        "microservice.services.auth.port"          -> wireMockPort,
-        "microservice.services.agent-mapping.port" -> wireMockPort,
-        "microservice.services.agent-subscription.port" -> wireMockPort,
-        "application.router"                       -> "testOnlyDoNotUseInAppConf.Routes",
-        "clientCount.maxRecords" -> 15
+        "microservice.services.auth.port"                 -> wireMockPort,
+        "microservice.services.agent-mapping.port"              -> wireMockPort,
+        "microservice.services.agent-subscription.port"         -> wireMockPort,
+        "microservice.services.agent-client-authorisation.port" -> wireMockPort,
+        "application.router"                                    -> "testOnlyDoNotUseInAppConf.Routes",
+        "clientCount.maxRecords"                                -> 15,
+        "cache.suspensionDetails.duration"                      -> "0 seconds" // disable cache or tests will interfere with each other
       )
       .configure(additionalConfig)
       .overrides(moduleWithOverrides)

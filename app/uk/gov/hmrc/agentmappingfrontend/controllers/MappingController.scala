@@ -21,7 +21,7 @@ import play.api.mvc._
 import play.api.{Configuration, Environment, Logging}
 import uk.gov.hmrc.agentmappingfrontend.auth.AuthActions
 import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
-import uk.gov.hmrc.agentmappingfrontend.connectors.{AgentSubscriptionConnector, MappingConnector}
+import uk.gov.hmrc.agentmappingfrontend.connectors.{AgentClientAuthorisationConnector, AgentSubscriptionConnector, MappingConnector}
 import uk.gov.hmrc.agentmappingfrontend.model.RadioInputAnswer.{No, Yes}
 import uk.gov.hmrc.agentmappingfrontend.model._
 import uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId
@@ -41,6 +41,7 @@ class MappingController @Inject()(
   val authConnector: AuthConnector,
   mappingConnector: MappingConnector,
   val agentSubscriptionConnector: AgentSubscriptionConnector,
+  val agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
   repository: MappingArnRepository,
   val config: Configuration,
   val env: Environment,

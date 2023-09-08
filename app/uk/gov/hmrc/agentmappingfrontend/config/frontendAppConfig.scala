@@ -17,49 +17,60 @@
 package uk.gov.hmrc.agentmappingfrontend.config
 
 import com.google.inject.ImplementedBy
+
 import javax.inject.{Inject, Singleton}
 import play.api.i18n.Lang
-import play.api.mvc.Call
-import uk.gov.hmrc.agentmappingfrontend.controllers.routes
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import views.html.helper.urlEncode
 
+import scala.concurrent.duration.FiniteDuration
+
 @ImplementedBy(classOf[FrontendAppConfig])
 trait AppConfig {
-  val reportAProblemPartialUrl: String
-  val reportAProblemNonJSUrl: String
-  val signOutRedirectUrl: String
-  val taskListSignOutRedirectUrl: String
-  val signInAndContinue: String
+  val appName: String = "agent-mapping-frontend"
+
   val agentServicesFrontendBaseUrl: String
+  val asaFrontendExternalUrl: String
   val companyAuthFrontendBaseUrl: String
   val agentMappingBaseUrl: String
   val agentSubscriptionBaseUrl: String
   val agentSubscriptionFrontendBaseUrl: String
-  val agentSubscriptionFrontendTaskListUrl: String
-  val agentSubscriptionFrontendProgressSavedUrl: String
   val agentMappingFrontendBaseUrl: String
-  val appName: String
+  val agentClientAuthorisationBaseUrl: String
+  val contactFrontendHost: String
   val clientCountMaxRecords: Int
   val timeout: Int
   val timeoutCountdown: Int
   val languageToggle: Boolean
-  val languageMap: Map[String, Lang]
-  val routeToSwitchLanguage: String => Call
+  val suspensionCacheDuration: FiniteDuration
+
+  // derived values
+  lazy val suspensionCacheEnabled: Boolean = suspensionCacheDuration.toMillis != 0
+  private val contactFormServiceIdentifier = "AOSS"
+  lazy val reportAProblemPartialUrl =
+    s"$contactFrontendHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
+  lazy val reportAProblemNonJSUrl =
+    s"$contactFrontendHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
+  lazy val signOutRedirectUrl: String = s"$agentMappingFrontendBaseUrl/agent-mapping/start-submit"
+  lazy val taskListSignOutRedirectUrl: String =
+    s"$agentMappingFrontendBaseUrl/agent-mapping/task-list/start-submit"
+  lazy val agentSubscriptionFrontendTaskListUrl: String =
+    s"$agentSubscriptionFrontendBaseUrl/task-list"
+  lazy val agentSubscriptionFrontendProgressSavedUrl =
+    s"$agentSubscriptionFrontendBaseUrl/progress-saved/?backLink=$agentMappingFrontendBaseUrl/agent-mapping"
+  lazy val signInAndContinue =
+    s"$companyAuthFrontendBaseUrl/gg/sign-in?continue=${urlEncode(agentServicesFrontendBaseUrl)}"
+  lazy val accountLimitedUrl: String = asaFrontendExternalUrl + "/agent-services-account/account-limited"
+
+  val languageMap: Map[String, Lang] = Map(
+    "english" -> Lang("en"),
+    "cymraeg" -> Lang("cy")
+  )
 }
 @Singleton
 class FrontendAppConfig @Inject()(servicesConfig: ServicesConfig) extends AppConfig {
 
-  override val appName = "agent-mapping-frontend"
-
-  def getConf(key: String): String = servicesConfig.getString(key)
-
-  private val contactFormServiceIdentifier = "AOSS"
-  private lazy val contactFrontendHost: String = servicesConfig.getString("contact-frontend.host")
-  override lazy val reportAProblemPartialUrl =
-    s"$contactFrontendHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
-  override lazy val reportAProblemNonJSUrl =
-    s"$contactFrontendHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
+  override lazy val contactFrontendHost: String = servicesConfig.getString("contact-frontend.host")
 
   //base urls
   override lazy val companyAuthFrontendBaseUrl: String =
@@ -73,17 +84,9 @@ class FrontendAppConfig @Inject()(servicesConfig: ServicesConfig) extends AppCon
     s"${servicesConfig.getString("microservice.services.agent-mapping-frontend.external-url")}"
   override lazy val agentServicesFrontendBaseUrl: String =
     s"${servicesConfig.getString("microservice.services.agent-services-account-frontend.external-url")}/agent-services-account"
-
-  //constructed urls
-  override lazy val signOutRedirectUrl: String = s"$agentMappingFrontendBaseUrl/agent-mapping/start-submit"
-  override lazy val taskListSignOutRedirectUrl: String =
-    s"$agentMappingFrontendBaseUrl/agent-mapping/task-list/start-submit"
-  override val agentSubscriptionFrontendTaskListUrl: String =
-    s"$agentSubscriptionFrontendBaseUrl/task-list"
-  override lazy val agentSubscriptionFrontendProgressSavedUrl =
-    s"$agentSubscriptionFrontendBaseUrl/progress-saved/?backLink=$agentMappingFrontendBaseUrl/agent-mapping"
-  override lazy val signInAndContinue =
-    s"$companyAuthFrontendBaseUrl/gg/sign-in?continue=${urlEncode(agentServicesFrontendBaseUrl)}"
+  override val agentClientAuthorisationBaseUrl: String = servicesConfig.baseUrl("agent-client-authorisation")
+  override lazy val asaFrontendExternalUrl: String =
+    servicesConfig.getString("microservice.services.agent-services-account-frontend.external-url")
 
   override lazy val clientCountMaxRecords: Int = servicesConfig.getInt("clientCount.maxRecords")
 
@@ -92,11 +95,8 @@ class FrontendAppConfig @Inject()(servicesConfig: ServicesConfig) extends AppCon
 
   override val languageToggle: Boolean = servicesConfig.getBoolean("features.enable-welsh-toggle")
 
-  override val languageMap: Map[String, Lang] = Map(
-    "english" -> Lang("en"),
-    "cymraeg" -> Lang("cy")
-  )
-
-  override val routeToSwitchLanguage: String => Call = (lang: String) =>
-    routes.AgentMappingLanguageController.switchToLanguage(lang)
+  override val suspensionCacheDuration: FiniteDuration =
+    servicesConfig.getDuration("cache.suspensionDetails.duration") match {
+      case fd: FiniteDuration => fd
+    }
 }

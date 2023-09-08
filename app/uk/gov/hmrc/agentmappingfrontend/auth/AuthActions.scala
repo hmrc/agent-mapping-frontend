@@ -21,7 +21,7 @@ import play.api.mvc.{Request, Result, _}
 import play.api.{Configuration, Environment, Logging}
 import uk.gov.hmrc.agentmappingfrontend.auth.EnrolmentHelper._
 import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
-import uk.gov.hmrc.agentmappingfrontend.connectors.AgentSubscriptionConnector
+import uk.gov.hmrc.agentmappingfrontend.connectors.{AgentClientAuthorisationConnector, AgentSubscriptionConnector}
 import uk.gov.hmrc.agentmappingfrontend.controllers.routes
 import uk.gov.hmrc.agentmappingfrontend.model._
 import uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId
@@ -46,6 +46,8 @@ trait AuthActions extends AuthorisedFunctions with Logging {
 
   def agentSubscriptionConnector: AgentSubscriptionConnector
 
+  def agentClientAuthorisationConnector: AgentClientAuthorisationConnector
+
   def withBasicAuth(
     body: => Future[Result])(implicit request: Request[AnyContent], ec: ExecutionContext): Future[Result] = {
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
@@ -56,31 +58,39 @@ trait AuthActions extends AuthorisedFunctions with Logging {
     }
   }
 
-  def withAuthorisedAgent(idRefToArn: MappingArnResultId)(
+  def withAuthorisedAgent(idRefToArn: MappingArnResultId, checkSuspension: Boolean = true)(
     body: String => Future[Result])(implicit request: Request[AnyContent], ec: ExecutionContext): Future[Result] = {
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
     authorised(AuthProviders(GovernmentGateway))
       .retrieve(allEnrolments and credentials) {
+        case _ ~ None => Future.successful(Forbidden)
         case agentEnrolments ~ Some(Credentials(providerId, _)) =>
           val activeEnrolments = agentEnrolments.enrolments.filter(_.isActivated)
 
           val eligibleEnrolments: Set[Enrolment] = activeEnrolments.filter(LegacyAgentEnrolmentType.exists)
-
-          if (eligibleEnrolments.nonEmpty) {
-            body(providerId)
-          } else {
-            val redirectRoute = if (userHasAsAgentEnrolment(activeEnrolments)) {
+          def redirectRoute: Call =
+            if (userHasAsAgentEnrolment(activeEnrolments)) {
               routes.MappingController.incorrectAccount(idRefToArn)
             } else if (userHasAtedAgentEnrolment(activeEnrolments)) {
               routes.MappingController.alreadyMapped(idRefToArn)
             } else {
               routes.MappingController.notEnrolled(idRefToArn)
             }
-
-            Future.successful(Redirect(redirectRoute))
+          def isSuspended(): Future[Boolean] = getArn(agentEnrolments) match {
+            case Some(arn) if checkSuspension =>
+              agentClientAuthorisationConnector.getSuspensionDetails(arn).map(_.suspensionStatus)
+            case _ => Future.successful(false)
           }
 
-        case _ ~ None => Future.successful(Forbidden)
+          isSuspended().flatMap {
+            // check suspension
+            case true =>
+              Future.successful(Redirect(appConfig.accountLimitedUrl))
+            case false if eligibleEnrolments.nonEmpty =>
+              body(providerId)
+            case _ =>
+              Future.successful(Redirect(redirectRoute))
+          }
       }
       .recover {
         handleException
@@ -93,7 +103,20 @@ trait AuthActions extends AuthorisedFunctions with Logging {
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
     authorised(AuthProviders(GovernmentGateway) and AffinityGroup.Agent)
       .retrieve(allEnrolments) { agentEnrolments =>
-        body(getArn(agentEnrolments))
+        val arn = getArn(agentEnrolments)
+
+        def isSuspended(): Future[Boolean] = getArn(agentEnrolments) match {
+          case Some(arn) =>
+            agentClientAuthorisationConnector.getSuspensionDetails(arn).map(_.suspensionStatus)
+          case _ => Future.successful(false)
+        }
+
+        isSuspended().flatMap {
+          case true =>
+            Future.successful(Redirect(appConfig.accountLimitedUrl))
+          case false =>
+            body(arn)
+        }
       }
       .recoverWith {
         case _: NoActiveSession => body(None)
