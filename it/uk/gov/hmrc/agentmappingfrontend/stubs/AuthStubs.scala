@@ -2,7 +2,10 @@ package uk.gov.hmrc.agentmappingfrontend.stubs
 
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
+import play.api.http.Status.{NO_CONTENT, OK}
+import play.api.libs.json.Json
 import uk.gov.hmrc.agentmappingfrontend.support.{SampleUser, WireMockSupport}
+import uk.gov.hmrc.agentmtdidentifiers.model.SuspensionDetails
 
 trait AuthStubs {
   me: WireMockSupport =>
@@ -64,7 +67,25 @@ trait AuthStubs {
         .willReturn(aResponse()
           .withStatus(401)
           .withHeader("WWW-Authenticate", "MDTP detail=\"InsufficientEnrolments\"")))
+    // suspension check
+    givenNotSuspended()
   }
+
+  def givenSuspended() =
+    stubFor(
+      get(urlPathMatching("""\/agent\-client\-authorisation\/client\/suspension\-details\/.*"""))
+        .willReturn(aResponse()
+          .withStatus(OK)
+          .withHeader("Content-Type", "application/json")
+          .withBody(Json.toJson(SuspensionDetails(suspensionStatus = true, Some(Set("ALL")))).toString)
+        )
+    )
+
+  def givenNotSuspended() =
+    stubFor(
+      get(urlPathMatching("""\/agent\-client\-authorisation\/client\/suspension\-details\/.*"""))
+        .willReturn(aResponse().withStatus(NO_CONTENT))
+    )
 
   def givenuserHasUnsupportedAffinityGroup(): StubMapping = {
     stubFor(

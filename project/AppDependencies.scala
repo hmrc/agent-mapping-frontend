@@ -8,13 +8,14 @@ object AppDependencies {
 
   val compile = Seq(
     ws,
-    "uk.gov.hmrc"       %% "bootstrap-frontend-play-28" % bootstrapVer,
-    "com.typesafe.play" %% "play-json-joda"             % "2.9.2",
-    "uk.gov.hmrc"       %% "play-frontend-hmrc"         % "7.19.0-play-28",
-    "uk.gov.hmrc"       %% "play-partials"              % "8.4.0-play-28",
-    "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-28"         % mongoVer,
-    "uk.gov.hmrc"       %% "agent-mtd-identifiers"      % "1.13.0",
-    "uk.gov.hmrc"       %% "agent-kenshoo-monitoring"   % "5.5.0"
+    "uk.gov.hmrc"        %% "bootstrap-frontend-play-28" % bootstrapVer,
+    "com.typesafe.play"  %% "play-json-joda"             % "2.9.2",
+    "uk.gov.hmrc"        %% "play-frontend-hmrc"         % "7.19.0-play-28",
+    "uk.gov.hmrc"        %% "play-partials"              % "8.4.0-play-28",
+    "uk.gov.hmrc.mongo"  %% "hmrc-mongo-play-28"         % mongoVer,
+    "uk.gov.hmrc"        %% "agent-mtd-identifiers"      % "1.13.0",
+    "uk.gov.hmrc"        %% "agent-kenshoo-monitoring"   % "5.5.0",
+    "com.github.blemale" %% "scaffeine"                  % "5.2.1"
   )
 
   val test = Seq(
