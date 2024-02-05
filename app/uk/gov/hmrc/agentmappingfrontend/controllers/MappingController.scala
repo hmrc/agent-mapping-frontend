@@ -27,13 +27,12 @@ import uk.gov.hmrc.agentmappingfrontend.model._
 import uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId
 import uk.gov.hmrc.agentmappingfrontend.repository.{ClientCountAndGGTag, MappingArnRepository}
 import uk.gov.hmrc.agentmappingfrontend.util._
-import uk.gov.hmrc.agentmappingfrontend.views.html.{already_mapped, client_relationships_found, complete, copy_across_clients, existing_client_relationships, gg_tag, incorrect_account, not_enrolled, page_not_found, start, start_sign_in_required}
+import uk.gov.hmrc.agentmappingfrontend.views.html._
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.http.ConflictException
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.Future.successful
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -82,14 +81,14 @@ class MappingController @Inject()(
               .create(arn)
               .map(id => Ok(startTemplate(id, countsAndTags, getBackLinkForStart))))
 
-      case None => successful(Redirect(routes.MappingController.needAgentServicesAccount))
+      case None => Future.successful(Redirect(routes.MappingController.needAgentServicesAccount))
     }
   }
 
   def needAgentServicesAccount: Action[AnyContent] = Action.async { implicit request =>
     withCheckForArn {
-      case Some(_) => successful(Redirect(routes.MappingController.start))
-      case None    => successful(Ok(signInTemplate()))
+      case Some(_) => Future.successful(Redirect(routes.MappingController.start))
+      case None    => Future.successful(Ok(signInTemplate()))
     }
   }
 
@@ -238,19 +237,19 @@ class MappingController @Inject()(
 
   def alreadyMapped(id: MappingArnResultId): Action[AnyContent] = Action.async { implicit request =>
     withBasicAuth {
-      successful(Ok(alreadyMappedTemplate(id)))
+      Future.successful(Ok(alreadyMappedTemplate(id)))
     }
   }
 
   def notEnrolled(id: MappingArnResultId): Action[AnyContent] = Action.async { implicit request =>
     withBasicAuth {
-      successful(Ok(notEnrolledTemplate(id)))
+      Future.successful(Ok(notEnrolledTemplate(id)))
     }
   }
 
   def incorrectAccount(id: MappingArnResultId): Action[AnyContent] = Action.async { implicit request =>
     withBasicAuth {
-      successful(Ok(incorrectAccountTemplate(id)))
+      Future.successful(Ok(incorrectAccountTemplate(id)))
     }
   }
 }
