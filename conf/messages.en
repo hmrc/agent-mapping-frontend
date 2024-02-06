@@ -3,36 +3,36 @@ app.name=Create an agent services account
 app.name-alreadySubscribed=Agent services account
 servicename.titleSuffix=- GOV.UK
 #Connect agent services
-start.not-signed-in.title=Copy across your existing VAT and Self Assessment clients to your agent services account
+start.not-signed-in.title=Copy across your existing Self Assessment clients to your agent services account
 start.not-signed-in.p1=You need to sign in to your agent services account to use this service.
 
-start.title=Copy across your existing VAT and Self Assessment clients to your agent services account
+start.title=Copy across your existing Self Assessment clients to your agent services account
 start.copied=Already copied
 start.inset=You will not be able to view your client lists through your agent services account. To view your clients, use your third-party software.
 start.need-to-do=What you need to do
-start.need-to-do.p1=On the next screen, sign in with an old Government Gateway user ID that you use for managing VAT or Self Assessment clients. This is different to the new user ID of your agent services account.
+start.need-to-do.p1=On the next screen, sign in with an old Government Gateway user ID that you use for managing Self Assessment clients. This is different to the new user ID of your agent services account.
 start.need-to-do.p2=If you have more than one Government Gateway user ID, you will need to repeat this for each user ID.
 
-start.task-list.heading=Copy across your existing VAT and Self Assessment clients to your agent services account
+start.task-list.heading=Copy across your existing Self Assessment clients to your agent services account
 start.task-list.need-to-know=What you need to know
 start.task-list.need-to-know.p1=Before you can sign your clients up for Making Tax Digital, you need to copy your existing relationship from your old Government Gateway user IDs to your new agent services account.
 start.task-list.need-to-know.p2=This means your clients will not have to authorise you again for Making Tax Digital services.
 start.task-list.need-to-know.panel=You cannot view your client lists through your agent services account.
 start.task-list.need-to-do=What you need to do
-start.task-list.need-to-do.p1=On the next screen you will see how many VAT or Self Assessment clients you have linked to your current user ID
-start.task-list.need-to-do.p2=If you have more than one Government Gateway user ID, you will need to sign in with each user ID to copy more clients accross.
+start.task-list.need-to-do.p1=On the next screen you will see how many Self Assessment clients you have linked to your current user ID.
+start.task-list.need-to-do.p2=If you have more than one Government Gateway user ID, you will need to sign in with each user ID to copy more clients across.
 
 #client-relationships-found
 clientRelationshipsFound.title=Client relationships found
 clientRelationshipsFound.single.title=Client relationship found
 clientRelationshipsFound.single.p1=Your user ID has the following client relationship that you can copy across.
-clientRelationshipsFound.single.td=VAT and Self Assessment client
+clientRelationshipsFound.single.td=Self Assessment client
 clientRelationshipsFound.single.p2=By continuing, they will be copied across to your new agent services account. You will then be able to sign this client up to Making Tax Digital.
 clientRelationshipsFound.multi.title=Client relationships found
 clientRelationshipsFound.multi.p1=Your user ID has the following client relationships that you can copy across.
-clientRelationshipsFound.multi.td=VAT and Self Assessment clients
+clientRelationshipsFound.multi.td=Self Assessment clients
 clientRelationshipsFound.multi.p2=By continuing, they will be copied across to your new agent services account. You will then be able to sign them up to Making Tax Digital.
-clientRelationshipsFound.max=or more VAT and Self Assessment clients
+clientRelationshipsFound.max=or more Self Assessment clients
 
 #gg-tag
 gg-tag.title=Enter the last 4 characters of the Government Gateway user ID you signed in with
@@ -42,20 +42,20 @@ gg-tag.xs=XXXX-XXXX-
 
 #existing-client-relationships
 existingClientRelationships.title=Copied client relationships
-copied.table.single.th={0} VAT and Self Assessment client
-copied.table.multi.th={0} VAT and Self Assessment clients
-copied.table.max.th={0} or more VAT and Self Assessment clients
+copied.table.single.th={0} Self Assessment client
+copied.table.multi.th={0} Self Assessment clients
+copied.table.max.th={0} or more Self Assessment clients
 copied.table.ggTag=User ID: XXXX-XXXX-{0}
 existingClientRelationships.heading=Do you need to copy more clients across?
-existingClientRelationships.p1=To copy more clients across, you need to sign in with another user ID you use to manage VAT and Self Assessment clients.
+existingClientRelationships.p1=To copy more clients across, you need to sign in with another user ID you use to manage Self Assessment clients.
 existingClientRelationships.yes=Yes
 existingClientRelationships.no=No
-existingClientRelationships.max=or more VAT and Self Assessment clients
+existingClientRelationships.max=or more Self Assessment clients
 
 #Copy Across
-copyAcross.h1=Copy across your existing VAT and Self Assessment clients to your agent services account
+copyAcross.h1=Copy across your existing Self Assessment clients to your agent services account
 copyAcross.heading=What you need to do
-copyAcross.p1=On the next screen, sign in with another Government Gateway user ID that you use for managing VAT or Self Assessment clients.
+copyAcross.p1=On the next screen, sign in with another Government Gateway user ID that you use for managing Self Assessment clients.
 copyAcross.p2=You will need to repeat this for each user ID that you use.
 
 #PageNotFound
@@ -68,7 +68,7 @@ alreadyMapped.h1=This user ID is already linked to your agent services account
 alreadyMapped.p1=If you need to link another Government Gateway user ID, sign in with the user ID and password.
 #Incorrect account
 incorrectAccount.h1=You tried to sign in with your agent services account user ID.
-incorrectAccount.p1=You need to sign in with a Government Gateway user ID you use to manage your VAT or Self Assessment clients.
+incorrectAccount.p1=You need to sign in with a Government Gateway user ID you use to manage your Self Assessment clients.
 
 #Not enrolled
 notEnrolled.h1=You cannot link this user ID to your agent services account
@@ -145,8 +145,6 @@ global.error.500.title=Sorry, there is a problem with the service - 500
 global.error.500.heading=Sorry, there is a problem with the service
 global.error.500.message=Try again later.
 global.error.500.p2=We may not have saved your answers. When the service is available, you may have to start again.
-global.error.500.vat_helpline.link=Call the VAT online services helpline
-global.error.500.vat_helpline=if you need help with VAT.
 global.error.500.sa_helpline.link=Call the HMRC Self Assessment online services helpline
 global.error.500.sa_helpline=if you need help with Making Tax Digital for Income Tax.
 
