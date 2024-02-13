@@ -3,23 +3,23 @@ app.name=Creu cyfrif gwasanaethau asiant
 app.name-alreadySubscribed=Cyfrif gwasanaethau asiant
 servicename.titleSuffix=– GOV.UK
 #Connect agent services
-start.not-signed-in.title=Copïwch eich cleientiaid Hunanasesiad a TAW presennol ar draws i’ch cyfrif gwasanaethau asiant
+start.not-signed-in.title=Copïwch eich cleientiaid Hunanasesiad presennol ar draws i’ch cyfrif gwasanaethau asiant newydd
 start.not-signed-in.p1=Mae’n rhaid i chi fewngofnodi i’ch cyfrif gwasanaethau asiant er mwyn defnyddio’r gwasanaeth hwn.
 
-start.title=Copïwch eich cleientiaid Hunanasesiad a TAW presennol ar draws i’ch cyfrif gwasanaethau asiant
+start.title=Copïwch eich cleientiaid Hunanasesiad presennol ar draws i’ch cyfrif gwasanaethau asiant newydd
 start.copied=Eisoes wedi’u copïo
 start.inset=Ni fyddwch yn gallu bwrw golwg dros eich rhestrau o gleientiaid drwy’ch cyfrif gwasanaethau asiant. I fwrw golwg dros eich cleientiaid, defnyddiwch eich meddalwedd trydydd parti.
 start.need-to-do=Yr hyn y mae angen i chi ei wneud
-start.need-to-do.p1=Ar y sgrin nesaf, mewngofnodwch gan ddefnyddio hen Ddynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth yr ydych yn ei ddefnyddio i reoli cleientiaid Hunanasesiad neu TAW. Mae hyn yn wahanol i’r Dynodydd Defnyddiwr (ID) newydd ar gyfer eich cyfrif gwasanaethau asiant.
+start.need-to-do.p1=Ar y sgrin nesaf, mewngofnodwch gan ddefnyddio hen Ddynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth yr ydych yn ei ddefnyddio ar gyfer cleientiaid Hunanasesiad. Mae hyn yn wahanol i’r Dynodydd Defnyddiwr (ID) newydd ar gyfer eich cyfrif gwasanaethau asiant newydd.
 start.need-to-do.p2=Os oes gennych fwy nag un Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth, bydd yn rhaid i chi ailadrodd hyn ar gyfer pob Dynodydd Defnyddiwr (ID).
 
-start.task-list.heading=Copïwch eich cleientiaid Hunanasesiad a TAW presennol ar draws i’ch cyfrif gwasanaethau asiant
+start.task-list.heading=Copïwch eich cleientiaid Hunanasesiad presennol ar draws i’ch cyfrif gwasanaethau asiant newydd
 start.task-list.need-to-know=Yr hyn y mae angen i chi ei wybod
 start.task-list.need-to-know.p1=Cyn i chi allu cofrestru’ch cleientiaid ar gyfer y cynllun Troi Treth yn Ddigidol, mae’n rhaid i chi gopïo’ch perthnasoedd presennol o’ch hen Ddynodyddion Defnyddiwr (IDs) ar gyfer Porth y Llywodraeth i’ch cyfrif gwasanaethau asiant newydd.
 start.task-list.need-to-know.p2=Mae hyn yn golygu na fydd yn rhaid i’ch cleientiaid eich awdurdodi eto ar gyfer gwasanaethau Troi Treth yn Ddigidol.
 start.task-list.need-to-know.panel=Ni allwch fwrw golwg dros eich rhestrau o gleientiaid drwy’ch cyfrif gwasanaethau asiant.
 start.task-list.need-to-do=Yr hyn y mae angen i chi ei wneud
-start.task-list.need-to-do.p1=Ar y sgrin nesaf, byddwch yn gweld faint o gleientiaid TAW neu Hunanasesiad sydd wedi’u cysylltu â’ch Dynodydd Defnyddiwr (ID) presennol
+start.task-list.need-to-do.p1=Ar y sgrin nesaf, byddwch yn gweld faint o gleientiaid Hunanasesiad sydd wedi’u cysylltu â’ch Dynodydd Defnyddiwr (ID) presennol.
 start.task-list.need-to-do.p2=Os oes gennych fwy nag un Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth, bydd yn rhaid i chi fewngofnodi gyda phob Dynodydd Defnyddiwr (ID) er mwyn copïo rhagor o gleientiaid ar draws.
 
 #client-relationships-found
@@ -30,7 +30,7 @@ clientRelationshipsFound.single.td=Cleient TAW a Hunanasesiad
 clientRelationshipsFound.single.p2=Drwy barhau, bydd yn cael ei gopïo ar draws i’ch cyfrif gwasanaethau asiant newydd. Yna, byddwch yn gallu cofrestru’r cleient hwn ar gyfer y cynllun Troi Treth yn Ddigidol.
 clientRelationshipsFound.multi.title=Perthnasoedd â chleientiaid wedi’u canfod
 clientRelationshipsFound.multi.p1=Mae gan eich Dynodydd Defnyddiwr (ID) y perthnasoedd canlynol â chleientiaid y gallwch eu copïo ar draws.
-clientRelationshipsFound.multi.td=Cleientiaid TAW a Hunanasesiad
+clientRelationshipsFound.multi.td=o gleientiaid Hunanasesiad
 clientRelationshipsFound.multi.p2=Drwy barhau, byddant yn cael eu copïo ar draws i’ch cyfrif gwasanaethau asiant newydd. Yna, byddwch yn gallu cofrestru ar gyfer y cynllun Troi Treth yn Ddigidol.
 clientRelationshipsFound.max=neu ragor o gleientiaid TAW a Hunanasesiad
 
@@ -43,19 +43,19 @@ gg-tag.xs=XXXX-XXXX-
 #existing-client-relationships
 existingClientRelationships.title=Perthnasoedd â chleientiaid wedi’u copïo
 copied.table.single.th={0} cleient TAW a Hunanasesiad
-copied.table.multi.th={0} o gleientiaid TAW a Hunanasesiad
+copied.table.multi.th={0} o gleientiaid Hunanasesiad
 copied.table.max.th={0} neu ragor o gleientiaid TAW a Hunanasesiad
 copied.table.ggTag=Dynodydd Defnyddiwr: XXXX-XXXX-{0}
 existingClientRelationships.heading=A oes angen i chi gopïo rhagor o gleientiaid ar draws?
-existingClientRelationships.p1=I gopïo rhagor o gleientiaid ar draws, mae’n rhaid i chi fewngofnodi gan ddefnyddio Dynodydd Defnyddiwr (ID) arall yr ydych yn ei ddefnyddio i reoli cleientiaid TAW a Hunanasesiad.
+existingClientRelationships.p1=I gopïo rhagor o gleientiaid ar draws, bydd angen i chi fewngofnodi gan ddefnyddio Dynodydd Defnyddiwr (ID) arall yr ydych yn ei ddefnyddio i reoli cleientiaid Hunanasesiad.
 existingClientRelationships.yes=Iawn
 existingClientRelationships.no=Na
 existingClientRelationships.max=neu ragor o gleientiaid TAW a Hunanasesiad
 
 #Copy Across
-copyAcross.h1=Copïwch eich cleientiaid Hunanasesiad a TAW presennol ar draws i’ch cyfrif gwasanaethau asiant
+copyAcross.h1=Copïwch eich cleientiaid Hunanasesiad presennol ar draws i’ch cyfrif gwasanaethau asiant newydd
 copyAcross.heading=Yr hyn y mae angen i chi ei wneud
-copyAcross.p1=Ar y sgrin nesaf, mewngofnodwch gan ddefnyddio Dynodydd Defnyddiwr (ID) arall ar gyfer Porth y Llywodraeth yr ydych yn ei ddefnyddio i reoli cleientiaid Hunanasesiad neu TAW.
+copyAcross.p1=Ar y sgrin nesaf, mewngofnodwch gan ddefnyddio Dynodydd Defnyddiwr (ID) arall ar gyfer Porth y Llywodraeth yr ydych yn ei ddefnyddio i reoli cleientiaid Hunanasesiad.
 copyAcross.p2=Bydd yn rhaid i chi ailadrodd hyn ar gyfer pob Dynodydd Defnyddiwr (ID) yr ydych yn ei ddefnyddio.
 
 #PageNotFound
@@ -145,8 +145,6 @@ global.error.500.title=Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth –
 global.error.500.heading=Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth
 global.error.500.message=Rhowch gynnig arall arni yn nes ymlaen.
 global.error.500.p2=Efallai nad ydym wedi cadw’ch atebion. Pan fydd y gwasanaeth ar gael, efallai y bydd yn rhaid i chi ddechrau eto.
-global.error.500.vat_helpline.link=Ffoniwch linell Ymholiadau TAW, Tollau ac Ecséis CThEM
-global.error.500.vat_helpline=os oes angen help arnoch gyda’r cynllun TAW.
 global.error.500.sa_helpline.link=Ffoniwch Wasanaeth Cwsmeriaid Cymraeg CThEM
 global.error.500.sa_helpline=os oes angen help arnoch gyda’r cynllun Troi Treth yn Ddigidol ar gyfer Treth Incwm.
 
