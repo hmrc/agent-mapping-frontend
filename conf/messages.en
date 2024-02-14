@@ -42,9 +42,9 @@ gg-tag.xs=XXXX-XXXX-
 
 #existing-client-relationships
 existingClientRelationships.title=Copied client relationships
-copied.table.single.th={0} Self Assessment client
-copied.table.multi.th={0} Self Assessment clients
-copied.table.max.th={0} or more Self Assessment clients
+copied.table.single.th={0} client relationship
+copied.table.multi.th={0} client relationships
+copied.table.max.th={0} or more client relationships
 copied.table.ggTag=User ID: XXXX-XXXX-{0}
 existingClientRelationships.heading=Do you need to copy more clients across?
 existingClientRelationships.p1=To copy more clients across, you need to sign in with another user ID you use to manage Self Assessment clients.
