@@ -26,13 +26,13 @@ start.task-list.need-to-do.p2=Os oes gennych fwy nag un Dynodydd Defnyddiwr (ID)
 clientRelationshipsFound.title=Perthnasoedd â chleientiaid wedi’u canfod
 clientRelationshipsFound.single.title=Perthynas â chleient wedi’i chanfod
 clientRelationshipsFound.single.p1=Mae gan eich Dynodydd Defnyddiwr (ID) y berthynas ganlynol â chleient y gallwch ei chopïo ar draws.
-clientRelationshipsFound.single.td=Cleient TAW a Hunanasesiad
+clientRelationshipsFound.single.td=cleient Hunanasesiad
 clientRelationshipsFound.single.p2=Drwy barhau, bydd yn cael ei gopïo ar draws i’ch cyfrif gwasanaethau asiant newydd. Yna, byddwch yn gallu cofrestru’r cleient hwn ar gyfer y cynllun Troi Treth yn Ddigidol.
 clientRelationshipsFound.multi.title=Perthnasoedd â chleientiaid wedi’u canfod
 clientRelationshipsFound.multi.p1=Mae gan eich Dynodydd Defnyddiwr (ID) y perthnasoedd canlynol â chleientiaid y gallwch eu copïo ar draws.
 clientRelationshipsFound.multi.td=o gleientiaid Hunanasesiad
 clientRelationshipsFound.multi.p2=Drwy barhau, byddant yn cael eu copïo ar draws i’ch cyfrif gwasanaethau asiant newydd. Yna, byddwch yn gallu cofrestru ar gyfer y cynllun Troi Treth yn Ddigidol.
-clientRelationshipsFound.max=neu ragor o gleientiaid TAW a Hunanasesiad
+clientRelationshipsFound.max=neu ragor o gleientiaid Hunanasesiad
 
 #gg-tag
 gg-tag.title=Nodwch 4 cymeriad olaf y Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth a ddefnyddioch i fewngofnodi
@@ -42,15 +42,15 @@ gg-tag.xs=XXXX-XXXX-
 
 #existing-client-relationships
 existingClientRelationships.title=Perthnasoedd â chleientiaid wedi’u copïo
-copied.table.single.th={0} cleient TAW a Hunanasesiad
+copied.table.single.th={0} berthynas â chleient
 copied.table.multi.th={0} o gleientiaid Hunanasesiad
-copied.table.max.th={0} neu ragor o gleientiaid TAW a Hunanasesiad
+copied.table.max.th={0} neu ragor o berthnasoedd â chleientiaid
 copied.table.ggTag=Dynodydd Defnyddiwr: XXXX-XXXX-{0}
 existingClientRelationships.heading=A oes angen i chi gopïo rhagor o gleientiaid ar draws?
 existingClientRelationships.p1=I gopïo rhagor o gleientiaid ar draws, bydd angen i chi fewngofnodi gan ddefnyddio Dynodydd Defnyddiwr (ID) arall yr ydych yn ei ddefnyddio i reoli cleientiaid Hunanasesiad.
 existingClientRelationships.yes=Iawn
 existingClientRelationships.no=Na
-existingClientRelationships.max=neu ragor o gleientiaid TAW a Hunanasesiad
+existingClientRelationships.max=neu ragor o gleientiaid Hunanasesiad
 
 #Copy Across
 copyAcross.h1=Copïwch eich cleientiaid Hunanasesiad presennol ar draws i’ch cyfrif gwasanaethau asiant newydd
@@ -68,7 +68,7 @@ alreadyMapped.h1=Mae’r Dynodydd Defnyddiwr (ID) hwn eisoes wedi’i gysylltu �
 alreadyMapped.p1=Os oes angen i chi gysylltu Dynodydd Defnyddiwr (ID) arall ar gyfer Porth y Llywodraeth, mewngofnodwch gan ddefnyddio’r Dynodydd Defnyddiwr (ID) a’r cyfrinair.
 #Incorrect account
 incorrectAccount.h1=Gwnaethoch geisio mewngofnodi gan ddefnyddio’r Dynodydd Defnyddiwr (ID) ar gyfer eich cyfrif gwasanaethau asiant.
-incorrectAccount.p1=Mae’n rhaid i chi fewngofnodi gan ddefnyddio Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth yr ydych yn ei ddefnyddio i reoli’ch cleientiaid TAW neu Hunanasesiad.
+incorrectAccount.p1=Mae angen i chi fewngofnodi gan ddefnyddio Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth yr ydych yn ei ddefnyddio i reoli’ch cleientiaid Hunanasesiad.
 
 #Not enrolled
 notEnrolled.h1=Ni allwch gysylltu’r Dynodydd Defnyddiwr (ID) hwn â’ch cyfrif gwasanaethau asiant
