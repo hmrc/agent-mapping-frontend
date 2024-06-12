@@ -6,12 +6,12 @@ servicename.titleSuffix=– GOV.UK
 start.not-signed-in.title=Copïwch eich cleientiaid Hunanasesiad presennol ar draws i’ch cyfrif gwasanaethau asiant newydd
 start.not-signed-in.p1=Mae’n rhaid i chi fewngofnodi i’ch cyfrif gwasanaethau asiant er mwyn defnyddio’r gwasanaeth hwn.
 
-start.title=Copïwch eich cleientiaid Hunanasesiad presennol ar draws i’ch cyfrif gwasanaethau asiant newydd
-start.copied=Eisoes wedi’u copïo
+start.title=Copïwch awdurdodiadau Hunanasesiad presennol drosodd
+start.copied=Rydych eisoes wedi copïo drosodd bob awdurdodiad cleientiaid o dan:
 start.inset=Ni fyddwch yn gallu bwrw golwg dros eich rhestrau o gleientiaid drwy’ch cyfrif gwasanaethau asiant. I fwrw golwg dros eich cleientiaid, defnyddiwch eich meddalwedd trydydd parti.
 start.need-to-do=Yr hyn y mae angen i chi ei wneud
-start.need-to-do.p1=Ar y sgrin nesaf, mewngofnodwch gan ddefnyddio hen Ddynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth yr ydych yn ei ddefnyddio ar gyfer cleientiaid Hunanasesiad. Mae hyn yn wahanol i’r Dynodydd Defnyddiwr (ID) newydd ar gyfer eich cyfrif gwasanaethau asiant newydd.
-start.need-to-do.p2=Os oes gennych fwy nag un Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth, bydd yn rhaid i chi ailadrodd hyn ar gyfer pob Dynodydd Defnyddiwr (ID).
+start.need-to-do.p1=Dewiswch i fynd yn eich blaen er mwyn mewngofnodi ag unrhyw un o’r ID eraill sydd gennych ar gyfer Porth y Llywodraeth. Bydd y rhain yn ID defnyddiwr hynach a defnyddiwyd gennych ar gyfer rheoli cleient Hunanasesiad.
+
 
 start.task-list.heading=Copïwch eich cleientiaid Hunanasesiad presennol ar draws i’ch cyfrif gwasanaethau asiant newydd
 start.task-list.need-to-know=Yr hyn y mae angen i chi ei wybod
