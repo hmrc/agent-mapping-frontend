@@ -50,4 +50,3 @@ lazy val it = project
     Test / scalafmtOnCompile := true
   )
 
-//inConfig(IntegrationTest)(scalafmtCoreSettings) //TODO WG - not sure if we need that

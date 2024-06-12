@@ -9,7 +9,6 @@ object AppDependencies {
   val compile: Seq[ModuleID] = Seq(
     ws,
     "uk.gov.hmrc"        %% "bootstrap-frontend-play-30" % bootstrapVer,
-    "com.typesafe.play"  %% "play-json-joda"             % "2.9.4", //TODO WG - remove joda
     "uk.gov.hmrc"        %% "play-frontend-hmrc-play-30" % "8.5.0",
     "uk.gov.hmrc"        %% "play-partials-play-30"      % "9.1.0",
     "uk.gov.hmrc.mongo"  %% "hmrc-mongo-play-30"         % mongoVer,
