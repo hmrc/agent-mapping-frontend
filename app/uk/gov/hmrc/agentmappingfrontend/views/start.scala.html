@@ -35,38 +35,24 @@ taskList = false,
 hasTimeout = true
 ) {
 
-    <h1 class="govuk-heading-xl">@msgs("start.title")</h1>
+<h1 class="govuk-heading-xl">@msgs("start.title")</h1>
 
-    @if(clientCountAndGGTags.nonEmpty) {
-        <h2 class="govuk-heading-m">@msgs("start.copied")</h2>
+@if(clientCountAndGGTags.nonEmpty) {
+<p>@msgs("start.copied")</p>
 
-        <dl class="govuk-summary-list">
-            @for(clientCountAndGGTag <- clientCountAndGGTags) {
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key agent-summary-list__key--long">
-                    @if(clientCountAndGGTag.clientCount == 1) {
-                    @msgs("copied.table.single.th", clientCountAndGGTag.clientCount)
-                    } else {
-                        @if(clientCountAndGGTag.clientCount < appConfig.clientCountMaxRecords) {
-                        @msgs("copied.table.multi.th", clientCountAndGGTag.clientCount)
-                        } else {
-                        @msgs("copied.table.max.th", appConfig.clientCountMaxRecords)
-                        }
-                    }
-                </dt>
-                <dd class="govuk-summary-list__value agent-summary-list__value--long">
-                    @msgs("copied.table.ggTag", clientCountAndGGTag.ggTag)
-                </dd>
-            </div>
-            }
-        </dl>
+
+<ul class="govuk-list govuk-list--bullet">
+    @for(clientCountAndGGTag <- clientCountAndGGTags){
+    <li class="govuk-list--item">@msgs("copied.table.ggTag", clientCountAndGGTag.ggTag)</li>
     }
+</ul>
+}
 
-    <p class="govuk-inset-text govuk-!-margin-bottom-6">@msgs("start.inset")</p>
 
-    <h2 class="govuk-heading-m">@msgs("start.need-to-do")</h2>
-    <p>@msgs("start.need-to-do.p1")</p>
-    <p>@msgs("start.need-to-do.p2")</p>
+<h2 class="govuk-heading-m">@msgs("start.need-to-do")</h2>
+<p>@msgs("start.need-to-do.p1")</p>
 
-    <a class="govuk-button" name="start" id="start" href="@routes.SignedOutController.signOutAndRedirect(id)" role="button" draggable="false">@msgs("button.continue")</a>
+
+<a class="govuk-button" name="start" id="start" href="@routes.SignedOutController.signOutAndRedirect(id)" role="button"
+   draggable="false">@msgs("button.continue")</a>
 }
