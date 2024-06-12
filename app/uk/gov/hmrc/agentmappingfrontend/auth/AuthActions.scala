@@ -49,7 +49,8 @@ trait AuthActions extends AuthorisedFunctions with Logging {
   def agentClientAuthorisationConnector: AgentClientAuthorisationConnector
 
   def withBasicAuth(
-    body: => Future[Result])(implicit request: Request[AnyContent], ec: ExecutionContext): Future[Result] = {
+    body: => Future[Result]
+  )(implicit request: Request[AnyContent], ec: ExecutionContext): Future[Result] = {
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
     authorised(AuthProviders(GovernmentGateway)) {
       body
@@ -59,7 +60,8 @@ trait AuthActions extends AuthorisedFunctions with Logging {
   }
 
   def withAuthorisedAgent(idRefToArn: MappingArnResultId, checkSuspension: Boolean = true)(
-    body: String => Future[Result])(implicit request: Request[AnyContent], ec: ExecutionContext): Future[Result] = {
+    body: String => Future[Result]
+  )(implicit request: Request[AnyContent], ec: ExecutionContext): Future[Result] = {
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
     authorised(AuthProviders(GovernmentGateway))
       .retrieve(allEnrolments and credentials) {
@@ -97,9 +99,9 @@ trait AuthActions extends AuthorisedFunctions with Logging {
       }
   }
 
-  def withCheckForArn(body: Option[Arn] => Future[Result])(
-    implicit request: Request[AnyContent],
-    ec: ExecutionContext): Future[Result] = {
+  def withCheckForArn(
+    body: Option[Arn] => Future[Result]
+  )(implicit request: Request[AnyContent], ec: ExecutionContext): Future[Result] = {
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
     authorised(AuthProviders(GovernmentGateway) and AffinityGroup.Agent)
       .retrieve(allEnrolments) { agentEnrolments =>
@@ -126,7 +128,8 @@ trait AuthActions extends AuthorisedFunctions with Logging {
   }
 
   def withBasicAgentAuth[A](
-    body: => Future[Result])(implicit request: Request[AnyContent], ec: ExecutionContext): Future[Result] = {
+    body: => Future[Result]
+  )(implicit request: Request[AnyContent], ec: ExecutionContext): Future[Result] = {
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
     authorised(AuthProviders(GovernmentGateway) and AffinityGroup.Agent) {
       body
@@ -135,8 +138,9 @@ trait AuthActions extends AuthorisedFunctions with Logging {
     }
   }
 
-  def withSubscribingAgent(id: MappingArnResultId)(
-    body: Agent => Future[Result])(implicit request: Request[AnyContent], ec: ExecutionContext): Future[Result] = {
+  def withSubscribingAgent(
+    id: MappingArnResultId
+  )(body: Agent => Future[Result])(implicit request: Request[AnyContent], ec: ExecutionContext): Future[Result] = {
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
     authorised(AuthProviders(GovernmentGateway) and AffinityGroup.Agent)
       .retrieve(credentials and agentCode and allEnrolments) {
@@ -146,12 +150,14 @@ trait AuthActions extends AuthorisedFunctions with Logging {
 
           if (eligibleEnrolments.nonEmpty) {
             agentSubscriptionConnector.getSubscriptionJourneyRecord(AuthProviderId(providerId)).flatMap { maybeSjr =>
-              body(new Agent(
-                providerId = AuthProviderId(providerId),
-                maybeAgentCode = agentCodeOpt.flatMap(ac => Some(AgentCode(ac))),
-                legacyEnrolments = agentEnrolmentsFromEligibleEnrolments(eligibleEnrolments),
-                maybeSjr
-              ))
+              body(
+                new Agent(
+                  providerId = AuthProviderId(providerId),
+                  maybeAgentCode = agentCodeOpt.flatMap(ac => Some(AgentCode(ac))),
+                  legacyEnrolments = agentEnrolmentsFromEligibleEnrolments(eligibleEnrolments),
+                  maybeSjr
+                )
+              )
             }
           } else {
             val redirectRoute = if (userHasAsAgentEnrolment(activeEnrolments)) {
@@ -177,7 +183,8 @@ trait AuthActions extends AuthorisedFunctions with Logging {
           case Some(legacyEnrolmentType) =>
             AgentEnrolment(legacyEnrolmentType, IdentifierValue(enrolment.identifiers.map(i => i.value).mkString("/")))
           case None => throw new RuntimeException("invalid enrolment type found")
-      })
+        }
+      )
       .toSeq
 
   private def getArn(enrolments: Enrolments) =
@@ -216,7 +223,8 @@ class Agent(
   private val providerId: AuthProviderId,
   private val maybeAgentCode: Option[AgentCode],
   private val legacyEnrolments: Seq[AgentEnrolment],
-  private val maybeSubscriptionJourneyRecord: Option[SubscriptionJourneyRecord]) {
+  private val maybeSubscriptionJourneyRecord: Option[SubscriptionJourneyRecord]
+) {
   def authProviderId: AuthProviderId = providerId
   def agentEnrolments: Seq[AgentEnrolment] = legacyEnrolments
   def agentCodeOpt: Option[AgentCode] = maybeAgentCode
@@ -225,6 +233,8 @@ class Agent(
     maybeSubscriptionJourneyRecord
       .getOrElse(
         throw new RuntimeException(
-          s"mandatory subscription journey record was missing for authProviderID $authProviderId"))
+          s"mandatory subscription journey record was missing for authProviderID $authProviderId"
+        )
+      )
 
 }

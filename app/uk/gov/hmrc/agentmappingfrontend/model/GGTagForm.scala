@@ -29,6 +29,7 @@ object GGTagForm {
     Form[GGTag](
       mapping(
         "ggTag" -> text
-          .verifying("error.gg-tag.invalid", v => v.matches(ggTagRegex)))(a => GGTag(a))(g => Some(g.value))
+          .verifying("error.gg-tag.invalid", v => v.matches(ggTagRegex))
+      )(a => GGTag(a))(g => Some(g.value))
     )
 }

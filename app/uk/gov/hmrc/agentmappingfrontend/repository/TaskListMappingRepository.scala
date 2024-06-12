@@ -21,7 +21,7 @@ import org.mongodb.scala.model.Indexes.ascending
 import org.mongodb.scala.model.Updates.set
 import org.mongodb.scala.model.{FindOneAndReplaceOptions, IndexModel, IndexOptions, ReplaceOptions}
 import play.api.Logging
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{Format, Json, OFormat}
 import uk.gov.hmrc.agentmappingfrontend.model.MongoLocalDateTimeFormat
 import uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId
 import uk.gov.hmrc.mongo.MongoComponent
@@ -48,13 +48,13 @@ object TaskListMappingResult {
     TaskListMappingResult(id = id, continueId = continueId)
   }
 
-  implicit val localDateTimeFormat = MongoLocalDateTimeFormat.localDateTimeFormat
+  implicit val localDateTimeFormat: Format[LocalDateTime] = MongoLocalDateTimeFormat.localDateTimeFormat
   implicit val format: OFormat[TaskListMappingResult] = Json.format[TaskListMappingResult]
 
 }
 
 @Singleton
-class TaskListMappingRepository @Inject()(mongoComponent: MongoComponent)(implicit ec: ExecutionContext)
+class TaskListMappingRepository @Inject() (mongoComponent: MongoComponent)(implicit ec: ExecutionContext)
     extends PlayMongoRepository[TaskListMappingResult](
       mongoComponent = mongoComponent,
       collectionName = "mapping-task-list",
@@ -63,7 +63,8 @@ class TaskListMappingRepository @Inject()(mongoComponent: MongoComponent)(implic
         IndexModel(ascending("id"), IndexOptions().name("idUnique").unique(true)),
         IndexModel(
           ascending("createdDate"),
-          IndexOptions().name("createdDate").unique(false).expireAfter(86400, TimeUnit.SECONDS))
+          IndexOptions().name("createdDate").unique(false).expireAfter(86400, TimeUnit.SECONDS)
+        )
       ),
       replaceIndexes = true
     ) with Logging {
@@ -95,8 +96,11 @@ class TaskListMappingRepository @Inject()(mongoComponent: MongoComponent)(implic
       .updateOne(equal(ID, id), set(CLIENT_COUNT, clientCount))
       .toFuture()
       .map(ur =>
-        logger.info(s"UpdateFor was acknowledged: ${ur.wasAcknowledged()}. " +
-          s"Matched documents: ${ur.getMatchedCount}. Updated count: ${ur.getModifiedCount}"))
+        logger.info(
+          s"UpdateFor was acknowledged: ${ur.wasAcknowledged()}. " +
+            s"Matched documents: ${ur.getMatchedCount}. Updated count: ${ur.getModifiedCount}"
+        )
+      )
 
   def upsert(taskListMappingResult: TaskListMappingResult, continueId: String): Future[Unit] =
     collection

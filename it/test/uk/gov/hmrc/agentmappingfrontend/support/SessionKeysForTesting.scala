@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,9 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentmappingfrontend.model
+package uk.gov.hmrc.agentmappingfrontend.support
 
-import play.api.libs.json.Format
-import play.api.libs.functional.syntax._
-
-/** A value associated with an enrolment key
-  */
-final case class IdentifierValue(value: String)
-
-object IdentifierValue {
-  implicit val format: Format[IdentifierValue] = implicitly[Format[String]].inmap(IdentifierValue(_), _.value)
+object SessionKeysForTesting {
+  // Workaround to hide the deprecation warning. It it OK to use this here, as long as we write sessions and not read them.
+  val token = "token" // SessionKeys.token
 }

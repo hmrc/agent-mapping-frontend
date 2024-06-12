@@ -55,5 +55,6 @@ object SubscriptionJourneyRecord {
       (JsPath \ "contactTradingAddressData").formatNullable[ContactTradingAddressData] and
       (JsPath \ "contactTelephoneData").formatNullable[ContactTelephoneData])(
       SubscriptionJourneyRecord.apply,
-      unlift(SubscriptionJourneyRecord.unapply))
+      unlift(SubscriptionJourneyRecord.unapply)
+    )
 }

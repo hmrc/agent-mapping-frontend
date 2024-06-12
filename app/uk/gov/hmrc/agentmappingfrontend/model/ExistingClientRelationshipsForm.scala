@@ -23,9 +23,10 @@ object ExistingClientRelationshipsForm {
 
   val form: Form[RadioInputAnswer] =
     Form[RadioInputAnswer](
-      mapping("additional-clients" -> optional(text)
-        .verifying("error.existingClientRelationships.choice.invalid", a => a.contains("yes") || a.contains("no")))(a =>
-        RadioInputAnswer.apply(a.getOrElse("")))(a => Some(RadioInputAnswer.unapply(a)))
+      mapping(
+        "additional-clients" -> optional(text)
+          .verifying("error.existingClientRelationships.choice.invalid", a => a.contains("yes") || a.contains("no"))
+      )(a => RadioInputAnswer.apply(a.getOrElse("")))(a => Some(RadioInputAnswer.unapply(a)))
     )
 
 }

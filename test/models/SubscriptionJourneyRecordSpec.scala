@@ -41,14 +41,17 @@ class SubscriptionJourneyRecordSpec extends UnitSpec {
               false,
               BusinessAddress("1 Any st", None, None, None, Some("W1N2 2TD"), "GB"),
               Some("email@email.com"),
-              Some("01273111111"))),
+              Some("01273111111")
+            )
+          ),
           None,
           None,
           None,
           None
         ),
         amlsData = Some(
-          AmlsData(true, Some(false), Some(AmlsDetails("body", Some("foo"), None, None, None, Some(LocalDate.now()))))),
+          AmlsData(true, Some(false), Some(AmlsDetails("body", Some("foo"), None, None, None, Some(LocalDate.now()))))
+        )
       )
       Json.toJson(sjr).as[SubscriptionJourneyRecord] shouldBe sjr
     }

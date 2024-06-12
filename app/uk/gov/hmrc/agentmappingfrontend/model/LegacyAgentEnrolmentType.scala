@@ -19,15 +19,13 @@ package uk.gov.hmrc.agentmappingfrontend.model
 import play.api.libs.json.{Format, JsError, JsResult, JsString, JsSuccess, JsValue}
 import uk.gov.hmrc.auth.core.Enrolment
 
-/**
-  * A comprehensive list of all the old (pre-MTD) agent enrolment types
-  * IR-SA-AGENT is the only legacy code we actually use in authentication
-  * others are captured for future use
+/** A comprehensive list of all the old (pre-MTD) agent enrolment types IR-SA-AGENT is the only legacy code we actually
+  * use in authentication others are captured for future use
   */
 sealed abstract class LegacyAgentEnrolmentType {
 
-  /**
-    * @return The service key for a legacy enrolment (1-1 for these old agent enrolments)
+  /** @return
+    *   The service key for a legacy enrolment (1-1 for these old agent enrolments)
     */
   def serviceKey: String = this match {
     case IRAgentReference     => "IR-SA-AGENT"
@@ -59,10 +57,10 @@ object LegacyAgentEnrolmentType {
     def writes(o: LegacyAgentEnrolmentType): JsValue = JsString(o.serviceKey)
   }
 
-  /**
-    *
-    * @param serviceKey the enrolment service key to find an enrolment type
-    * @return Some enrolment type if found, None otherwise
+  /** @param serviceKey
+    *   the enrolment service key to find an enrolment type
+    * @return
+    *   Some enrolment type if found, None otherwise
     */
   def find(serviceKey: String): Option[LegacyAgentEnrolmentType] =
     serviceKey match {

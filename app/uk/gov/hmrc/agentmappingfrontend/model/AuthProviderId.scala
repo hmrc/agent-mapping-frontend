@@ -19,8 +19,7 @@ package uk.gov.hmrc.agentmappingfrontend.model
 import play.api.libs.json.Format
 import play.api.libs.functional.syntax._
 
-/**
-  * An internal id associated with a Government Gateway account.
+/** An internal id associated with a Government Gateway account.
   *
   * @param id
   */

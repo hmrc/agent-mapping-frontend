@@ -25,16 +25,18 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class AgentSubscriptionService @Inject()(agentSubscriptionConnector: AgentSubscriptionConnector) {
+class AgentSubscriptionService @Inject() (agentSubscriptionConnector: AgentSubscriptionConnector) {
 
-  def createOrUpdateRecordOrFail(agent: Agent, newSjr: SubscriptionJourneyRecord, onSuccess: => Future[Result])(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext): Future[Result] =
+  def createOrUpdateRecordOrFail(agent: Agent, newSjr: SubscriptionJourneyRecord, onSuccess: => Future[Result])(implicit
+    hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): Future[Result] =
     agentSubscriptionConnector.createOrUpdateJourney(newSjr).flatMap {
       case Right(_) => onSuccess
       case Left(e) =>
         throw new RuntimeException(
-          s"update subscriptionJourneyRecord call failed $e for agentCode ${agent.agentCodeOpt.getOrElse(" ")}")
+          s"update subscriptionJourneyRecord call failed $e for agentCode ${agent.agentCodeOpt.getOrElse(" ")}"
+        )
     }
 
 }

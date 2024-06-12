@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.agentmappingfrontend.controllers
 
-import akka.stream.Materializer
+import org.apache.pekko.stream.Materializer
 import com.google.inject.AbstractModule
 import org.jsoup.Jsoup
 import org.scalatest.matchers.{MatchResult, Matcher}
@@ -37,19 +37,18 @@ abstract class BaseControllerISpec
   override implicit lazy val app: Application = appBuilder.build()
 
   def additionalConfig: Map[String, String] = Map.empty
-  def moduleWithOverrides: AbstractModule = new AbstractModule{}
-
+  def moduleWithOverrides: AbstractModule = new AbstractModule {}
 
   protected def appBuilder: GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .configure(
-        "microservice.services.auth.port"                 -> wireMockPort,
+        "microservice.services.auth.port"                       -> wireMockPort,
         "microservice.services.agent-mapping.port"              -> wireMockPort,
         "microservice.services.agent-subscription.port"         -> wireMockPort,
         "microservice.services.agent-client-authorisation.port" -> wireMockPort,
         "application.router"                                    -> "testOnlyDoNotUseInAppConf.Routes",
         "clientCount.maxRecords"                                -> 15,
-        "cache.suspensionDetails.duration"                      -> "0 seconds" // disable cache or tests will interfere with each other
+        "cache.suspensionDetails.duration" -> "0 seconds" // disable cache or tests will interfere with each other
       )
       .configure(additionalConfig)
       .overrides(moduleWithOverrides)
@@ -129,9 +128,10 @@ abstract class BaseControllerISpec
     }
 
   protected def containSubmitButton(
-                                     expectedMessageKey: String,
-                                     expectedElementId: String,
-                                     expectedTagName: String = "button"): Matcher[Result] = {
+    expectedMessageKey: String,
+    expectedElementId: String,
+    expectedTagName: String = "button"
+  ): Matcher[Result] =
     new Matcher[Result] {
       override def apply(result: Result): MatchResult = {
         val doc = Jsoup.parse(bodyOf(result))
@@ -142,11 +142,10 @@ abstract class BaseControllerISpec
 
         val isAsExpected = Option(foundElement) match {
           case None => false
-          case Some(elAmls) => {
+          case Some(elAmls) =>
             val isExpectedTag = elAmls.tagName() == expectedTagName
             val hasExpectedMsg = elAmls.text() == htmlEscapedMessage(expectedMessageKey)
             isExpectedTag && hasExpectedMsg
-          }
         }
 
         MatchResult(
@@ -156,16 +155,15 @@ abstract class BaseControllerISpec
         )
       }
     }
-  }
 
-  protected def containLink(expectedMessageKey: String, expectedHref: String): Matcher[Result] = {
+  protected def containLink(expectedMessageKey: String, expectedHref: String): Matcher[Result] =
     new Matcher[Result] {
       override def apply(result: Result): MatchResult = {
         val doc = Jsoup.parse(bodyOf(result))
         checkMessageIsDefined(expectedMessageKey)
         val foundElement = doc.select(s"a[href=$expectedHref]").first()
         val wasFoundWithCorrectMessage = Option(foundElement) match {
-          case None => false
+          case None          => false
           case Some(element) => element.text() == htmlEscapedMessage(expectedMessageKey)
         }
         MatchResult(
@@ -175,5 +173,4 @@ abstract class BaseControllerISpec
         )
       }
     }
-  }
 }
