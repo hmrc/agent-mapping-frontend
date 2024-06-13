@@ -6,12 +6,12 @@ servicename.titleSuffix=- GOV.UK
 start.not-signed-in.title=Copy across your existing Self Assessment clients to your agent services account
 start.not-signed-in.p1=You need to sign in to your agent services account to use this service.
 
-start.title=Copy across your existing Self Assessment clients to your agent services account
-start.copied=Already copied
+start.title=Copy across existing Self Assessment authorisations
+start.copied=You’ve already copied across all client authorisations under:
 start.inset=You will not be able to view your client lists through your agent services account. To view your clients, use your third-party software.
 start.need-to-do=What you need to do
-start.need-to-do.p1=On the next screen, sign in with an old Government Gateway user ID that you use for managing Self Assessment clients. This is different to the new user ID of your agent services account.
-start.need-to-do.p2=If you have more than one Government Gateway user ID, you will need to repeat this for each user ID.
+start.need-to-do.p1=Select ‘continue’ to sign in with any of your other Government Gateway user IDs. These will be older user IDs that you use for managing Self Assessment clients.
+
 
 start.task-list.heading=Copy across your existing Self Assessment clients to your agent services account
 start.task-list.need-to-know=What you need to know

@@ -71,13 +71,11 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs with Mon
       checkHtmlResultContainsEscapedMsgs(
         result,
         "start.copied",
-        "start.inset",
         "start.need-to-do",
         "start.need-to-do.p1",
-        "start.need-to-do.p2",
         "button.continue"
       )
-      bodyOf(result) should include(htmlEscapedMessage("copied.table.multi.th", 5))
+
       bodyOf(result) should include(htmlEscapedMessage("copied.table.ggTag", "1234"))
       bodyOf(result) should include("/signed-out-redirect?id=")
       bodyOf(result) should include("/agent-services-account") // default backlink
