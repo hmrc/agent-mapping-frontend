@@ -13,14 +13,13 @@ start.need-to-do=Yr hyn y mae angen i chi ei wneud
 start.need-to-do.p1=Dewiswch i fynd yn eich blaen er mwyn mewngofnodi ag unrhyw un o’r ID eraill sydd gennych ar gyfer Porth y Llywodraeth. Bydd y rhain yn ID defnyddiwr hynach a defnyddiwyd gennych ar gyfer rheoli cleient Hunanasesiad.
 
 
-start.task-list.heading=Copïwch eich cleientiaid Hunanasesiad presennol ar draws i’ch cyfrif gwasanaethau asiant newydd
-start.task-list.need-to-know=Yr hyn y mae angen i chi ei wybod
-start.task-list.need-to-know.p1=Cyn i chi allu cofrestru’ch cleientiaid ar gyfer y cynllun Troi Treth yn Ddigidol, mae’n rhaid i chi gopïo’ch perthnasoedd presennol o’ch hen Ddynodyddion Defnyddiwr (IDs) ar gyfer Porth y Llywodraeth i’ch cyfrif gwasanaethau asiant newydd.
-start.task-list.need-to-know.p2=Mae hyn yn golygu na fydd yn rhaid i’ch cleientiaid eich awdurdodi eto ar gyfer gwasanaethau Troi Treth yn Ddigidol.
-start.task-list.need-to-know.panel=Ni allwch fwrw golwg dros eich rhestrau o gleientiaid drwy’ch cyfrif gwasanaethau asiant.
-start.task-list.need-to-do=Yr hyn y mae angen i chi ei wneud
-start.task-list.need-to-do.p1=Ar y sgrin nesaf, byddwch yn gweld faint o gleientiaid Hunanasesiad sydd wedi’u cysylltu â’ch Dynodydd Defnyddiwr (ID) presennol.
-start.task-list.need-to-do.p2=Os oes gennych fwy nag un Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth, bydd yn rhaid i chi fewngofnodi gyda phob Dynodydd Defnyddiwr (ID) er mwyn copïo rhagor o gleientiaid ar draws.
+start.task-list.heading=Copïwch awdurdodiadau Hunanasesiad presennol drosodd
+start.task-list.p1=Bydd hyn yn golygu:
+start.task-list.li1=na fydd yn rhaid i’ch cleientiaid eich awdurdodi eto ar gyfer gwasanaethau Troi Treth yn Ddigidol ar gyfer Treth Incwm
+start.task-list.li2=gallwch roi gwybod i ni am sawl ID Defnyddiwr ar gyfer Porth y Llywodraeth ar yr un pryd
+start.task-list.li3=bydd unrhyw gleient Hunanasesiad newydd y byddwch yn ei gymryd o dan yr un ID defnyddiwr yn cael ei gysylltu’n awtomatig â’ch cyfrif gwasanaethau asiant newydd
+
+
 
 #client-relationships-found
 clientRelationshipsFound.title=Perthnasoedd â chleientiaid wedi’u canfod
