@@ -17,7 +17,7 @@ import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.test.MongoSupport
 
 class TaskListMappingControllerISpec extends BaseControllerISpec with AuthStubs with AgentSubscriptionStubs with SubscriptionJourneyRecordSamples
-with MongoSupport {
+  with MongoSupport {
 
   val repo = app.injector.instanceOf[TaskListMappingRepository]
 
@@ -92,10 +92,11 @@ with MongoSupport {
       status(result) shouldBe 200
       checkHtmlResultContainsEscapedMsgs(result,
         "start.task-list.heading",
-        "start.task-list.need-to-do",
-        "start.task-list.need-to-know",
-        "start.task-list.need-to-know.panel",
-        "button.saveContinue", "button.saveComeBackLater")
+        "start.task-list.p1",
+        "start.task-list.li1",
+        "start.task-list.li2",
+        "start.task-list.li3",
+        "button.continue")
       bodyOf(result) should include("/task-list/client-relationships-found?id=")
     }
 
@@ -136,11 +137,11 @@ with MongoSupport {
       status(result) shouldBe 200
 
       checkHtmlResultContainsEscapedMsgs(result,
-        "clientRelationshipsFound.title","clientRelationshipsFound.multi.title",
+        "clientRelationshipsFound.title", "clientRelationshipsFound.multi.title",
         "clientRelationshipsFound.multi.p1",
         "clientRelationshipsFound.multi.td",
         "clientRelationshipsFound.multi.p2",
-      "button.saveContinue", "button.saveComeBackLater")
+        "button.saveContinue", "button.saveComeBackLater")
 
       bodyOf(result) should include(appConfig.agentSubscriptionFrontendProgressSavedUrl)
       bodyOf(result) should include(routes.TaskListMappingController.showGGTag(id).url)
@@ -158,7 +159,7 @@ with MongoSupport {
       status(result) shouldBe 200
 
       checkHtmlResultContainsEscapedMsgs(result,
-        "clientRelationshipsFound.title","clientRelationshipsFound.multi.title",
+        "clientRelationshipsFound.title", "clientRelationshipsFound.multi.title",
         "clientRelationshipsFound.multi.p1",
         "clientRelationshipsFound.multi.td",
         "clientRelationshipsFound.multi.p2",
@@ -179,7 +180,7 @@ with MongoSupport {
       status(result) shouldBe 200
 
       checkHtmlResultContainsEscapedMsgs(result,
-        "clientRelationshipsFound.title","clientRelationshipsFound.multi.title",
+        "clientRelationshipsFound.title", "clientRelationshipsFound.multi.title",
         "clientRelationshipsFound.multi.p1",
         "clientRelationshipsFound.max",
         "clientRelationshipsFound.multi.p2",
@@ -229,8 +230,8 @@ with MongoSupport {
             AuthProviderId("12345-credId"),
             agentCode = Some(AgentCode("HZ1234")),
             count = 12,
-            legacyEnrolments =  Seq(AgentEnrolment(AgentRefNo, IdentifierValue("HZ1234"))),
-            ggTag= "1234") :: sjrWithNoUserMappings.userMappings))
+            legacyEnrolments = Seq(AgentEnrolment(AgentRefNo, IdentifierValue("HZ1234"))),
+            ggTag = "1234") :: sjrWithNoUserMappings.userMappings))
 
       val request = fakeRequest(POST, s"/agent-mapping/task-list/tag-gg/?id=$id").withFormUrlEncodedBody(
         "ggTag" -> "1234", "submit" -> "continue"
@@ -268,8 +269,8 @@ with MongoSupport {
             AuthProviderId("12345-credId"),
             agentCode = Some(AgentCode("HZ1234")),
             count = 12,
-            legacyEnrolments =  Seq(AgentEnrolment(AgentRefNo, IdentifierValue("HZ1234"))),
-            ggTag= "1234") :: sjrWithNoUserMappings.userMappings))
+            legacyEnrolments = Seq(AgentEnrolment(AgentRefNo, IdentifierValue("HZ1234"))),
+            ggTag = "1234") :: sjrWithNoUserMappings.userMappings))
 
       val request = fakeRequest(POST, s"/agent-mapping/task-list/tag-gg/?id=$id").withFormUrlEncodedBody(
         "ggTag" -> "1234", "submit" -> "continue"
@@ -309,17 +310,17 @@ with MongoSupport {
 
       checkHtmlResultContainsEscapedMsgs(result,
         "existingClientRelationships.title",
-      "existingClientRelationships.heading",
-      "existingClientRelationships.p1",
-      "existingClientRelationships.yes",
-      "existingClientRelationships.no")
+        "existingClientRelationships.heading",
+        "existingClientRelationships.p1",
+        "existingClientRelationships.yes",
+        "existingClientRelationships.no")
 
       //bodyOf(result) should include(htmlEscapedMessage("existingClientRelationships.td", "6666"))
       bodyOf(result) should include(htmlEscapedMessage("copied.table.single.th", 1))
       bodyOf(result) should include(routes.TaskListMappingController.showGGTag(id).url)
 
-      result should containSubmitButton("button.saveContinue","existing-client-relationships-continue")
-      result should containSubmitButton("button.saveComeBackLater","existing-client-relationships-save")
+      result should containSubmitButton("button.saveContinue", "existing-client-relationships-continue")
+      result should containSubmitButton("button.saveComeBackLater", "existing-client-relationships-save")
     }
 
     "200 the existing-client-relationships page with back link to /agent-subscription/task-list if not already mapped (has just arrived from agent-subscription/task-list" in {
@@ -440,7 +441,7 @@ with MongoSupport {
       checkHtmlResultContainsEscapedMsgs(
         result, "copyAcross.h1", "copyAcross.heading", "copyAcross.p1", "copyAcross.p2"
       )
-      result should containLink("button.continue",s"${routes.SignedOutController.taskListSignOutAndRedirect(id).url}")
+      result should containLink("button.continue", s"${routes.SignedOutController.taskListSignOutAndRedirect(id).url}")
       result should containLink("button.back", s"${routes.TaskListMappingController.showExistingClientRelationships(id).url}")
     }
   }
@@ -471,7 +472,7 @@ with MongoSupport {
           AuthProviderId("12345-credId"),
           None,
           legacyEnrolments = List.empty,
-          ggTag="") :: sjrWithMapping.userMappings)
+          ggTag = "") :: sjrWithMapping.userMappings)
       )
 
       val request = fakeRequest(GET, s"/agent-mapping/task-list/start-submit/?id=$id")

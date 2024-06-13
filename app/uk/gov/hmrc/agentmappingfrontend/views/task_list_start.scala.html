@@ -36,20 +36,20 @@ backLinkHref = Some(backLink),
 taskList = true
 ) {
 
-    <h1 class="govuk-heading-xl">@msgs("start.task-list.heading")</h1>
+<h1 class="govuk-heading-xl">@msgs("start.task-list.heading")</h1>
 
-    <h2 class="govuk-heading-m">@msgs("start.task-list.need-to-know")</h2>
-        <p>@msgs("start.task-list.need-to-know.p1")</p>
-        <p>@msgs("start.task-list.need-to-know.p2")</p>
 
-    <p class="govuk-inset-text govuk-!-margin-bottom-6">@msgs("start.task-list.need-to-know.panel")</p>
+<p>@msgs("start.task-list.p1")</p>
+<ul class="govuk-list govuk-list--bullet">
+    <li>@msgs("start.task-list.li1")</li>
+    <li>@msgs("start.task-list.li2")</li>
+    <li>@msgs("start.task-list.li3")</li>
+</ul>
 
-    <h2 class="govuk-heading-m">@msgs("start.task-list.need-to-do")</h2>
-        <p>@msgs("start.task-list.need-to-do.p1")</p>
-        <p>@msgs("start.task-list.need-to-do.p2")</p>
 
-    <div class="govuk-button-group">
-        <a class="govuk-button"  id="clients-found-continue" href="@routes.TaskListMappingController.showClientRelationshipsFound(id)" role="button" draggable="false">@msgs("button.saveContinue")</a>
-        <a class="govuk-button govuk-button--secondary"  id="clients-found-save" href='@appConfig.agentSubscriptionFrontendProgressSavedUrl@returnUrl' draggable="false">@msgs("button.saveComeBackLater")</a>
-    </div>
+<div class="govuk-button-group">
+    <a class="govuk-button" id="clients-found-continue"
+       href="@routes.TaskListMappingController.showClientRelationshipsFound(id)" role="button" draggable="false">@msgs("button.continue")</a>
+
+</div>
 }
