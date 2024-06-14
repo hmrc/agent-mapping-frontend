@@ -108,11 +108,11 @@ class TaskListMappingControllerISpec
       checkHtmlResultContainsEscapedMsgs(
         result,
         "start.task-list.heading",
-        "start.task-list.need-to-do",
-        "start.task-list.need-to-know",
-        "start.task-list.need-to-know.panel",
-        "button.saveContinue",
-        "button.saveComeBackLater"
+        "start.task-list.p1",
+        "start.task-list.li1",
+        "start.task-list.li2",
+        "start.task-list.li3",
+        "button.continue"
       )
       bodyOf(result) should include("/task-list/client-relationships-found?id=")
     }
