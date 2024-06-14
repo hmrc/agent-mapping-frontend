@@ -13,14 +13,12 @@ start.need-to-do=What you need to do
 start.need-to-do.p1=Select ‘continue’ to sign in with any of your other Government Gateway user IDs. These will be older user IDs that you use for managing Self Assessment clients.
 
 
-start.task-list.heading=Copy across your existing Self Assessment clients to your agent services account
-start.task-list.need-to-know=What you need to know
-start.task-list.need-to-know.p1=Before you can sign your clients up for Making Tax Digital, you need to copy your existing relationship from your old Government Gateway user IDs to your new agent services account.
-start.task-list.need-to-know.p2=This means your clients will not have to authorise you again for Making Tax Digital services.
-start.task-list.need-to-know.panel=You cannot view your client lists through your agent services account.
-start.task-list.need-to-do=What you need to do
-start.task-list.need-to-do.p1=On the next screen you will see how many Self Assessment clients you have linked to your current user ID.
-start.task-list.need-to-do.p2=If you have more than one Government Gateway user ID, you will need to sign in with each user ID to copy more clients across.
+start.task-list.heading=Copy across existing Self Assessment authorisations
+start.task-list.p1=This will mean:
+start.task-list.li1=your clients will not have to authorise you again for Making Tax Digital for Income Tax
+start.task-list.li2=you can tell us about multiple Government Gateway user IDs at the same time
+start.task-list.li3=any new Self Assessment client you take on under the same user IDs will automatically be linked to your new agent services account
+
 
 #client-relationships-found
 clientRelationshipsFound.title=Client relationships found
