@@ -36,7 +36,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class MappingController @Inject()(
+class MappingController @Inject() (
   val authConnector: AuthConnector,
   mappingConnector: MappingConnector,
   val agentSubscriptionConnector: AgentSubscriptionConnector,
@@ -55,7 +55,8 @@ class MappingController @Inject()(
   notEnrolledTemplate: not_enrolled,
   incorrectAccountTemplate: incorrect_account,
   ggTagTemplate: gg_tag,
-  mcc: MessagesControllerComponents)(implicit val ec: ExecutionContext, val appConfig: AppConfig)
+  mcc: MessagesControllerComponents
+)(implicit val ec: ExecutionContext, val appConfig: AppConfig)
     extends FrontendController(mcc) with I18nSupport with AuthActions with Logging {
 
   val root: Action[AnyContent] = Action {
@@ -64,7 +65,7 @@ class MappingController @Inject()(
 
   private def getBackLinkForStart(implicit request: Request[_]): String =
     request.session
-      .get("OriginForMapping") //set in AIF (agent journey & fastTrack) and the dashboard
+      .get("OriginForMapping") // set in AIF (agent journey & fastTrack) and the dashboard
       .getOrElse(appConfig.agentServicesFrontendBaseUrl)
 
   val start: Action[AnyContent] = Action.async { implicit request =>
@@ -75,11 +76,11 @@ class MappingController @Inject()(
           details <- mdOpt.fold(Seq.empty[MappingDetails])(md => md.mappingDetails)
         } yield ClientCountAndGGTag(details.count, details.ggTag)
 
-        clientCountsAndGGTags.flatMap(
-          countsAndTags =>
-            repository
-              .create(arn)
-              .map(id => Ok(startTemplate(id, countsAndTags, getBackLinkForStart))))
+        clientCountsAndGGTags.flatMap(countsAndTags =>
+          repository
+            .create(arn)
+            .map(id => Ok(startTemplate(id, countsAndTags, getBackLinkForStart)))
+        )
 
       case None => Future.successful(Redirect(routes.MappingController.needAgentServicesAccount))
     }
@@ -98,10 +99,9 @@ class MappingController @Inject()(
         case Some(record) =>
           for {
             clientCount <- mappingConnector.getClientCount
-            newRef <- repository.create(
-                       record.arn,
-                       currentCount = clientCount,
-                       clientCountAndGGTags = record.clientCountAndGGTags)
+            newRef <-
+              repository
+                .create(record.arn, currentCount = clientCount, clientCountAndGGTags = record.clientCountAndGGTags)
             _ <- repository.delete(id)
           } yield Redirect(routes.MappingController.showClientRelationshipsFound(newRef))
 
@@ -136,21 +136,21 @@ class MappingController @Inject()(
           GGTagForm.form
             .bindFromRequest()
             .fold(
-              formWithErrors => {
-                Ok(ggTagTemplate(formWithErrors, id))
-              },
-              ggTag => {
+              formWithErrors => Ok(ggTagTemplate(formWithErrors, id)),
+              ggTag =>
                 if (!record.alreadyMapped) {
                   mappingConnector.createMapping(record.arn).flatMap {
                     case CREATED =>
-                      val clientCountAndGGTags = ClientCountAndGGTag(record.currentCount, ggTag.value) +: record.clientCountAndGGTags
+                      val clientCountAndGGTags =
+                        ClientCountAndGGTag(record.currentCount, ggTag.value) +: record.clientCountAndGGTags
                       val newRecord =
                         record.copy(clientCountAndGGTags = clientCountAndGGTags, currentGGTag = ggTag.value)
                       for {
                         _ <- mappingConnector
-                              .createOrUpdateMappingDetails(
-                                record.arn,
-                                MappingDetailsRequest(AuthProviderId(providerId), ggTag.value, record.currentCount))
+                               .createOrUpdateMappingDetails(
+                                 record.arn,
+                                 MappingDetailsRequest(AuthProviderId(providerId), ggTag.value, record.currentCount)
+                               )
                         _ <- repository.updateMappingCompleteStatus(id)
                         _ <- repository.upsert(newRecord, id)
                       } yield Redirect(routes.MappingController.showExistingClientRelationships(id))
@@ -160,12 +160,11 @@ class MappingController @Inject()(
                       InternalServerError
                   }
                 } else Redirect(routes.MappingController.showExistingClientRelationships(id))
-              }
             )
         case None => Ok(pageNotFoundTemplate())
       }
-    }.recover {
-      case _: ConflictException => Redirect(routes.MappingController.alreadyMapped(id))
+    }.recover { case _: ConflictException =>
+      Redirect(routes.MappingController.alreadyMapped(id))
     }
   }
 
@@ -179,7 +178,9 @@ class MappingController @Inject()(
               id,
               record.clientCountAndGGTags,
               routes.MappingController.showGGTag(id).url,
-              taskList = false))
+              taskList = false
+            )
+          )
 
         case None => Ok(pageNotFoundTemplate())
       }
@@ -191,7 +192,7 @@ class MappingController @Inject()(
       ExistingClientRelationshipsForm.form
         .bindFromRequest()
         .fold(
-          formWithErrors => {
+          formWithErrors =>
             repository.findRecord(id).flatMap {
               case Some(record) =>
                 Ok(
@@ -200,13 +201,15 @@ class MappingController @Inject()(
                     id,
                     record.clientCountAndGGTags,
                     routes.MappingController.showClientRelationshipsFound(id).url,
-                    taskList = false))
+                    taskList = false
+                  )
+                )
 
               case None =>
                 logger.info(s"no record found for id $id")
                 Redirect(routes.MappingController.start)
-            }
-          }, {
+            },
+          {
             case Yes => Redirect(routes.MappingController.showCopyAcrossClients(id))
             case No  => Redirect(routes.MappingController.complete(id))
           }
@@ -219,7 +222,9 @@ class MappingController @Inject()(
       Ok(
         copyAcrossClientsTemplate(
           idRefForArn = id,
-          backUrl = routes.MappingController.showExistingClientRelationships(id).url))
+          backUrl = routes.MappingController.showExistingClientRelationships(id).url
+        )
+      )
     }
   }
 

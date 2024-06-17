@@ -16,26 +16,24 @@
 
 package uk.gov.hmrc.agentmappingfrontend.connectors
 
-import com.codahale.metrics.MetricRegistry
-import com.kenshoo.play.metrics.Metrics
 import play.api.Logging
 import play.api.http.Status._
-import uk.gov.hmrc.agent.kenshoo.monitoring.HttpAPIMonitor
 import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
 import uk.gov.hmrc.agentmappingfrontend.model.{MappingDetailsRepositoryRecord, MappingDetailsRequest, SaMapping, VatMapping}
+import uk.gov.hmrc.agentmappingfrontend.util.HttpAPIMonitor
 import uk.gov.hmrc.agentmtdidentifiers.model.Arn
 import uk.gov.hmrc.http.HttpErrorFunctions._
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HttpClient, _}
+import uk.gov.hmrc.play.bootstrap.metrics.Metrics
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class MappingConnector @Inject()(http: HttpClient, metrics: Metrics, appConfig: AppConfig)
-    extends HttpAPIMonitor with Logging {
-
-  override val kenshooRegistry: MetricRegistry = metrics.defaultRegistry
+class MappingConnector @Inject() (http: HttpClient, val metrics: Metrics, appConfig: AppConfig)(implicit
+  val ec: ExecutionContext
+) extends HttpAPIMonitor with Logging {
 
   def createMapping(arn: Arn)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Int] =
     monitor("ConsumedAPI-Mapping-CreateMapping-PUT") {
@@ -82,9 +80,10 @@ class MappingConnector @Inject()(http: HttpClient, metrics: Metrics, appConfig: 
       http.DELETE[HttpResponse](deleteUrl(arn)).map(_.status)
     }
 
-  def createOrUpdateMappingDetails(arn: Arn, mappingDetailsRequest: MappingDetailsRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext): Future[Unit] =
+  def createOrUpdateMappingDetails(arn: Arn, mappingDetailsRequest: MappingDetailsRequest)(implicit
+    hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): Future[Unit] =
     monitor("ConsumedAPI-Mapping-createOrUpdateMappingDetails-POST") {
       http
         .POST[MappingDetailsRequest, HttpResponse](detailsUrl(arn), mappingDetailsRequest)
@@ -101,7 +100,8 @@ class MappingConnector @Inject()(http: HttpClient, metrics: Metrics, appConfig: 
     }
 
   def getMappingDetails(
-    arn: Arn)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[MappingDetailsRepositoryRecord]] =
+    arn: Arn
+  )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[MappingDetailsRepositoryRecord]] =
     monitor("ConsumedAPI-Mapping-getMappingDetails-GET") {
       http.GET[Option[MappingDetailsRepositoryRecord]](detailsUrl(arn))
     }.recover {

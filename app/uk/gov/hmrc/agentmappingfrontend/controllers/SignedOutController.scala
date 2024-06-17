@@ -26,9 +26,9 @@ import views.html.helper.urlEncode
 
 import scala.concurrent.Future
 
-class SignedOutController @Inject()(timedOutTemplate: timed_out, cc: MessagesControllerComponents)(
-  implicit appConfig: AppConfig)
-    extends FrontendController(cc) {
+class SignedOutController @Inject() (timedOutTemplate: timed_out, cc: MessagesControllerComponents)(implicit
+  appConfig: AppConfig
+) extends FrontendController(cc) {
 
   def signOutAndRedirect(id: MappingArnResultId): Action[AnyContent] = Action {
     val url = s"${appConfig.signOutRedirectUrl}?id=$id"

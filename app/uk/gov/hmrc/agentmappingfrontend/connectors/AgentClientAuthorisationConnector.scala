@@ -16,27 +16,26 @@
 
 package uk.gov.hmrc.agentmappingfrontend.connectors
 
-import com.codahale.metrics.MetricRegistry
 import com.github.blemale.scaffeine.Scaffeine
-import com.kenshoo.play.metrics.Metrics
 import play.api.Logging
 import play.api.http.Status._
 import play.api.libs.json.Json
-import uk.gov.hmrc.agent.kenshoo.monitoring.HttpAPIMonitor
 import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
+import uk.gov.hmrc.agentmappingfrontend.util.HttpAPIMonitor
 import uk.gov.hmrc.agentmtdidentifiers.model._
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HttpClient, _}
+import uk.gov.hmrc.play.bootstrap.metrics.Metrics
 
 import java.net.URL
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AgentClientAuthorisationConnector @Inject()(http: HttpClient, metrics: Metrics)(implicit val appConfig: AppConfig)
-    extends HttpAPIMonitor with Logging {
-
-  override val kenshooRegistry: MetricRegistry = metrics.defaultRegistry
+class AgentClientAuthorisationConnector @Inject() (http: HttpClient, val metrics: Metrics)(implicit
+  val appConfig: AppConfig,
+  val ec: ExecutionContext
+) extends HttpAPIMonitor with Logging {
 
   private val suspensionCache: com.github.blemale.scaffeine.Cache[Arn, SuspensionDetails] =
     Scaffeine()

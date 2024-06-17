@@ -27,15 +27,13 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import scala.concurrent.ExecutionContext
 
-class TestOnlyController @Inject()(
+class TestOnlyController @Inject() (
   override val messagesApi: MessagesApi,
   mappingConnector: MappingConnector,
   viewSaMappingsTemplate: view_sa_mappings,
   noMappingsTemplate: no_mappings,
-  viewVatMappingsTemplate: view_vat_mappings)(
-  implicit appConfig: AppConfig,
-  val ec: ExecutionContext,
-  cc: MessagesControllerComponents)
+  viewVatMappingsTemplate: view_vat_mappings
+)(implicit appConfig: AppConfig, val ec: ExecutionContext, cc: MessagesControllerComponents)
     extends FrontendController(cc) with I18nSupport {
 
   def findSaMappings(arn: Arn): Action[AnyContent] = Action.async { implicit request =>

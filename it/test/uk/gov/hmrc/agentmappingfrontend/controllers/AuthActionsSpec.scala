@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.agentmappingfrontend.controllers
 
-import play.api.mvc.Result
+import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.mvc.Results._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -34,15 +34,18 @@ import uk.gov.hmrc.http.SessionKeys
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class AuthActionsSpec extends BaseControllerISpec with AuthStubs with AgentSubscriptionStubs with SubscriptionJourneyRecordSamples {
+class AuthActionsSpec
+    extends BaseControllerISpec with AuthStubs with AgentSubscriptionStubs with SubscriptionJourneyRecordSamples {
 
   object TestController extends AuthActions {
 
     override def authConnector: AuthConnector = app.injector.instanceOf[AuthConnector]
-    override def agentSubscriptionConnector: AgentSubscriptionConnector = app.injector.instanceOf[AgentSubscriptionConnector]
-    override def agentClientAuthorisationConnector: AgentClientAuthorisationConnector = app.injector.instanceOf[AgentClientAuthorisationConnector]
+    override def agentSubscriptionConnector: AgentSubscriptionConnector =
+      app.injector.instanceOf[AgentSubscriptionConnector]
+    override def agentClientAuthorisationConnector: AgentClientAuthorisationConnector =
+      app.injector.instanceOf[AgentClientAuthorisationConnector]
 
-    implicit val request = FakeRequest("GET", "/foo")
+    implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/foo")
       .withSession(SessionKeys.authToken -> "Bearer XYZ")
 
     val env = app.injector.instanceOf[Environment]
@@ -51,49 +54,51 @@ class AuthActionsSpec extends BaseControllerISpec with AuthStubs with AgentSubsc
     val appConfig = app.injector.instanceOf[AppConfig]
 
     def testWithAuthorisedAgent =
-      await(withAuthorisedAgent("arnRefToTryAgain") { _ => Future.successful(Ok("Done.")) })
+      await(withAuthorisedAgent("arnRefToTryAgain")(_ => Future.successful(Ok("Done."))))
 
     def testWithBasicAuth =
-      await(withBasicAuth { Future.successful(Ok("Done."))})
+      await(withBasicAuth(Future.successful(Ok("Done."))))
 
     def testWithBasicAgentAuth =
-      await(withBasicAgentAuth{Future.successful(Ok("Done."))})
+      await(withBasicAgentAuth(Future.successful(Ok("Done."))))
 
     def testWithCheckForArn =
-      await(withCheckForArn { optEnrolmentIdentifier => Future.successful(Ok(optEnrolmentIdentifier.toString))})
+      await(withCheckForArn(optEnrolmentIdentifier => Future.successful(Ok(optEnrolmentIdentifier.toString))))
 
     def testWithSubscribingAgent =
-      await(withSubscribingAgent("mappingArnResultId"){ _ => Future.successful(Ok("Done."))})
+      await(withSubscribingAgent("mappingArnResultId")(_ => Future.successful(Ok("Done."))))
 
   }
 
   private val eligibleEnrolments = Map(
-    "IR-SA-AGENT" -> "IRAgentReference",
-    "HMCE-VAT-AGNT" -> "AgentRefNo",
+    "IR-SA-AGENT"     -> "IRAgentReference",
+    "HMCE-VAT-AGNT"   -> "AgentRefNo",
     "HMRC-CHAR-AGENT" -> "AGENTCHARID",
-    "HMRC-GTS-AGNT" -> "HMRCGTSAGENTREF",
-    "HMRC-MGD-AGNT" -> "HMRCMGDAGENTREF",
+    "HMRC-GTS-AGNT"   -> "HMRCGTSAGENTREF",
+    "HMRC-MGD-AGNT"   -> "HMRCMGDAGENTREF",
     "HMRC-NOVRN-AGNT" -> "VATAgentRefNo",
-    "IR-CT-AGENT" -> "IRAgentReference",
-    "IR-PAYE-AGENT" -> "IRAgentReference",
-    "IR-SDLT-AGENT" -> "STORN"
+    "IR-CT-AGENT"     -> "IRAgentReference",
+    "IR-PAYE-AGENT"   -> "IRAgentReference",
+    "IR-SDLT-AGENT"   -> "STORN"
   )
 
   def testAuthorisedAgentRedirectedTo(expectedLocation: String, enrolments: (String, String)*): Unit = {
 
-    val enrolmentsArr = enrolments.map { case (key, identifier) =>
-      s"""
-         |{
-         |  "key":"$key",
-         |  "identifiers": [
-         |    {
-         |      "key":"$identifier",
-         |      "value": "TARN0000001"
-         |    }
-         |  ]
-         |}
+    val enrolmentsArr = enrolments
+      .map { case (key, identifier) =>
+        s"""
+           |{
+           |  "key":"$key",
+           |  "identifiers": [
+           |    {
+           |      "key":"$identifier",
+           |      "value": "TARN0000001"
+           |    }
+           |  ]
+           |}
              """.stripMargin
-    }.mkString("[", ", ", "]")
+      }
+      .mkString("[", ", ", "]")
 
     givenAuthorisedFor(
       "{}",
@@ -113,19 +118,21 @@ class AuthActionsSpec extends BaseControllerISpec with AuthStubs with AgentSubsc
 
   def testSubscribingAgentRedirectedTo(expectedLocation: String, enrolments: (String, String)*): Unit = {
 
-    val enrolmentsArr = enrolments.map { case (key, identifier) =>
-      s"""
-         |{
-         |  "key":"$key",
-         |  "identifiers": [
-         |    {
-         |      "key":"$identifier",
-         |      "value": "TARN0000001"
-         |    }
-         |  ]
-         |}
+    val enrolmentsArr = enrolments
+      .map { case (key, identifier) =>
+        s"""
+           |{
+           |  "key":"$key",
+           |  "identifiers": [
+           |    {
+           |      "key":"$identifier",
+           |      "value": "TARN0000001"
+           |    }
+           |  ]
+           |}
              """.stripMargin
-    }.mkString("[", ", ", "]")
+      }
+      .mkString("[", ", ", "]")
 
     givenAuthorisedFor(
       "{}",
@@ -209,13 +216,14 @@ class AuthActionsSpec extends BaseControllerISpec with AuthStubs with AgentSubsc
         )
         val result = TestController.testWithAuthorisedAgent
         status(result) shouldBe 303
-        result.header.headers(HeaderNames.LOCATION) shouldBe routes.MappingController.notEnrolled(id = "arnRefToTryAgain").url
+        result.header
+          .headers(HeaderNames.LOCATION) shouldBe routes.MappingController.notEnrolled(id = "arnRefToTryAgain").url
       }
 
       "agent has no enrolments" in {
         behave like testAuthorisedAgentRedirectedTo(
           expectedLocation = routes.MappingController.notEnrolled(id = "arnRefToTryAgain").url,
-          enrolments = ("","")
+          enrolments = ("", "")
         )
 
       }
@@ -232,7 +240,7 @@ class AuthActionsSpec extends BaseControllerISpec with AuthStubs with AgentSubsc
       "agent has both HMRC-AS-AGENT and HMRC-AGENT-AGENT enrolments" in {
         behave like testAuthorisedAgentRedirectedTo(
           expectedLocation = routes.MappingController.incorrectAccount(id = "arnRefToTryAgain").url,
-          enrolments = Seq("HMRC-AS-AGENT" -> "AgentReferenceNumber", "HMRC-AGENT-AGENT" -> "AgentRefNumber") :_*
+          enrolments = Seq("HMRC-AS-AGENT" -> "AgentReferenceNumber", "HMRC-AGENT-AGENT" -> "AgentRefNumber"): _*
         )
       }
     }
@@ -241,7 +249,9 @@ class AuthActionsSpec extends BaseControllerISpec with AuthStubs with AgentSubsc
       givenUnauthorisedWith("MissingBearerToken")
       val result = TestController.testWithAuthorisedAgent
       status(result) shouldBe 303
-      result.header.headers(HeaderNames.LOCATION) shouldBe s"http://localhost:9553/bas-gateway/sign-in?continue_url=http://localhost:9438/foo&origin=agent-mapping-frontend"
+      result.header.headers(
+        HeaderNames.LOCATION
+      ) shouldBe s"http://localhost:9553/bas-gateway/sign-in?continue_url=http://localhost:9438/foo&origin=agent-mapping-frontend"
     }
   }
 
@@ -309,12 +319,14 @@ class AuthActionsSpec extends BaseControllerISpec with AuthStubs with AgentSubsc
         givenUserHasUnsupportedAuthProvider()
         val result = TestController.testWithSubscribingAgent
         status(result) shouldBe 303
-        result.header.headers(HeaderNames.LOCATION) shouldBe s"http://localhost:9553/bas-gateway/sign-in?continue_url=http://localhost:9438/foo"
+        result.header.headers(
+          HeaderNames.LOCATION
+        ) shouldBe s"http://localhost:9553/bas-gateway/sign-in?continue_url=http://localhost:9438/foo"
       }
     }
   }
 
-    "withBasicAuth" should {
+  "withBasicAuth" should {
     "check if the user is logged in" in {
       givenAuthorisedFor("{}", s"""{}""".stripMargin)
       val result = TestController.testWithBasicAuth
@@ -326,7 +338,9 @@ class AuthActionsSpec extends BaseControllerISpec with AuthStubs with AgentSubsc
       givenUnauthorisedWith("MissingBearerToken")
       val result = TestController.testWithBasicAuth
       status(result) shouldBe 303
-      result.header.headers(HeaderNames.LOCATION) shouldBe s"http://localhost:9553/bas-gateway/sign-in?continue_url=http://localhost:9438/foo&origin=agent-mapping-frontend"
+      result.header.headers(
+        HeaderNames.LOCATION
+      ) shouldBe s"http://localhost:9553/bas-gateway/sign-in?continue_url=http://localhost:9438/foo&origin=agent-mapping-frontend"
     }
   }
 
@@ -342,7 +356,9 @@ class AuthActionsSpec extends BaseControllerISpec with AuthStubs with AgentSubsc
       givenUnauthorisedWith("MissingBearerToken")
       val result = TestController.testWithBasicAgentAuth
       status(result) shouldBe 303
-      result.header.headers(HeaderNames.LOCATION) shouldBe s"http://localhost:9553/bas-gateway/sign-in?continue_url=http://localhost:9438/foo&origin=agent-mapping-frontend"
+      result.header.headers(
+        HeaderNames.LOCATION
+      ) shouldBe s"http://localhost:9553/bas-gateway/sign-in?continue_url=http://localhost:9438/foo&origin=agent-mapping-frontend"
     }
   }
 
@@ -369,7 +385,7 @@ class AuthActionsSpec extends BaseControllerISpec with AuthStubs with AgentSubsc
     }
 
     "return None when user has no HMRC-AS-AGENT enrolment" in {
-      givenAuthorisedFor(s"""{"allEnrolments": []}""",s"""{}""".stripMargin)
+      givenAuthorisedFor(s"""{"allEnrolments": []}""", s"""{}""".stripMargin)
 
       val result = TestController.testWithCheckForArn
       status(result) shouldBe 403

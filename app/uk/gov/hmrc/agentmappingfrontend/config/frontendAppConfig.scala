@@ -68,11 +68,11 @@ trait AppConfig {
   )
 }
 @Singleton
-class FrontendAppConfig @Inject()(servicesConfig: ServicesConfig) extends AppConfig {
+class FrontendAppConfig @Inject() (servicesConfig: ServicesConfig) extends AppConfig {
 
   override lazy val contactFrontendHost: String = servicesConfig.getString("contact-frontend.host")
 
-  //base urls
+  // base urls
   override lazy val companyAuthFrontendBaseUrl: String =
     servicesConfig.getString("microservice.services.company-auth-frontend.external-url")
   override lazy val agentSubscriptionBaseUrl: String =

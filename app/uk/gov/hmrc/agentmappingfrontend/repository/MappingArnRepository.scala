@@ -48,7 +48,8 @@ case class MappingArnResult(
   currentCount: Int,
   currentGGTag: String = "",
   clientCountAndGGTags: Seq[ClientCountAndGGTag] = Seq.empty,
-  alreadyMapped: Boolean = false)
+  alreadyMapped: Boolean = false
+)
 
 object MappingResult {
   type MappingArnResultId = String
@@ -66,7 +67,7 @@ object MappingArnResult {
 }
 
 @Singleton
-class MappingArnRepository @Inject()(mongoComponent: MongoComponent)(implicit ec: ExecutionContext)
+class MappingArnRepository @Inject() (mongoComponent: MongoComponent)(implicit ec: ExecutionContext)
     extends PlayMongoRepository[MappingArnResult](
       mongoComponent = mongoComponent,
       collectionName = "mapping-arn",
@@ -75,7 +76,8 @@ class MappingArnRepository @Inject()(mongoComponent: MongoComponent)(implicit ec
         IndexModel(ascending("id"), IndexOptions().name("idUnique").unique(true)),
         IndexModel(
           ascending("createdDate"),
-          IndexOptions().name("createDate").unique(false).expireAfter(86400, TimeUnit.SECONDS))
+          IndexOptions().name("createDate").unique(false).expireAfter(86400, TimeUnit.SECONDS)
+        )
       ),
       replaceIndexes = true
     ) with Logging {
@@ -83,7 +85,8 @@ class MappingArnRepository @Inject()(mongoComponent: MongoComponent)(implicit ec
   def create(
     arn: Arn,
     currentCount: Int = 0,
-    clientCountAndGGTags: Seq[ClientCountAndGGTag] = Seq.empty): Future[MappingArnResultId] = {
+    clientCountAndGGTags: Seq[ClientCountAndGGTag] = Seq.empty
+  ): Future[MappingArnResultId] = {
     val record = MappingArnResult(arn = arn, currentCount = currentCount, clientCountAndGGTags = clientCountAndGGTags)
     collection
       .insertOne(record)
@@ -102,37 +105,44 @@ class MappingArnRepository @Inject()(mongoComponent: MongoComponent)(implicit ec
         equal("id", id),
         mappingArnResult,
         ReplaceOptions()
-          .upsert(true))
+          .upsert(true)
+      )
       .toFuture()
-      .map(
-        wr =>
-          if (!wr.wasAcknowledged()) throw new RuntimeException("Something went wrong with upsert.")
-          else
-            logger.info(s"Upsert success. Found ${wr.getMatchedCount} matching documents. " +
-              s"${wr.getModifiedCount} were modified."))
+      .map(wr =>
+        if (!wr.wasAcknowledged()) throw new RuntimeException("Something went wrong with upsert.")
+        else
+          logger.info(
+            s"Upsert success. Found ${wr.getMatchedCount} matching documents. " +
+              s"${wr.getModifiedCount} were modified."
+          )
+      )
 
   def updateCurrentGGTag(id: MappingArnResultId, ggTag: String): Future[Unit] =
     collection
       .updateOne(equal("id", id), set("currentGGTag", ggTag))
       .toFuture()
-      .map(
-        wr =>
-          if (!wr.wasAcknowledged()) throw new RuntimeException("Something went wrong with updateCurrentGGTag.")
-          else
-            logger.info(s"updateCurrentGGTag success. Found ${wr.getMatchedCount} matching documents. " +
-              s"${wr.getModifiedCount} were modified."))
+      .map(wr =>
+        if (!wr.wasAcknowledged()) throw new RuntimeException("Something went wrong with updateCurrentGGTag.")
+        else
+          logger.info(
+            s"updateCurrentGGTag success. Found ${wr.getMatchedCount} matching documents. " +
+              s"${wr.getModifiedCount} were modified."
+          )
+      )
 
   def updateMappingCompleteStatus(id: MappingArnResultId): Future[Unit] =
     collection
       .updateOne(equal("id", id), set("alreadyMapped", true))
       .toFuture()
-      .map(
-        wr =>
-          if (!wr.wasAcknowledged())
-            throw new RuntimeException("Something went wrong with updateMappingCompleteStatus.")
-          else
-            logger.info(s"updateMappingCompleteStatus success. Found ${wr.getMatchedCount} matching documents. " +
-              s"${wr.getModifiedCount} were modified."))
+      .map(wr =>
+        if (!wr.wasAcknowledged())
+          throw new RuntimeException("Something went wrong with updateMappingCompleteStatus.")
+        else
+          logger.info(
+            s"updateMappingCompleteStatus success. Found ${wr.getMatchedCount} matching documents. " +
+              s"${wr.getModifiedCount} were modified."
+          )
+      )
 
   def delete(id: MappingArnResultId): Future[Unit] =
     collection
