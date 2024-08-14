@@ -17,7 +17,6 @@
 package uk.gov.hmrc.agentmappingfrontend.model
 
 import java.time.LocalDateTime
-
 import play.api.libs.functional.syntax.unlift
 import play.api.libs.json.{JsPath, OFormat}
 import play.api.libs.functional.syntax._
@@ -34,7 +33,8 @@ final case class SubscriptionJourneyRecord(
   contactEmailData: Option[ContactEmailData] = None,
   contactTradingNameData: Option[ContactTradingNameData] = None,
   contactTradingAddressData: Option[ContactTradingAddressData] = None,
-  contactTelephoneData: Option[ContactTelephoneData] = None
+  contactTelephoneData: Option[ContactTelephoneData] = None,
+  verifiedEmails: VerifiedEmails = VerifiedEmails(emails = Set.empty)
 )
 
 object SubscriptionJourneyRecord {
@@ -53,7 +53,8 @@ object SubscriptionJourneyRecord {
       (JsPath \ "contactEmailData").formatNullable[ContactEmailData] and
       (JsPath \ "contactTradingNameData").formatNullable[ContactTradingNameData] and
       (JsPath \ "contactTradingAddressData").formatNullable[ContactTradingAddressData] and
-      (JsPath \ "contactTelephoneData").formatNullable[ContactTelephoneData])(
+      (JsPath \ "contactTelephoneData").formatNullable[ContactTelephoneData] and
+      (JsPath \ "verifiedEmails").formatWithDefault[VerifiedEmails](VerifiedEmails()))(
       SubscriptionJourneyRecord.apply,
       unlift(SubscriptionJourneyRecord.unapply)
     )
