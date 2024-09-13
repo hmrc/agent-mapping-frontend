@@ -251,7 +251,7 @@ class AuthActionsSpec
       status(result) shouldBe 303
       result.header.headers(
         HeaderNames.LOCATION
-      ) shouldBe s"http://localhost:9553/bas-gateway/sign-in?continue_url=http://localhost:9438/foo&origin=agent-mapping-frontend"
+      ) shouldBe s"http://localhost:9099/bas-gateway/sign-in?continue_url=http://localhost:9438/foo&origin=agent-mapping-frontend"
     }
   }
 
@@ -321,7 +321,7 @@ class AuthActionsSpec
         status(result) shouldBe 303
         result.header.headers(
           HeaderNames.LOCATION
-        ) shouldBe s"http://localhost:9553/bas-gateway/sign-in?continue_url=http://localhost:9438/foo"
+        ) shouldBe s"http://localhost:9099/bas-gateway/sign-in?continue_url=http://localhost:9438/foo"
       }
     }
   }
@@ -340,7 +340,7 @@ class AuthActionsSpec
       status(result) shouldBe 303
       result.header.headers(
         HeaderNames.LOCATION
-      ) shouldBe s"http://localhost:9553/bas-gateway/sign-in?continue_url=http://localhost:9438/foo&origin=agent-mapping-frontend"
+      ) shouldBe s"http://localhost:9099/bas-gateway/sign-in?continue_url=http://localhost:9438/foo&origin=agent-mapping-frontend"
     }
   }
 
@@ -358,7 +358,7 @@ class AuthActionsSpec
       status(result) shouldBe 303
       result.header.headers(
         HeaderNames.LOCATION
-      ) shouldBe s"http://localhost:9553/bas-gateway/sign-in?continue_url=http://localhost:9438/foo&origin=agent-mapping-frontend"
+      ) shouldBe s"http://localhost:9099/bas-gateway/sign-in?continue_url=http://localhost:9438/foo&origin=agent-mapping-frontend"
     }
   }
 
