@@ -16,12 +16,12 @@
 
 package uk.gov.hmrc.agentmappingfrontend.auth
 
-import play.api.mvc.Results.{Forbidden, _}
-import play.api.mvc.{Request, Result, _}
+import play.api.mvc.Results._
+import play.api.mvc._
 import play.api.{Configuration, Environment, Logging}
 import uk.gov.hmrc.agentmappingfrontend.auth.EnrolmentHelper._
 import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
-import uk.gov.hmrc.agentmappingfrontend.connectors.{AgentClientAuthorisationConnector, AgentSubscriptionConnector}
+import uk.gov.hmrc.agentmappingfrontend.connectors.AgentSubscriptionConnector
 import uk.gov.hmrc.agentmappingfrontend.controllers.routes
 import uk.gov.hmrc.agentmappingfrontend.model._
 import uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId
@@ -46,8 +46,6 @@ trait AuthActions extends AuthorisedFunctions with Logging {
 
   def agentSubscriptionConnector: AgentSubscriptionConnector
 
-  def agentClientAuthorisationConnector: AgentClientAuthorisationConnector
-
   def withBasicAuth(
     body: => Future[Result]
   )(implicit request: Request[AnyContent], ec: ExecutionContext): Future[Result] = {
@@ -59,7 +57,7 @@ trait AuthActions extends AuthorisedFunctions with Logging {
     }
   }
 
-  def withAuthorisedAgent(idRefToArn: MappingArnResultId, checkSuspension: Boolean = true)(
+  def withAuthorisedAgent(idRefToArn: MappingArnResultId)(
     body: String => Future[Result]
   )(implicit request: Request[AnyContent], ec: ExecutionContext): Future[Result] = {
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
@@ -78,20 +76,11 @@ trait AuthActions extends AuthorisedFunctions with Logging {
             } else {
               routes.MappingController.notEnrolled(idRefToArn)
             }
-          def isSuspended(): Future[Boolean] = getArn(agentEnrolments) match {
-            case Some(arn) if checkSuspension =>
-              agentClientAuthorisationConnector.getSuspensionDetails(arn).map(_.suspensionStatus)
-            case _ => Future.successful(false)
-          }
 
-          isSuspended().flatMap {
-            // check suspension
-            case true =>
-              Future.successful(Redirect(appConfig.accountLimitedUrl))
-            case false if eligibleEnrolments.nonEmpty =>
-              body(providerId)
-            case _ =>
-              Future.successful(Redirect(redirectRoute))
+          if (eligibleEnrolments.nonEmpty) {
+            body(providerId)
+          } else {
+            Future.successful(Redirect(redirectRoute))
           }
       }
       .recover {
@@ -106,19 +95,7 @@ trait AuthActions extends AuthorisedFunctions with Logging {
     authorised(AuthProviders(GovernmentGateway) and AffinityGroup.Agent)
       .retrieve(allEnrolments) { agentEnrolments =>
         val arn = getArn(agentEnrolments)
-
-        def isSuspended(): Future[Boolean] = getArn(agentEnrolments) match {
-          case Some(arn) =>
-            agentClientAuthorisationConnector.getSuspensionDetails(arn).map(_.suspensionStatus)
-          case _ => Future.successful(false)
-        }
-
-        isSuspended().flatMap {
-          case true =>
-            Future.successful(Redirect(appConfig.accountLimitedUrl))
-          case false =>
-            body(arn)
-        }
+        body(arn)
       }
       .recoverWith {
         case _: NoActiveSession => body(None)

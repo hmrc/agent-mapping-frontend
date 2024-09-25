@@ -22,7 +22,7 @@ import play.api.mvc._
 import play.api.{Configuration, Environment, Logging}
 import uk.gov.hmrc.agentmappingfrontend.auth.AuthActions
 import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
-import uk.gov.hmrc.agentmappingfrontend.connectors.{AgentClientAuthorisationConnector, AgentSubscriptionConnector, MappingConnector}
+import uk.gov.hmrc.agentmappingfrontend.connectors.{AgentSubscriptionConnector, MappingConnector}
 import uk.gov.hmrc.agentmappingfrontend.model.RadioInputAnswer.{No, Yes}
 import uk.gov.hmrc.agentmappingfrontend.model.{ExistingClientRelationshipsForm, GGTagForm, UserMapping}
 import uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId
@@ -41,7 +41,6 @@ import scala.concurrent.{ExecutionContext, Future}
 class TaskListMappingController @Inject() (
   val authConnector: AuthConnector,
   val agentSubscriptionConnector: AgentSubscriptionConnector,
-  val agentClientAuthorisationConnector: AgentClientAuthorisationConnector,
   val agentSubscriptionService: AgentSubscriptionService,
   val mappingConnector: MappingConnector,
   val repository: TaskListMappingRepository,

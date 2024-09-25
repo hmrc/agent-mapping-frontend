@@ -23,8 +23,6 @@ import play.api.i18n.Lang
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import views.html.helper.urlEncode
 
-import scala.concurrent.duration.FiniteDuration
-
 @ImplementedBy(classOf[FrontendAppConfig])
 trait AppConfig {
   val appName: String = "agent-mapping-frontend"
@@ -42,10 +40,8 @@ trait AppConfig {
   val timeout: Int
   val timeoutCountdown: Int
   val languageToggle: Boolean
-  val suspensionCacheDuration: FiniteDuration
 
   // derived values
-  lazy val suspensionCacheEnabled: Boolean = suspensionCacheDuration.toMillis != 0
   private val contactFormServiceIdentifier = "AOSS"
   lazy val reportAProblemPartialUrl =
     s"$contactFrontendHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
@@ -60,7 +56,6 @@ trait AppConfig {
     s"$agentSubscriptionFrontendBaseUrl/progress-saved/?backLink=$agentMappingFrontendBaseUrl/agent-mapping"
   lazy val signInAndContinue =
     s"$companyAuthFrontendBaseUrl/gg/sign-in?continue=${urlEncode(agentServicesFrontendBaseUrl)}"
-  lazy val accountLimitedUrl: String = asaFrontendExternalUrl + "/agent-services-account/account-limited"
 
   val languageMap: Map[String, Lang] = Map(
     "english" -> Lang("en"),
@@ -95,8 +90,4 @@ class FrontendAppConfig @Inject() (servicesConfig: ServicesConfig) extends AppCo
 
   override val languageToggle: Boolean = servicesConfig.getBoolean("features.enable-welsh-toggle")
 
-  override val suspensionCacheDuration: FiniteDuration =
-    servicesConfig.getDuration("cache.suspensionDetails.duration") match {
-      case fd: FiniteDuration => fd
-    }
 }
