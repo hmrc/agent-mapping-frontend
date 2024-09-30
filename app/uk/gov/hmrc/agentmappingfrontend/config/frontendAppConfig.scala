@@ -28,7 +28,6 @@ trait AppConfig {
   val appName: String = "agent-mapping-frontend"
 
   val agentServicesFrontendBaseUrl: String
-  val asaFrontendExternalUrl: String
   val companyAuthFrontendBaseUrl: String
   val agentMappingBaseUrl: String
   val agentSubscriptionBaseUrl: String
@@ -80,8 +79,6 @@ class FrontendAppConfig @Inject() (servicesConfig: ServicesConfig) extends AppCo
   override lazy val agentServicesFrontendBaseUrl: String =
     s"${servicesConfig.getString("microservice.services.agent-services-account-frontend.external-url")}/agent-services-account"
   override val agentClientAuthorisationBaseUrl: String = servicesConfig.baseUrl("agent-client-authorisation")
-  override lazy val asaFrontendExternalUrl: String =
-    servicesConfig.getString("microservice.services.agent-services-account-frontend.external-url")
 
   override lazy val clientCountMaxRecords: Int = servicesConfig.getInt("clientCount.maxRecords")
 

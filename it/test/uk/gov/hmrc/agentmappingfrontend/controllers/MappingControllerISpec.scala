@@ -619,17 +619,4 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs with Mon
     }
   }
 
-  "trying to load any page when suspended" should {
-    "redirect to 'account limited' external page" in {
-      givenUserIsAuthenticated(mtdAsAgent)
-      givenSuspended()
-      implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest(GET, s"/agent-mapping/start")
-      val result = callEndpointWith(request)
-
-      status(result) shouldBe 303
-      redirectLocation(result).get should include("account-limited")
-    }
-
-  }
-
 }

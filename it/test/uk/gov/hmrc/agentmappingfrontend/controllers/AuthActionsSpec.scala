@@ -42,8 +42,6 @@ class AuthActionsSpec
     override def authConnector: AuthConnector = app.injector.instanceOf[AuthConnector]
     override def agentSubscriptionConnector: AgentSubscriptionConnector =
       app.injector.instanceOf[AgentSubscriptionConnector]
-    override def agentClientAuthorisationConnector: AgentClientAuthorisationConnector =
-      app.injector.instanceOf[AgentClientAuthorisationConnector]
 
     implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/foo")
       .withSession(SessionKeys.authToken -> "Bearer XYZ")
