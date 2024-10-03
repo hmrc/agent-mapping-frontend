@@ -30,7 +30,7 @@ trait EndpointBehaviours extends AuthStubs {
   protected def fakeRequest(endpointMethod: String, endpointPath: String): FakeRequest[AnyContentAsEmpty.type]
   protected def materializer: Materializer
 
-  implicit lazy val mat = materializer
+  implicit lazy val mat: Materializer = materializer
 
   protected def anAuthenticatedEndpoint(
     endpointMethod: String,

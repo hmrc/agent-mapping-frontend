@@ -47,8 +47,7 @@ abstract class BaseControllerISpec
         "microservice.services.agent-subscription.port"         -> wireMockPort,
         "microservice.services.agent-client-authorisation.port" -> wireMockPort,
         "application.router"                                    -> "testOnlyDoNotUseInAppConf.Routes",
-        "clientCount.maxRecords"                                -> 15,
-        "cache.suspensionDetails.duration" -> "0 seconds" // disable cache or tests will interfere with each other
+        "clientCount.maxRecords"                                -> 15
       )
       .configure(additionalConfig)
       .overrides(moduleWithOverrides)
