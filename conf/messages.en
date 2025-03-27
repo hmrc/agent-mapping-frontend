@@ -33,8 +33,8 @@ clientRelationshipsFound.multi.p2=By continuing, they will be copied across to y
 clientRelationshipsFound.max=or more Self Assessment clients
 
 #gg-tag
-gg-tag.title=Enter the last 4 characters of the Government Gateway user ID you signed in with
-gg-tag.p1=You will see this reference number whenever you check your previously copied across clients.
+gg-tag.title=Enter the last 4 numbers of the Government Gateway user ID you signed in with
+gg-tag.p1=We’ll use this as a reference number to show you which client authorisations you’ve added to your agent services account.
 gg-tag.form.hint=For example, XXXX-XXXX-1234
 gg-tag.xs=XXXX-XXXX-
 

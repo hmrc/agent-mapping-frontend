@@ -34,8 +34,8 @@ clientRelationshipsFound.multi.p2=Drwy barhau, byddant yn cael eu copïo ar draw
 clientRelationshipsFound.max=neu ragor o gleientiaid Hunanasesiad
 
 #gg-tag
-gg-tag.title=Nodwch 4 cymeriad olaf y Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth a ddefnyddioch i fewngofnodi
-gg-tag.p1=Byddwch yn gweld y cyfeirnod hwn pryd bynnag y byddwch yn gwirio’r cleientiaid y gwnaethoch eu copïo drosodd yn flaenorol.
+gg-tag.title=Nodwch 4 rhif olaf y Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth a ddefnyddioch i fewngofnodi
+gg-tag.p1=Byddwn yn defnyddio hwn fel cyfeirnod i ddangos pa awdurdodiadau gan ba gleientiaid yr ydych wedi eu hychwanegu at eich cyfrif gwasanaethau asiant.
 gg-tag.form.hint=Er enghraifft, XXXX-XXXX-1234
 gg-tag.xs=XXXX-XXXX-
 
