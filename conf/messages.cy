@@ -11,11 +11,12 @@ start.p1=Mae angen i chi roi gwybod i ni am bob cyfrif Porth y Llywodraeth yr yd
 start.p2=Mae hyn er mwyn sicrhau ein bod yn ychwanegu eich awdurdodiadau gan gleientiaid at eich cyfrif gwasanaethau asiant.
 start.inset=Y cyfan y bydd ychwanegu awdurdodiadau yn ei wneud yw copïo’r awdurdodiadau hyn draw i’ch cyfrif gwasanaethau asiant. Ni fyddwch yn colli unrhyw fynediad neu ganiatâd sydd gennych i reoli Hunanasesiad ar ran eich cleientiaid yn eich cyfrif gwasanaethau ar-lein CThEF.
 start.copied=Rydych eisoes wedi copïo drosodd bob awdurdodiad cleientiaid o dan:
-start.added=<translation needed>
-start.addClients=<translation needed>
+start.added=Awdurdodiadau wedi’u hychwanegu
+start.addClients=A ydych am ychwanegu awdurdodiadau gan eich cleient?
 start.addMore=A ydych am ychwanegu rhagor o awdurdodiadau?
 start.yes=Iawn - byddaf yn mewngofnodi nawr
 start.hint=Mae angen i chi fewngofnodi gan ddefnyddio?r Dynodydd Defnyddiwr (ID) perthnasol ar gyfer Porth y Llywodraeth er mwyn profi bod gennych fynediad at y cyfrif.
+start.error.required=Dewiswch ‘Iawn’ os ydych am ychwanegu eich awdurdodiadau gan gleientiaid
 
 start.task-list.heading=Ychwanegwch awdurdodiadau ar gyfer Hunanasesiad
 start.task-list.p1=Mae hyn yn golygu:
