@@ -40,10 +40,10 @@ totalClients: Int
     }
 }
 
-@mainTemplate(title = msgs("connectionComplete.title",s"${totalClients.toString}")) {
+@mainTemplate(title = msgs("connectionComplete.title",totalClients.toString)) {
 
     @govukPanel(Panel(
-    title = Text(msgs("connectionComplete.banner.header", s"${totalClients.toString}"))
+    title = Text(msgs("connectionComplete.banner.header", totalClients.toString))
     ))
 
     <h2 class="govuk-heading-l">@msgs(s"connectionComplete.section1.h2")</h2>
