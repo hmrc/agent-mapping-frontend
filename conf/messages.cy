@@ -77,13 +77,13 @@ notEnrolled.p2=Os oes angen i chi gysylltu Dynodydd Defnyddiwr (ID) arall ar gyf
 #Connection complete
 connectionComplete.title=Perthnasoedd â chleientiaid wedi’u copïo
 connectionComplete.banner.header=Gwnaethoch ychwanegu {0} o awdurdodiadau ar gyfer Hunanasesiad
-connectionComplete.banner.single.paragraph=Rydych wedi copïo 1 berthynas â chleient i’ch cyfrif gwasanaethau asiant
-connectionComplete.banner.multi.paragraph=Rydych wedi copïo {0} o berthnasoedd â chleientiaid i’ch cyfrif gwasanaethau asiant
+connectionComplete.section1.h2=Yr hyn sy’n digwydd nesaf
+connectionComplete.section1.p1=Mae angen i chi fewngofnodi i’ch cyfrif gwasanaethau asiant eto cyn i chi allu cael mynediad at fanylion eich cleientiaid neu wneud unrhyw newidiadau pellach.
 
 #Buttons/links
 button.repeatProcess=Mewngofnodi i gysylltu cyfrif arall
 link.finishSignOut=Gorffen ac allgofnodi
-link.goToASAccount=Ewch i’ch cyfrif gwasanaethau asiant
+link.goToASAccount=Mewngofnodwch i’ch cyfrif gwasanaethau asiant
 button.continue=Yn eich blaen
 button.signOut=Allgofnodi
 button.startNow=Dechrau nawr
