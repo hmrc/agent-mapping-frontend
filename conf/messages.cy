@@ -12,14 +12,14 @@ start.inset=Ni fyddwch yn gallu bwrw golwg dros eich rhestrau o gleientiaid drwy
 start.need-to-do=Yr hyn y mae angen i chi ei wneud
 start.need-to-do.p1=Dewiswch i fynd yn eich blaen er mwyn mewngofnodi ag unrhyw un o’r ID eraill sydd gennych ar gyfer Porth y Llywodraeth. Bydd y rhain yn ID defnyddiwr hynach a defnyddiwyd gennych ar gyfer rheoli cleient Hunanasesiad.
 
-
-start.task-list.heading=Copïwch awdurdodiadau Hunanasesiad presennol drosodd
-start.task-list.p1=Bydd hyn yn golygu:
-start.task-list.li1=na fydd yn rhaid i’ch cleientiaid eich awdurdodi eto ar gyfer gwasanaethau Troi Treth yn Ddigidol ar gyfer Treth Incwm
-start.task-list.li2=gallwch roi gwybod i ni am sawl ID Defnyddiwr ar gyfer Porth y Llywodraeth ar yr un pryd
-start.task-list.li3=bydd unrhyw gleient Hunanasesiad newydd y byddwch yn ei gymryd o dan yr un ID defnyddiwr yn cael ei gysylltu’n awtomatig â’ch cyfrif gwasanaethau asiant newydd
-
-
+start.task-list.heading=Ychwanegwch awdurdodiadau ar gyfer Hunanasesiad
+start.task-list.p1=Mae hyn yn golygu:
+start.task-list.li1=byddwch yn rhoi gwybod i ni pa gyfrifon Porth y Llywodraeth yr ydych yn eu defnyddio i reoli’ch cleientiaid Hunanasesiad yn eich cyfrif gwasanaethau ar-lein CThEF
+start.task-list.li2=byddwn yn ychwanegu’r awdurdodiadau ar gyfer Hunanasesiad at eich cyfrif gwasanaethau asiant
+start.task-list.li3=ni fydd yn rhaid i’r cleientiaid sydd eisoes wedi eich awdurdodi ar gyfer Hunanasesiad eich awdurdodi eto ar gyfer y cynllun Troi Treth yn Ddigidol ar gyfer Treth Incwm – mae hyn yn cynnwys unrhyw gleientiaid newydd y byddwch yn eu cymryd o dan yr un Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth
+start.task-list.p2=Nid yw ychwanegu awdurdodiadau yn golygu:
+start.task-list.li4=y bydd angen i chi gofrestru’ch cleientiaid ar gyfer y cynllun Troi Treth yn Ddigidol ar hyn o bryd
+start.task-list.li5=y byddwch yn colli unrhyw fynediad neu ganiatâd presennol sydd gennych i reoli Hunanasesiad ar ran eich cleientiaid yn eich cyfrif gwasanaethau ar-lein CThEF
 
 #client-relationships-found
 clientRelationshipsFound.title=Perthnasoedd â chleientiaid wedi’u canfod
@@ -34,8 +34,8 @@ clientRelationshipsFound.multi.p2=Drwy barhau, byddant yn cael eu copïo ar draw
 clientRelationshipsFound.max=neu ragor o gleientiaid Hunanasesiad
 
 #gg-tag
-gg-tag.title=Nodwch 4 cymeriad olaf y Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth a ddefnyddioch i fewngofnodi
-gg-tag.p1=Byddwch yn gweld y cyfeirnod hwn pryd bynnag y byddwch yn gwirio’r cleientiaid y gwnaethoch eu copïo drosodd yn flaenorol.
+gg-tag.title=Nodwch 4 rhif olaf y Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth a ddefnyddioch i fewngofnodi
+gg-tag.p1=Byddwn yn defnyddio hwn fel cyfeirnod i ddangos pa awdurdodiadau gan ba gleientiaid yr ydych wedi eu hychwanegu at eich cyfrif gwasanaethau asiant.
 gg-tag.form.hint=Er enghraifft, XXXX-XXXX-1234
 gg-tag.xs=XXXX-XXXX-
 
