@@ -354,13 +354,11 @@ class TaskListMappingControllerISpec
         result,
         "existingClientRelationships.title",
         "existingClientRelationships.heading",
-        "existingClientRelationships.p1",
         "existingClientRelationships.yes",
         "existingClientRelationships.no"
       )
 
-      // bodyOf(result) should include(htmlEscapedMessage("existingClientRelationships.td", "6666"))
-      bodyOf(result) should include(htmlEscapedMessage("copied.table.single.th", 1))
+      bodyOf(result) should include(htmlEscapedMessage("copied.table.single.dd", 1))
       bodyOf(result) should include(routes.TaskListMappingController.showGGTag(id).url)
 
       result should containSubmitButton("button.saveContinue", "existing-client-relationships-continue")
@@ -404,7 +402,7 @@ class TaskListMappingControllerISpec
       redirectLocation(result) shouldBe Some(routes.SignedOutController.returnAfterMapping().url)
     }
 
-    "redirect to /copy-across-clients if user selects 'Yes' and continues" in {
+    "redirect to /task-list/signed-out-redirect if user selects 'Yes' and continues" in {
       givenUserIsAuthenticated(vatEnrolledAgent)
       givenSubscriptionJourneyRecordExistsForAuthProviderId(AuthProviderId("12345-credId"), sjrWithMapping)
       val id = await(repo.create("continue-id"))
@@ -421,7 +419,7 @@ class TaskListMappingControllerISpec
 
       status(result) shouldBe 303
 
-      redirectLocation(result) shouldBe Some(routes.TaskListMappingController.showCopyAcrossClients(id).url)
+      redirectLocation(result) shouldBe Some(routes.SignedOutController.taskListSignOutAndRedirect(id).url)
     }
 
     "redirect to agent-subscription/saved-progress if user selects 'Yes' and saves" in {
@@ -487,31 +485,6 @@ class TaskListMappingControllerISpec
         result,
         "existingClientRelationships.title",
         "error.existingClientRelationships.choice.invalid"
-      )
-    }
-  }
-
-  "GET /task-list/copy-across-clients" should {
-
-    "render content as expected" in {
-      givenUserIsAuthenticated(vatEnrolledAgent)
-      givenSubscriptionJourneyRecordExistsForAuthProviderId(AuthProviderId("12345-credId"), sjrWithMapping)
-      val id = await(repo.create("continue-id"))
-      implicit val request: FakeRequest[AnyContentAsEmpty.type] =
-        fakeRequest(GET, s"/agent-mapping/task-list/copy-across-clients?id=$id")
-      val result = callEndpointWith(request)
-
-      checkHtmlResultContainsEscapedMsgs(
-        result,
-        "copyAcross.h1",
-        "copyAcross.heading",
-        "copyAcross.p1",
-        "copyAcross.p2"
-      )
-      result should containLink("button.continue", s"${routes.SignedOutController.taskListSignOutAndRedirect(id).url}")
-      result should containLink(
-        "button.back",
-        s"${routes.TaskListMappingController.showExistingClientRelationships(id).url}"
       )
     }
   }

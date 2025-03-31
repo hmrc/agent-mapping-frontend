@@ -439,17 +439,16 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs with Mon
             result,
             "existingClientRelationships.title",
             "existingClientRelationships.heading",
-            "existingClientRelationships.p1",
             "existingClientRelationships.yes",
             "existingClientRelationships.no"
           )
           bodyOf(result) should include(htmlEscapedMessage("copied.table.ggTag", ggTag))
           if (clientCount == 1) {
-            bodyOf(result) should include(htmlEscapedMessage("copied.table.single.th", clientCount))
+            bodyOf(result) should include(htmlEscapedMessage("copied.table.single.dd", clientCount))
           } else if (clientCount < 15) {
-            bodyOf(result) should include(htmlEscapedMessage("copied.table.multi.th", clientCount))
+            bodyOf(result) should include(htmlEscapedMessage("copied.table.multi.dd", clientCount))
           } else {
-            bodyOf(result) should include(htmlEscapedMessage("copied.table.max.th", 15))
+            bodyOf(result) should include(htmlEscapedMessage("copied.table.max.dd", 15))
           }
         }
       }
@@ -478,7 +477,6 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs with Mon
         result,
         "existingClientRelationships.title",
         "existingClientRelationships.heading",
-        "existingClientRelationships.p1",
         "existingClientRelationships.yes",
         "existingClientRelationships.no"
       )
@@ -520,7 +518,7 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs with Mon
       redirectLocation(result) shouldBe Some(routes.MappingController.complete(persistedMappingArnResultId).url)
     }
 
-    "redirect to /copy-across-clients when the user selects YES" in {
+    "redirect to /signed-out-redirect when the user selects YES" in {
       val persistedMappingArnResultId = await(repo.create(arn))
       givenUserIsAuthenticated(vatEnrolledAgent)
       val request = fakeRequest(
@@ -534,7 +532,7 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs with Mon
       status(result) shouldBe 303
 
       redirectLocation(result) shouldBe Some(
-        routes.MappingController.showCopyAcrossClients(persistedMappingArnResultId).url
+        routes.SignedOutController.signOutAndRedirect(persistedMappingArnResultId).url
       )
     }
 
@@ -565,11 +563,10 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs with Mon
         "error.existingClientRelationships.choice.invalid",
         "existingClientRelationships.title",
         "existingClientRelationships.heading",
-        "existingClientRelationships.p1",
         "existingClientRelationships.yes",
         "existingClientRelationships.no"
       )
-      bodyOf(result) should include(htmlEscapedMessage("copied.table.single.th", count))
+      bodyOf(result) should include(htmlEscapedMessage("copied.table.single.dd", count))
     }
 
     "redirect to start when there is a form error and no record found" in {
@@ -581,27 +578,6 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs with Mon
 
       status(result) shouldBe 303
       redirectLocation(result) shouldBe Some(routes.MappingController.start.url)
-    }
-  }
-
-  "GET /copy-across-clients" should {
-
-    "render content as expected" in {
-      givenUserIsAuthenticated(vatEnrolledAgent)
-      val id = await(repo.create(arn))
-      implicit val request: FakeRequest[AnyContentAsEmpty.type] =
-        fakeRequest(GET, s"/agent-mapping/copy-across-clients?id=$id")
-      val result = callEndpointWith(request)
-
-      checkHtmlResultContainsEscapedMsgs(
-        result,
-        "copyAcross.h1",
-        "copyAcross.heading",
-        "copyAcross.p1",
-        "copyAcross.p2"
-      )
-      result should containLink("button.continue", s"/agent-mapping/signed-out-redirect?id=$id")
-      result should containLink("button.back", s"${routes.MappingController.showExistingClientRelationships(id).url}")
     }
   }
 

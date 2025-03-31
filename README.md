@@ -23,13 +23,17 @@ This mapping journey will capture the CESA Agent Ref and associate it with the A
 
 ### Running the tests
 
-    sbt test it:test
+    sbt test it/test
+
+### Running the coverage report
+
+    ./check.sh
 
 ### Running the app locally
 
-    sm --start AGENT_ONBOARDING -r
-    sm --stop AGENT_MAPPING_FRONTEND
-    sbt run
+    sm2 --start INTERNAL_AUTH AGENT_ONBOARDING
+    sm2 --stop AGENT_MAPPING_FRONTEND
+    ./run.sh
 
 It should then be listening on port 9438.
 

@@ -14,34 +14,30 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId
 @import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
-@import uk.gov.hmrc.agentmappingfrontend.views.html
 @import uk.gov.hmrc.agentmappingfrontend.controllers.routes
 @import uk.gov.hmrc.agentmappingfrontend.model.RadioInputAnswer
-@import uk.gov.hmrc.agentmappingfrontend.views.html.helpers.{error_prefix}
-@import uk.gov.hmrc.govukfrontend.views.html.components.{GovukRadios, GovukErrorSummary}
-@import uk.gov.hmrc.govukfrontend.views.html.components.{Radios, Fieldset, Legend, Text, RadioItem, Hint, ErrorLink, ErrorSummary, ErrorMessage, FormWithCSRF}
+@import uk.gov.hmrc.agentmappingfrontend.repository.ClientCountAndGGTag
+@import uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId
+@import uk.gov.hmrc.agentmappingfrontend.views.html.helpers.error_prefix
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
+@import uk.gov.hmrc.govukfrontend.views.html.components.{ErrorSummary, Fieldset, FormWithCSRF, GovukErrorSummary, GovukRadios, Legend, RadioItem, Radios, Text}
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.implicits._
 
-@import uk.gov.hmrc.agentmappingfrontend.model.MappingDetails
-@import uk.gov.hmrc.agentmappingfrontend.repository.ClientCountAndGGTag
-
 @this(
-    mainTemplate: MainTemplate,
-    formHelper: FormWithCSRF,
-    govukRadios: GovukRadios,
-    govukErrorSummary: GovukErrorSummary,
-    errorPrefix: error_prefix
+        mainTemplate: MainTemplate,
+        formHelper: FormWithCSRF,
+        govukRadios: GovukRadios,
+        govukErrorSummary: GovukErrorSummary,
+        errorPrefix: error_prefix
 )
 
 @(
-addClientsForm: Form[RadioInputAnswer],
-id: MappingArnResultId,
-clientCountAndGGTags: Seq[ClientCountAndGGTag],
-backUrl: String,
-taskList: Boolean = false
+        addClientsForm: Form[RadioInputAnswer],
+        id: MappingArnResultId,
+        clientCountAndGGTags: Seq[ClientCountAndGGTag],
+        backUrl: String,
+        taskList: Boolean = false
 )(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
 @mainTemplate(
@@ -57,32 +53,34 @@ taskList: Boolean = false
     <h1 class="govuk-heading-xl">@msgs("existingClientRelationships.title")</h1>
 
     <dl class="govuk-summary-list govuk-!-margin-bottom-6">
-        @for(clientCountAndGGTag <- clientCountAndGGTags) {
+    @for(clientCountAndGGTag <- clientCountAndGGTags) {
         <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key agent-summary-list__key--long">
-                @if(clientCountAndGGTag.clientCount == 1) {
-                    @msgs("copied.table.single.th", clientCountAndGGTag.clientCount)
-                } else {
-                    @if(clientCountAndGGTag.clientCount < appConfig.clientCountMaxRecords) {
-                        @msgs("copied.table.multi.th", clientCountAndGGTag.clientCount)
-                    } else {
-                        @msgs("copied.table.max.th", appConfig.clientCountMaxRecords)
-                    }
-                }
-            </dt>
-            <dd class="govuk-summary-list__value agent-summary-list__value--long">
+            <dt class="govuk-summary-list__key">
             @msgs("copied.table.ggTag", clientCountAndGGTag.ggTag)
+            </dt>
+            <dd class="govuk-summary-list__value">
+            @if(clientCountAndGGTag.clientCount == 1) {
+                @msgs("copied.table.single.dd", clientCountAndGGTag.clientCount)
+            } else {
+                @if(clientCountAndGGTag.clientCount < appConfig.clientCountMaxRecords) {
+                    @msgs("copied.table.multi.dd", clientCountAndGGTag.clientCount)
+                } else {
+                    @msgs("copied.table.max.dd", appConfig.clientCountMaxRecords)
+                }
+            }
             </dd>
         </div>
-        }
+    }
     </dl>
 
-    @formHelper(action = if(taskList) routes.TaskListMappingController.submitExistingClientRelationships(id) else routes.MappingController.submitExistingClientRelationships(id),
-    'autoComplete -> "off") {
+    @formHelper(
+        action = if(taskList) routes.TaskListMappingController.submitExistingClientRelationships(id) else routes.MappingController.submitExistingClientRelationships(id),
+        Symbol("autoComplete") -> "off"
+    ) {
 
         @govukRadios(Radios(
             classes = "govuk-radios--inline",
-            hint = Some(Hint(content = Text(msgs("existingClientRelationships.p1")))),
+            hint = None,
             fieldset = Some(Fieldset(
                 legend = Some(Legend(
                     content = Text(msgs("existingClientRelationships.heading")),
@@ -92,34 +90,34 @@ taskList: Boolean = false
             )),
             items = Seq(
                 RadioItem(
-                    content = Text(msgs("button.yes")),
+                    content = Text(msgs("existingClientRelationships.yes")),
                     value = Some("yes")
                 ),
                 RadioItem(
-                    content = Text(msgs("button.no")),
+                    content = Text(msgs("existingClientRelationships.no")),
                     value = Some("no")
                 )
             )
         ).withFormField(addClientsForm("additional-clients")))
 
         @if(taskList) {
-        <div class="govuk-button-group">
-            <button type="submit"
-                    name="submit"
-                    class="govuk-button"
-                    id="existing-client-relationships-continue"
-                    value="continue">@msgs("button.saveContinue")</button>
+            <div class="govuk-button-group">
+                <button type="submit"
+                name="submit"
+                class="govuk-button"
+                id="existing-client-relationships-continue"
+                value="continue">@msgs("button.saveContinue")</button>
 
-            <button type="submit"
-                    name="submit"
-                    class="govuk-button govuk-button--secondary"
-                    id="existing-client-relationships-save"
-                    value="save">@msgs("button.saveComeBackLater")</button>
-        </div>
+                <button type="submit"
+                name="submit"
+                class="govuk-button govuk-button--secondary"
+                id="existing-client-relationships-save"
+                value="save">@msgs("button.saveComeBackLater")</button>
+            </div>
         } else {
             <button type="submit"
-                    class="govuk-button"
-                    id="submit-existing-clients">@msgs("button.continue")</button>
+            class="govuk-button"
+            id="submit-existing-clients">@msgs("button.continue")</button>
         }
 
     }

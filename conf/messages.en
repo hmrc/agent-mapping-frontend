@@ -46,22 +46,15 @@ gg-tag.form.hint=For example, XXXX-XXXX-1234
 gg-tag.xs=XXXX-XXXX-
 
 #existing-client-relationships
-existingClientRelationships.title=Copied client relationships
-copied.table.single.th={0} client relationship
-copied.table.multi.th={0} client relationships
-copied.table.max.th={0} or more client relationships
-copied.table.ggTag=User ID: XXXX-XXXX-{0}
-existingClientRelationships.heading=Do you need to copy more clients across?
-existingClientRelationships.p1=To copy more clients across, you need to sign in with another user ID you use to manage Self Assessment clients.
-existingClientRelationships.yes=Yes
+existingClientRelationships.title=Client authorisations added to your agent services account
+copied.table.single.dd={0} Self Assessment authorisation
+copied.table.multi.dd={0} Self Assessment authorisations
+copied.table.max.dd={0} or more Self Assessment authorisations
+copied.table.ggTag=XXXX-XXXX-{0}
+existingClientRelationships.heading=Do you want to add more Self Assessment authorisations?
+existingClientRelationships.yes=Yes – I’ll sign in now with a different Government Gateway user ID
 existingClientRelationships.no=No
-existingClientRelationships.max=or more Self Assessment clients
-
-#Copy Across
-copyAcross.h1=Copy across your existing Self Assessment clients to your agent services account
-copyAcross.heading=What you need to do
-copyAcross.p1=On the next screen, sign in with another Government Gateway user ID that you use for managing Self Assessment clients.
-copyAcross.p2=You will need to repeat this for each user ID that you use.
+error.existingClientRelationships.choice.invalid=Select yes if you want to add more Self Assessment authorisations
 
 #PageNotFound
 page-not-found.title=Page not found
@@ -112,7 +105,6 @@ error.utr.invalid.format=Enter a valid Unique Taxpayer Reference (UTR) that only
 error.utr.invalid.length=Unique Taxpayer Reference (UTR) must be 10 numbers
 error.arn.invalid=Enter a valid agent services account number that only includes letters A to Z, numbers and hyphens, like XARN-123-4567 or XARN1234567
 error.arn.blank=Enter your agent services account number
-error.existingClientRelationships.choice.invalid=Select yes if you want to add more authorisations
 error.gg-tag.invalid=Enter the last 4 characters of the Government Gateway user ID you signed in with
 
 #TestOnly
