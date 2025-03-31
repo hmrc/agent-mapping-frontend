@@ -76,7 +76,7 @@ notEnrolled.p2=If you need to link another Government Gateway user ID, sign in w
 
 #Connection complete
 connectionComplete.title=Client relationships copied
-connectionComplete.banner.header=Client relationships copied
+connectionComplete.banner.header=You added {0} authorizations for Self Assessment
 connectionComplete.banner.single.paragraph=You copied 1 client relationship to your agent services account
 connectionComplete.banner.multi.paragraph=You copied {0} client relationships to your agent services account
 

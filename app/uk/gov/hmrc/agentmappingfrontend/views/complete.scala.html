@@ -43,12 +43,11 @@ totalClients: Int
 @mainTemplate(title = msgs("connectionComplete.title")) {
 
     @govukPanel(Panel(
-    title = Text(msgs("connectionComplete.banner.header")),
-    content = HtmlContent(panelContent)
+    title = Text(msgs("connectionComplete.banner.header", s"${totalClients.toString}"))
     ))
 
     <p>
         <a class="govuk-link" target="_blank" rel="noreferrer noopener"
-        href="@routes.SignedOutController.reLogForMappingStart">@msgs("link.finishSignOut")</a>
+        href="@appConfig.agentServicesFrontendBaseUrl">@msgs("link.goToASAccount")</a>
     </p>
 }
