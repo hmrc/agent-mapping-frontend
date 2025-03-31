@@ -40,7 +40,7 @@ totalClients: Int
     }
 }
 
-@mainTemplate(title = msgs("connectionComplete.title")) {
+@mainTemplate(title = msgs("connectionComplete.title",s"${totalClients.toString}")) {
 
     @govukPanel(Panel(
     title = Text(msgs("connectionComplete.banner.header", s"${totalClients.toString}"))

@@ -75,7 +75,7 @@ notEnrolled.p1=You can only link user IDs registered to your business.
 notEnrolled.p2=If you need to link another Government Gateway user ID, sign in with the user ID and password.
 
 #Connection complete
-connectionComplete.title=Client relationships copied
+connectionComplete.title=You added {0} authorizations for Self Assessment
 connectionComplete.banner.header=You added {0} authorizations for Self Assessment
 connectionComplete.section1.h2=What happens next
 connectionComplete.section1.p1=You need to sign in to your agent services account again before you can access any client details or  make further changes.
