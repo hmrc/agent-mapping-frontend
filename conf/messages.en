@@ -77,13 +77,14 @@ notEnrolled.p2=If you need to link another Government Gateway user ID, sign in w
 #Connection complete
 connectionComplete.title=Client relationships copied
 connectionComplete.banner.header=You added {0} authorizations for Self Assessment
-connectionComplete.banner.single.paragraph=You copied 1 client relationship to your agent services account
-connectionComplete.banner.multi.paragraph=You copied {0} client relationships to your agent services account
+connectionComplete.section1.h2=What happens next
+connectionComplete.section1.p1=You need to sign in to your agent services account again before you can access any client details or  make further changes.
+
 
 #Buttons/links
 button.repeatProcess=Sign in to link another account
 link.finishSignOut=Finish and sign out
-link.goToASAccount=Go to your agent services account
+link.goToASAccount=Sign in to your agent service account
 button.continue=Continue
 button.signOut=Sign out
 button.startNow=Start now
