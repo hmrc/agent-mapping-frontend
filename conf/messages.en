@@ -6,11 +6,17 @@ servicename.titleSuffix=- GOV.UK
 start.not-signed-in.title=Copy across your existing Self Assessment clients to your agent services account
 start.not-signed-in.p1=You need to sign in to your agent services account to use this service.
 
-start.title=Copy across existing Self Assessment authorisations
-start.copied=You’ve already copied across all client authorisations under:
-start.inset=You will not be able to view your client lists through your agent services account. To view your clients, use your third-party software.
-start.need-to-do=What you need to do
-start.need-to-do.p1=Select ‘continue’ to sign in with any of your other Government Gateway user IDs. These will be older user IDs that you use for managing Self Assessment clients.
+start.title=Add authorisations from Self Assessment clients
+start.p1=We need to know about all the Government Gateway accounts you use to manage Self Assessment clients.
+start.p2=This is to make sure we add your client authorisations to your agent services account.
+start.inset=Adding an authorisation just copies it to your agent services account. You will not lose any access or permissions to manage Self Assessment for your clients in your HMRC online services account.
+start.copied=You’ve already told us about these Government Gateway accounts:
+start.added=Authorisations added
+start.addClients=Do you want to add your client authorisations?
+start.addMore=Do you want to add more authorisations?
+start.yes=Yes - I’ll sign in now
+start.hint=You need to sign in with the relevant Government Gateway user ID to prove you have access to the account.
+start.error.required=Select yes if you want to add your client authorisations
 
 start.task-list.heading=Add Self Assessment authorisations
 start.task-list.p1=This means:
@@ -105,7 +111,7 @@ error.utr.invalid.format=Enter a valid Unique Taxpayer Reference (UTR) that only
 error.utr.invalid.length=Unique Taxpayer Reference (UTR) must be 10 numbers
 error.arn.invalid=Enter a valid agent services account number that only includes letters A to Z, numbers and hyphens, like XARN-123-4567 or XARN1234567
 error.arn.blank=Enter your agent services account number
-error.existingClientRelationships.choice.invalid=Select yes if you wish to copy across additional clients
+error.existingClientRelationships.choice.invalid=Select yes if you want to add more authorisations
 error.gg-tag.invalid=Enter the last 4 characters of the Government Gateway user ID you signed in with
 
 #TestOnly

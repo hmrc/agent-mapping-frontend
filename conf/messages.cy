@@ -6,11 +6,16 @@ servicename.titleSuffix=– GOV.UK
 start.not-signed-in.title=Copïwch eich cleientiaid Hunanasesiad presennol ar draws i’ch cyfrif gwasanaethau asiant newydd
 start.not-signed-in.p1=Mae’n rhaid i chi fewngofnodi i’ch cyfrif gwasanaethau asiant er mwyn defnyddio’r gwasanaeth hwn.
 
-start.title=Copïwch awdurdodiadau Hunanasesiad presennol drosodd
+start.title=Ychwanegwch awdurdodiadau gan gleientiaid Hunanasesiad
+start.p1=Mae angen i chi roi gwybod i ni am bob cyfrif Porth y Llywodraeth yr ydych yn ei ddefnyddio i reoli’ch cleientiaid Hunanasesiad.
+start.p2=Mae hyn er mwyn sicrhau ein bod yn ychwanegu eich awdurdodiadau gan gleientiaid at eich cyfrif gwasanaethau asiant.
+start.inset=Y cyfan y bydd ychwanegu awdurdodiadau yn ei wneud yw copïo’r awdurdodiadau hyn draw i’ch cyfrif gwasanaethau asiant. Ni fyddwch yn colli unrhyw fynediad neu ganiatâd sydd gennych i reoli Hunanasesiad ar ran eich cleientiaid yn eich cyfrif gwasanaethau ar-lein CThEF.
 start.copied=Rydych eisoes wedi copïo drosodd bob awdurdodiad cleientiaid o dan:
-start.inset=Ni fyddwch yn gallu bwrw golwg dros eich rhestrau o gleientiaid drwy’ch cyfrif gwasanaethau asiant. I fwrw golwg dros eich cleientiaid, defnyddiwch eich meddalwedd trydydd parti.
-start.need-to-do=Yr hyn y mae angen i chi ei wneud
-start.need-to-do.p1=Dewiswch i fynd yn eich blaen er mwyn mewngofnodi ag unrhyw un o’r ID eraill sydd gennych ar gyfer Porth y Llywodraeth. Bydd y rhain yn ID defnyddiwr hynach a defnyddiwyd gennych ar gyfer rheoli cleient Hunanasesiad.
+start.added=<translation needed>
+start.addClients=<translation needed>
+start.addMore=A ydych am ychwanegu rhagor o awdurdodiadau?
+start.yes=Iawn - byddaf yn mewngofnodi nawr
+start.hint=Mae angen i chi fewngofnodi gan ddefnyddio?r Dynodydd Defnyddiwr (ID) perthnasol ar gyfer Porth y Llywodraeth er mwyn profi bod gennych fynediad at y cyfrif.
 
 start.task-list.heading=Ychwanegwch awdurdodiadau ar gyfer Hunanasesiad
 start.task-list.p1=Mae hyn yn golygu:
@@ -105,7 +110,7 @@ error.utr.invalid.format=Nodwch Gyfeirnod Unigryw y Trethdalwr (UTR) dilys sydd 
 error.utr.invalid.length=Rhaid i Gyfeirnod Unigryw y Trethdalwr (UTR) fod yn 10 rhif
 error.arn.invalid=Nodwch rif cyfrif gwasanaethau asiant dilys sydd ond yn cynnwys y llythrennau A i Z, rhifau a chysylltnodau, megis XARN-123-4567 neu XARN1234567
 error.arn.blank=Nodwch rif eich cyfrif gwasanaethau asiant
-error.existingClientRelationships.choice.invalid=Dewiswch ‘Iawn’ os hoffech gopïo cleientiaid ychwanegol ar draws
+error.existingClientRelationships.choice.invalid=Dewiswch ‘Iawn’ os ydych am ychwanegu rhagor o awdurdodiadau
 error.gg-tag.invalid=Nodwch 4 cymeriad olaf y Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth a ddefnyddioch i fewngofnodi
 
 #TestOnly
