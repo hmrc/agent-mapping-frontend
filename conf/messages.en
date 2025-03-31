@@ -12,13 +12,14 @@ start.inset=You will not be able to view your client lists through your agent se
 start.need-to-do=What you need to do
 start.need-to-do.p1=Select ‘continue’ to sign in with any of your other Government Gateway user IDs. These will be older user IDs that you use for managing Self Assessment clients.
 
-
-start.task-list.heading=Copy across existing Self Assessment authorisations
-start.task-list.p1=This will mean:
-start.task-list.li1=your clients will not have to authorise you again for Making Tax Digital for Income Tax
-start.task-list.li2=you can tell us about multiple Government Gateway user IDs at the same time
-start.task-list.li3=any new Self Assessment client you take on under the same user IDs will automatically be linked to your new agent services account
-
+start.task-list.heading=Add Self Assessment authorisations
+start.task-list.p1=This means:
+start.task-list.li1=you’ll tell us which Government Gateway accounts you use to manage Self Assessment clients in your HMRC online services account
+start.task-list.li2=we’ll add the Self Assessment authorisations to your agent services account
+start.task-list.li3=clients who already authorise you for Self Assessment will not have to authorise you again for Making Tax Digital for Income Tax – this includes any new clients you take on under the same Government Gateway IDs
+start.task-list.p2=Adding authorisations does not mean:
+start.task-list.li4=you have to sign up your clients to Making Tax Digital for Income Tax yet
+start.task-list.li5=you’ll lose any of your current access or permissions to manage Self Assessment for your clients in your HMRC online services account
 
 #client-relationships-found
 clientRelationshipsFound.title=Client relationships found

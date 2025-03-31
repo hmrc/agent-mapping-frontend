@@ -18,38 +18,43 @@
 @import uk.gov.hmrc.agentmappingfrontend.views.html.MainTemplate
 @import uk.gov.hmrc.agentmappingfrontend.controllers.routes
 @import uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId
-@import uk.gov.hmrc.agentmappingfrontend.repository.ClientCountAndGGTag
 
 @this(mainTemplate: MainTemplate)
 
 @(
-continueId: String,
-id: MappingArnResultId,
-backLink: String
+    continueId: String,
+    id: MappingArnResultId,
+    backLink: String
 )(implicit request: Request[_], appConfig: AppConfig, msgs: Messages)
 
 @returnUrl=@{s"/task-list/start?continueId=$continueId"}
 
 @mainTemplate(
-title = msgs("start.task-list.heading"),
-backLinkHref = Some(backLink),
-taskList = true
+    title = msgs("start.task-list.heading"),
+    backLinkHref = Some(backLink),
+    taskList = true
 ) {
 
-<h1 class="govuk-heading-xl">@msgs("start.task-list.heading")</h1>
+    <h1 class="govuk-heading-xl">@msgs("start.task-list.heading")</h1>
 
+    <p>@msgs("start.task-list.p1")</p>
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@msgs("start.task-list.li1")</li>
+        <li>@msgs("start.task-list.li2")</li>
+        <li>@msgs("start.task-list.li3")</li>
+    </ul>
 
-<p>@msgs("start.task-list.p1")</p>
-<ul class="govuk-list govuk-list--bullet">
-    <li>@msgs("start.task-list.li1")</li>
-    <li>@msgs("start.task-list.li2")</li>
-    <li>@msgs("start.task-list.li3")</li>
-</ul>
+    <p>@msgs("start.task-list.p2")</p>
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@msgs("start.task-list.li4")</li>
+        <li>@msgs("start.task-list.li5")</li>
+    </ul>
 
-
-<div class="govuk-button-group">
-    <a class="govuk-button" id="clients-found-continue"
-       href="@routes.TaskListMappingController.showClientRelationshipsFound(id)" role="button" draggable="false">@msgs("button.continue")</a>
-
-</div>
+    <div class="govuk-button-group">
+        <a class="govuk-button" id="clients-found-continue"
+           href="@routes.TaskListMappingController.showClientRelationshipsFound(id)" role="button" draggable="false">@msgs("button.saveContinue")</a>
+        <a class="govuk-button govuk-button--secondary"  id="clients-found-save"
+           href='@appConfig.agentSubscriptionFrontendProgressSavedUrl@returnUrl'
+           draggable="false">@msgs("button.saveComeBackLater")</a>
+    </div>
 }
