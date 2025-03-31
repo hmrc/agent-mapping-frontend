@@ -112,7 +112,11 @@ class TaskListMappingControllerISpec
         "start.task-list.li1",
         "start.task-list.li2",
         "start.task-list.li3",
-        "button.continue"
+        "start.task-list.p2",
+        "start.task-list.li4",
+        "start.task-list.li5",
+        "button.saveContinue",
+        "button.saveComeBackLater"
       )
       bodyOf(result) should include("/task-list/client-relationships-found?id=")
     }
