@@ -17,10 +17,11 @@
 @import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
 @import uk.gov.hmrc.agentmappingfrontend.views.html
 @import uk.gov.hmrc.agentmappingfrontend.controllers.routes
-
+@import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId
 
-@this(mainTemplate: MainTemplate)
+@this(mainTemplate: MainTemplate ,govukInsetText : GovukInsetText)
+
 
 @(
 clientCount: Int,
@@ -31,7 +32,7 @@ taskList: Boolean = false)(implicit request: Request[_],appConfig: AppConfig, ms
 
 @maxRecords=@{appConfig.clientCountMaxRecords}
 
-@mainTemplate(title = msgs("clientRelationshipsFound.title"), taskList = taskList) {
+@mainTemplate(title = msgs("clientAuthorisationsFound.title"), taskList = taskList) {
 
     <h1 class="govuk-heading-xl">
         @if(clientCount == 1){ @msgs("clientRelationshipsFound.single.title")} else { @msgs("clientRelationshipsFound.multi.title")}
@@ -55,6 +56,10 @@ taskList: Boolean = false)(implicit request: Request[_],appConfig: AppConfig, ms
     </dl>
 
     <p>@if(clientCount == 1) { @msgs("clientRelationshipsFound.single.p2")} else {@msgs("clientRelationshipsFound.multi.p2")}</p>
+
+    @govukInsetText(InsetText(
+        content = Text(msgs("clientRelationshipsFound.inset"))
+    ))
 
     @if(taskList){
         <div class="govuk-button-group">
