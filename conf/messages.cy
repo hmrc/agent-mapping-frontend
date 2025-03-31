@@ -76,7 +76,7 @@ notEnrolled.p2=Os oes angen i chi gysylltu Dynodydd Defnyddiwr (ID) arall ar gyf
 
 #Connection complete
 connectionComplete.title=Perthnasoedd â chleientiaid wedi’u copïo
-connectionComplete.banner.header=Perthnasoedd â chleientiaid wedi’u copïo
+connectionComplete.banner.header=Gwnaethoch ychwanegu {0} o awdurdodiadau ar gyfer Hunanasesiad
 connectionComplete.banner.single.paragraph=Rydych wedi copïo 1 berthynas â chleient i’ch cyfrif gwasanaethau asiant
 connectionComplete.banner.multi.paragraph=Rydych wedi copïo {0} o berthnasoedd â chleientiaid i’ch cyfrif gwasanaethau asiant
 
