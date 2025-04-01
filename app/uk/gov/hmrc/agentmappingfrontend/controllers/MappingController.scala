@@ -18,6 +18,7 @@ package uk.gov.hmrc.agentmappingfrontend.controllers
 
 import play.api.i18n.I18nSupport
 import play.api.mvc._
+import play.api.data._
 import play.api.{Configuration, Environment, Logging}
 import uk.gov.hmrc.agentmappingfrontend.auth.AuthActions
 import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
@@ -75,11 +76,49 @@ class MappingController @Inject() (
           details <- mdOpt.fold(Seq.empty[MappingDetails])(md => md.mappingDetails)
         } yield ClientCountAndGGTag(details.count, details.ggTag)
 
-        clientCountsAndGGTags.flatMap(countsAndTags =>
+        clientCountsAndGGTags.flatMap { countsAndTags =>
+          val activeForm: Form[RadioInputAnswer] =
+            if (countsAndTags.isEmpty) StartMappingForm.form else ExistingClientRelationshipsForm.form
           repository
             .create(arn)
-            .map(id => Ok(startTemplate(id, countsAndTags, getBackLinkForStart)))
-        )
+            .map(id => Ok(startTemplate(id, countsAndTags, getBackLinkForStart, activeForm)))
+        }
+
+      case None => Future.successful(Redirect(routes.MappingController.needAgentServicesAccount))
+    }
+  }
+
+  def submitStart(id: MappingArnResultId): Action[AnyContent] = Action.async { implicit request =>
+    withCheckForArn {
+      case Some(arn) =>
+        val clientCountsAndGGTags: Future[Seq[ClientCountAndGGTag]] = for {
+          mdOpt   <- mappingConnector.getMappingDetails(arn)
+          details <- mdOpt.fold(Seq.empty[MappingDetails])(md => md.mappingDetails)
+        } yield ClientCountAndGGTag(details.count, details.ggTag)
+
+        clientCountsAndGGTags.flatMap { countsAndTags =>
+          val activeForm: Form[RadioInputAnswer] =
+            if (countsAndTags.isEmpty) StartMappingForm.form else ExistingClientRelationshipsForm.form
+          activeForm
+            .bindFromRequest()
+            .fold(
+              formWithErrors =>
+                BadRequest(
+                  startTemplate(
+                    id,
+                    countsAndTags,
+                    getBackLinkForStart,
+                    formWithErrors
+                  )
+                ),
+              {
+                case Yes =>
+                  Redirect(routes.SignedOutController.signOutAndRedirect(id))
+                case No =>
+                  Redirect(appConfig.agentServicesFrontendBaseUrl)
+              }
+            )
+        }
 
       case None => Future.successful(Redirect(routes.MappingController.needAgentServicesAccount))
     }

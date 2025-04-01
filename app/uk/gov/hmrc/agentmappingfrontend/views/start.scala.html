@@ -19,40 +19,108 @@
 @import uk.gov.hmrc.agentmappingfrontend.controllers.routes
 @import uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId
 @import uk.gov.hmrc.agentmappingfrontend.repository.ClientCountAndGGTag
+@import uk.gov.hmrc.agentmappingfrontend.model.RadioInputAnswer
 
-@this(mainTemplate: MainTemplate)
+@import uk.gov.hmrc.govukfrontend.views.html.components._
+@import uk.gov.hmrc.govukfrontend.views.Implicits._
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.implicits._
+
+@this(
+        mainTemplate: MainTemplate,
+        govukSummaryList: GovukSummaryList,
+        formWithCSRF: FormWithCSRF,
+        govukRadios: GovukRadios,
+        govukButton: GovukButton,
+        govukErrorSummary: GovukErrorSummary
+)
 
 @(
-id: MappingArnResultId,
-clientCountAndGGTags: Seq[ClientCountAndGGTag],
-backLink: String
+        id: MappingArnResultId,
+        clientCountAndGGTags: Seq[ClientCountAndGGTag],
+        backLink: String,
+        form: Form[RadioInputAnswer]
 )(implicit request: Request[_], msgs: Messages, appConfig: AppConfig)
 
-@mainTemplate(
-title = msgs("start.title"),
-backLinkHref = Some(backLink),
-taskList = false,
-hasTimeout = true
-) {
-
-<h1 class="govuk-heading-xl">@msgs("start.title")</h1>
-
-@if(clientCountAndGGTags.nonEmpty) {
-<p>@msgs("start.copied")</p>
-
-
-<ul class="govuk-list govuk-list--bullet">
-    @for(clientCountAndGGTag <- clientCountAndGGTags){
-    <li class="govuk-list--item">@msgs("copied.table.ggTag", clientCountAndGGTag.ggTag)</li>
-    }
-</ul>
+@addedTag = {
+    <strong class="govuk-tag govuk-tag--blue">
+        @msgs("start.added")
+    </strong>
 }
 
+@rows = @{
+    clientCountAndGGTags.map(clientCountAndGGTag =>
+        SummaryListRow(
+            key = Key(content = Text(s"XXXX-XXXX-${clientCountAndGGTag.ggTag}")),
+            value = Value(content = HtmlContent(addedTag))
+        )
+    )
+}
+@legend = @{
+  if(clientCountAndGGTags.isEmpty) {
+    msgs("start.addClients")
+  } else {
+    msgs("start.addMore")
+  }
 
-<h2 class="govuk-heading-m">@msgs("start.need-to-do")</h2>
-<p>@msgs("start.need-to-do.p1")</p>
+}
 
+@mainTemplate(
+    title = msgs("start.title"),
+    backLinkHref = Some(backLink),
+    taskList = false,
+    hasTimeout = true
+) {
 
-<a class="govuk-button" name="start" id="start" href="@routes.SignedOutController.signOutAndRedirect(id)" role="button"
-   draggable="false">@msgs("button.continue")</a>
+    @if(form.hasErrors) {
+        @govukErrorSummary(ErrorSummary().withFormErrorsAsText(form))
+    }
+
+    <h1 class="govuk-heading-xl">@msgs("start.title")</h1>
+
+    <p class="govuk-body">@msgs("start.p1")</p>
+    <p class="govuk-body">@msgs("start.p2")</p>
+    <div class="govuk-inset-text">
+        @msgs("start.inset")
+    </div>
+
+    @if(clientCountAndGGTags.nonEmpty) {
+        <p class="govuk-body">@msgs("start.copied")</p>
+        @govukSummaryList(SummaryList(
+            classes = "govuk-summary-list--no-border",
+            rows = rows
+        ))
+    }
+
+    @formWithCSRF(action = routes.MappingController.submitStart(id)) {
+        @govukRadios(Radios(
+            hint = Some(Hint(
+                content = Text(msgs("start.hint"))
+            )),
+            items = Seq(
+                RadioItem(
+                    value = Some("yes"),
+                    content = Text(msgs("start.yes")),
+                    checked = false
+                ),
+                RadioItem(
+                    value = Some("no"),
+                    content = Text(msgs("button.no")),
+                    checked = false
+                )
+            ),
+            fieldset = Some(Fieldset(
+                legend = Some(Legend(
+                    content = Text(legend),
+                    isPageHeading = false,
+                    classes = "govuk-fieldset__legend--m"
+                ))
+            ))
+        ).withFormField(form("additional-clients")))
+
+      @govukButton(Button(
+          content = Text(msgs("button.continue"))
+      ))
+
+    }
+
 }
