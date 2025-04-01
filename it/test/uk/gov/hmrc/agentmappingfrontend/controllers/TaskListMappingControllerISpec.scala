@@ -215,6 +215,7 @@ class TaskListMappingControllerISpec
         "clientRelationshipsFound.multi.p1",
         "clientRelationshipsFound.max",
         "clientRelationshipsFound.multi.p2",
+        "clientRelationshipsFound.inset",
         "button.saveContinue",
         "button.saveComeBackLater"
       )

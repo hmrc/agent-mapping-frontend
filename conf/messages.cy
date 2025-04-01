@@ -28,16 +28,17 @@ start.task-list.li4=y bydd angen i chi gofrestru’ch cleientiaid ar gyfer y cyn
 start.task-list.li5=y byddwch yn colli unrhyw fynediad neu ganiatâd presennol sydd gennych i reoli Hunanasesiad ar ran eich cleientiaid yn eich cyfrif gwasanaethau ar-lein CThEF
 
 #client-relationships-found
-clientRelationshipsFound.title=Perthnasoedd â chleientiaid wedi’u canfod
-clientRelationshipsFound.single.title=Perthynas â chleient wedi’i chanfod
-clientRelationshipsFound.single.p1=Mae gan eich Dynodydd Defnyddiwr (ID) y berthynas ganlynol â chleient y gallwch ei chopïo ar draws.
-clientRelationshipsFound.single.td=cleient Hunanasesiad
-clientRelationshipsFound.single.p2=Drwy barhau, bydd yn cael ei gopïo ar draws i’ch cyfrif gwasanaethau asiant newydd. Yna, byddwch yn gallu cofrestru’r cleient hwn ar gyfer y cynllun Troi Treth yn Ddigidol.
-clientRelationshipsFound.multi.title=Perthnasoedd â chleientiaid wedi’u canfod
-clientRelationshipsFound.multi.p1=Mae gan eich Dynodydd Defnyddiwr (ID) y perthnasoedd canlynol â chleientiaid y gallwch eu copïo ar draws.
-clientRelationshipsFound.multi.td=o gleientiaid Hunanasesiad
-clientRelationshipsFound.multi.p2=Drwy barhau, byddant yn cael eu copïo ar draws i’ch cyfrif gwasanaethau asiant newydd. Yna, byddwch yn gallu cofrestru ar gyfer y cynllun Troi Treth yn Ddigidol.
+clientRelationshipsFound.title=Wedi canfod awdurdodiadau gan gleientiaid
+clientRelationshipsFound.single.title=Wedi canfod awdurdodiadau gan gleientiaid
+clientRelationshipsFound.single.p1=Ar hyn o bryd, mae gan eich Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth:
+clientRelationshipsFound.single.td=o awdurdodiadau gan gleientiaid Hunanasesiad
+clientRelationshipsFound.single.p2=Byddwn yn ychwanegu’r awdurdodiadau hyn at eich cyfrif gwasanaethau asiant.
+clientRelationshipsFound.multi.title=Wedi canfod awdurdodiadau gan gleientiaid
+clientRelationshipsFound.multi.p1=Ar hyn o bryd, mae gan eich Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth:
+clientRelationshipsFound.multi.td=o awdurdodiadau gan gleientiaid Hunanasesiad
+clientRelationshipsFound.multi.p2=Byddwn yn ychwanegu’r awdurdodiadau hyn at eich cyfrif gwasanaethau asiant.
 clientRelationshipsFound.max=neu ragor o gleientiaid Hunanasesiad
+clientRelationshipsFound.inset=Y cyfan y bydd ychwanegu awdurdodiadau yn ei wneud yw copïo’r awdurdodiadau hyn draw i’ch cyfrif gwasanaethau asiant. Ni fyddwch yn colli unrhyw fynediad neu ganiatâd sydd gennych i reoli Hunanasesiad ar ran eich cleientiaid yn eich cyfrif gwasanaethau ar-lein CThEF.
 
 #gg-tag
 gg-tag.title=Nodwch 4 rhif olaf y Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth a ddefnyddioch i fewngofnodi

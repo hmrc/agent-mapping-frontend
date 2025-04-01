@@ -28,16 +28,17 @@ start.task-list.li4=you have to sign up your clients to Making Tax Digital for I
 start.task-list.li5=you’ll lose any of your current access or permissions to manage Self Assessment for your clients in your HMRC online services account
 
 #client-relationships-found
-clientRelationshipsFound.title=Client relationships found
-clientRelationshipsFound.single.title=Client relationship found
-clientRelationshipsFound.single.p1=Your user ID has the following client relationship that you can copy across.
-clientRelationshipsFound.single.td=Self Assessment client
-clientRelationshipsFound.single.p2=By continuing, they will be copied across to your new agent services account. You will then be able to sign this client up to Making Tax Digital.
-clientRelationshipsFound.multi.title=Client relationships found
-clientRelationshipsFound.multi.p1=Your user ID has the following client relationships that you can copy across.
-clientRelationshipsFound.multi.td=Self Assessment clients
-clientRelationshipsFound.multi.p2=By continuing, they will be copied across to your new agent services account. You will then be able to sign them up to Making Tax Digital.
+clientRelationshipsFound.title=Client authorisations found
+clientRelationshipsFound.single.title=Client authorisations found
+clientRelationshipsFound.single.p1=Your Government Gateway user ID currently has:
+clientRelationshipsFound.single.td=authorisation for Self Assessment client
+clientRelationshipsFound.single.p2=We will add these authorisations to your agent services account.
+clientRelationshipsFound.multi.title=Client authorisations found
+clientRelationshipsFound.multi.p1=Your Government Gateway user ID currently has:
+clientRelationshipsFound.multi.td=authorisations for Self Assessment clients
+clientRelationshipsFound.multi.p2=We will add these authorisations to your agent services account.
 clientRelationshipsFound.max=or more Self Assessment clients
+clientRelationshipsFound.inset=Adding an authorisation just copies it to your agent services account. You will not lose any access or permissions to manage Self Assessment for your clients in your HMRC online services account.
 
 #gg-tag
 gg-tag.title=Enter the last 4 numbers of the Government Gateway user ID you signed in with
