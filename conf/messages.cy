@@ -46,22 +46,15 @@ gg-tag.form.hint=Er enghraifft, XXXX-XXXX-1234
 gg-tag.xs=XXXX-XXXX-
 
 #existing-client-relationships
-existingClientRelationships.title=Perthnasoedd â chleientiaid wedi’u copïo
-copied.table.single.th={0} berthynas â chleient
-copied.table.multi.th={0} o gleientiaid Hunanasesiad
-copied.table.max.th={0} neu ragor o berthnasoedd â chleientiaid
-copied.table.ggTag=Dynodydd Defnyddiwr: XXXX-XXXX-{0}
-existingClientRelationships.heading=A oes angen i chi gopïo rhagor o gleientiaid ar draws?
-existingClientRelationships.p1=I gopïo rhagor o gleientiaid ar draws, bydd angen i chi fewngofnodi gan ddefnyddio Dynodydd Defnyddiwr (ID) arall yr ydych yn ei ddefnyddio i reoli cleientiaid Hunanasesiad.
-existingClientRelationships.yes=Iawn
+existingClientRelationships.title=Awdurdodiadau gan gleientiaid wedi’u hychwanegu at eich cyfrif gwasanaethau asiant
+copied.table.single.dd={0} awdurdodiad ar gyfer Hunanasesiad
+copied.table.multi.dd={0} o awdurdodiadau ar gyfer Hunanasesiad
+copied.table.max.dd={0} neu ragor o awdurdodiadau ar gyfer Hunanasesiad
+copied.table.ggTag=XXXX-XXXX-{0}
+existingClientRelationships.heading=A ydych am ychwanegu rhagor o awdurdodiadau ar gyfer Hunanasesiad?
+existingClientRelationships.yes=Iawn – byddaf yn mewngofnodi eto gan ddefnyddio Dynodydd Defnyddiwr (ID) gwahanol ar gyfer Porth y Llywodraeth
 existingClientRelationships.no=Na
-existingClientRelationships.max=neu ragor o gleientiaid Hunanasesiad
-
-#Copy Across
-copyAcross.h1=Copïwch eich cleientiaid Hunanasesiad presennol ar draws i’ch cyfrif gwasanaethau asiant newydd
-copyAcross.heading=Yr hyn y mae angen i chi ei wneud
-copyAcross.p1=Ar y sgrin nesaf, mewngofnodwch gan ddefnyddio Dynodydd Defnyddiwr (ID) arall ar gyfer Porth y Llywodraeth yr ydych yn ei ddefnyddio i reoli cleientiaid Hunanasesiad.
-copyAcross.p2=Bydd yn rhaid i chi ailadrodd hyn ar gyfer pob Dynodydd Defnyddiwr (ID) yr ydych yn ei ddefnyddio.
+error.existingClientRelationships.choice.invalid=Dewiswch ‘Iawn’ os ydych am ychwanegu rhagor o awdurdodiadau Hunanasesiad
 
 #PageNotFound
 page-not-found.title=Heb ddod o hyd i’r dudalen
@@ -111,7 +104,6 @@ error.utr.invalid.format=Nodwch Gyfeirnod Unigryw y Trethdalwr (UTR) dilys sydd 
 error.utr.invalid.length=Rhaid i Gyfeirnod Unigryw y Trethdalwr (UTR) fod yn 10 rhif
 error.arn.invalid=Nodwch rif cyfrif gwasanaethau asiant dilys sydd ond yn cynnwys y llythrennau A i Z, rhifau a chysylltnodau, megis XARN-123-4567 neu XARN1234567
 error.arn.blank=Nodwch rif eich cyfrif gwasanaethau asiant
-error.existingClientRelationships.choice.invalid=Dewiswch ‘Iawn’ os ydych am ychwanegu rhagor o awdurdodiadau
 error.gg-tag.invalid=Nodwch 4 cymeriad olaf y Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth a ddefnyddioch i fewngofnodi
 
 #TestOnly
