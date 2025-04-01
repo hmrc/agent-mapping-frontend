@@ -80,6 +80,23 @@ abstract class BaseControllerISpec
     }
   }
 
+  protected def checkHtmlResultContainsMsgsWithArgs(result: Result, expectedMessageKeys: Map[String, String]): Unit = {
+    contentType(result) shouldBe Some("text/html")
+    charset(result) shouldBe Some("utf-8")
+
+    expectedMessageKeys.foreach { case (messageKey, messageArg) =>
+      withClue(s"Expected message key '$messageKey' to exist: ") {
+        Messages.isDefinedAt(messageKey) shouldBe true
+      }
+
+      val expectedContent = Messages(messageKey, messageArg)
+
+      withClue(s"Expected content ('$expectedContent') for message key '$messageKey' to be in request body: ") {
+        bodyOf(result) should include(htmlEscapedMessage(expectedContent))
+      }
+    }
+  }
+
   protected def checkHtmlResultContainsMsgs(result: Result, expectedMessageKeys: String*): Unit = {
     contentType(result) shouldBe Some("text/html")
     charset(result) shouldBe Some("utf-8")

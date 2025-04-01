@@ -40,15 +40,17 @@ totalClients: Int
     }
 }
 
-@mainTemplate(title = msgs("connectionComplete.title")) {
+@mainTemplate(title = msgs("connectionComplete.title",totalClients.toString)) {
 
     @govukPanel(Panel(
-    title = Text(msgs("connectionComplete.banner.header")),
-    content = HtmlContent(panelContent)
+    title = Text(msgs("connectionComplete.banner.header", totalClients.toString))
     ))
+
+    <h2 class="govuk-heading-l">@msgs(s"connectionComplete.section1.h2")</h2>
+    <p class="govuk-body">@msgs(s"connectionComplete.section1.p1")</p>
 
     <p>
         <a class="govuk-link" target="_blank" rel="noreferrer noopener"
-        href="@routes.SignedOutController.reLogForMappingStart">@msgs("link.finishSignOut")</a>
+        href="@appConfig.agentServicesFrontendBaseUrl">@msgs("link.goToASAccount")</a>
     </p>
 }

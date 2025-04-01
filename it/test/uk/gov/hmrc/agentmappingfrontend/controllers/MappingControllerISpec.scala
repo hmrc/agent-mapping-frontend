@@ -635,20 +635,14 @@ class MappingControllerISpec extends BaseControllerISpec with AuthStubs with Mon
           val request = fakeRequest(GET, routes.MappingController.complete(id = persistedMappingArnResultId).url)
           val result = callEndpointWith(request)
           status(result) shouldBe 200
-          checkHtmlResultContainsEscapedMsgs(
+          checkHtmlResultContainsMsgsWithArgs(
             result,
-            "connectionComplete.title",
-            "connectionComplete.banner.header",
-            "link.finishSignOut"
-          )
-
-          result should containLink("link.finishSignOut", routes.SignedOutController.reLogForMappingStart.url)
-
-          if (singleClientCountResponse)
-            bodyOf(result) should include(
-              htmlEscapedMessage("You copied 1 client relationship to your agent services account")
+            Map(
+              "connectionComplete.title"         -> s"$clientCount",
+              "connectionComplete.banner.header" -> s"$clientCount",
+              "link.goToASAccount"               -> ""
             )
-          else result should containSubstrings("You copied 12 client relationships to your agent services account")
+          )
 
         }
 
