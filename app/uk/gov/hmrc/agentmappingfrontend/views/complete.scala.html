@@ -51,6 +51,6 @@ totalClients: Int
 
     <p>
         <a class="govuk-link" target="_blank" rel="noreferrer noopener"
-        href="@appConfig.agentServicesFrontendBaseUrl">@msgs("link.goToASAccount")</a>
+        href="@{routes.SignedOutController.reLogForMappingStart.url}">@msgs("link.goToASAccount")</a>
     </p>
 }
