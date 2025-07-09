@@ -21,6 +21,7 @@ import play.api.Environment
 import play.api.Logging
 import play.api.mvc.Results._
 import play.api.mvc._
+import sttp.model.Uri.UriContext
 import uk.gov.hmrc.agentmappingfrontend.auth.EnrolmentHelper._
 import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
 import uk.gov.hmrc.agentmappingfrontend.connectors.AgentSubscriptionConnector
@@ -37,7 +38,6 @@ import uk.gov.hmrc.auth.core.retrieve.Credentials
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.domain.AgentCode
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.StringContextOps
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import scala.concurrent.ExecutionContext
@@ -207,12 +207,12 @@ with Logging {
       Forbidden
 
     case _: NoActiveSession =>
-      val continueUrl = url"${continueBaseUrl + request.uri}"
+      val continueUrl = uri"${continueBaseUrl + request.uri}"
       val params = List(
         "continue_url" -> continueUrl,
         "origin" -> appName
       )
-      val url = url"""${basGatewayFrontendExternalUrl + signInUrl}?${params}"""
+      val url = uri"""${basGatewayFrontendExternalUrl + signInUrl}?${params}"""
       Redirect(url.toString)
 
     case _: InsufficientEnrolments =>
@@ -221,11 +221,11 @@ with Logging {
 
     case _: UnsupportedAuthProvider =>
       logger.warn("User is not logged in via  GovernmentGateway, signing out and redirecting")
-      val continueUrl = url"${continueBaseUrl + request.uri}"
+      val continueUrl = uri"${continueBaseUrl + request.uri}"
       val params = List(
         "continue_url" -> continueUrl
       )
-      val url = url"""${basGatewayFrontendExternalUrl + signInUrl}?${params}"""
+      val url = uri"""${basGatewayFrontendExternalUrl + signInUrl}?${params}"""
       Redirect(url.toString)
   }
 

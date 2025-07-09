@@ -19,10 +19,10 @@ package uk.gov.hmrc.agentmappingfrontend.controllers
 import play.api.mvc.Action
 import play.api.mvc.AnyContent
 import play.api.mvc.MessagesControllerComponents
+import sttp.model.Uri.UriContext
 import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
 import uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId
 import uk.gov.hmrc.agentmappingfrontend.views.html.timed_out
-import uk.gov.hmrc.http.StringContextOps
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.Inject
@@ -37,17 +37,17 @@ class SignedOutController @Inject() (
 extends FrontendController(cc) {
 
   private def signOutWithContinue(continue: String) = {
-    val signOutAndRedirectUrl: String = url"${appConfig.signOutUrl}?${Map("continue" -> continue)}".toString
+    val signOutAndRedirectUrl: String = uri"${appConfig.signOutUrl}?${Map("continue" -> continue)}".toString
     Redirect(signOutAndRedirectUrl)
   }
 
   def signOutAndRedirect(id: MappingArnResultId): Action[AnyContent] = Action {
-    val url = url"${appConfig.signOutRedirectUrl}?${Map("id" -> id)}"
+    val url = uri"${appConfig.signOutRedirectUrl}?${Map("id" -> id)}"
     signOutWithContinue(url.toString)
   }
 
   def taskListSignOutAndRedirect(id: MappingArnResultId): Action[AnyContent] = Action {
-    val url = url"${appConfig.taskListSignOutRedirectUrl}?${Map("id" -> id)}"
+    val url = uri"${appConfig.taskListSignOutRedirectUrl}?${Map("id" -> id)}"
     signOutWithContinue(url.toString)
   }
 
@@ -67,12 +67,12 @@ extends FrontendController(cc) {
   }
 
   def signOut: Action[AnyContent] = Action {
-    val url = url"${appConfig.agentMappingFrontendBaseUrl + routes.MappingController.root.url}"
+    val url = uri"${appConfig.agentMappingFrontendBaseUrl + routes.MappingController.root.url}"
     signOutWithContinue(url.toString)
   }
 
   def timeOut(): Action[AnyContent] = Action {
-    val url = url"${appConfig.agentMappingFrontendBaseUrl + routes.SignedOutController.timedOut.url}"
+    val url = uri"${appConfig.agentMappingFrontendBaseUrl + routes.SignedOutController.timedOut.url}"
     signOutWithContinue(url.toString)
   }
 
