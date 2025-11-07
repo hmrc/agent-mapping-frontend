@@ -33,18 +33,3 @@ case class SaMapping(
 object SaMapping {
   implicit val formats: Format[SaMapping] = format[SaMapping]
 }
-
-case class VatMappings(mappings: List[VatMapping])
-
-object VatMappings {
-  implicit val formats: Format[VatMappings] = format[VatMappings]
-}
-
-case class VatMapping(
-  arn: String,
-  vrn: String
-)
-
-object VatMapping {
-  implicit val formats: Format[VatMapping] = format[VatMapping]
-}

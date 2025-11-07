@@ -79,23 +79,9 @@ with MetricTestSupport {
       mappings.head.arn shouldBe arn.value
     }
 
-    "find all vat mappings for a given arn" in {
-      vatMappingsFound(arn)
-      val mappings = await(connector.findVatMappingsFor(arn))
-
-      mappings.size shouldBe 2
-      mappings.head.arn shouldBe arn.value
-    }
-
     "return empty list if no sa mappings found for a given arn" in {
       noSaMappingsFound(arn)
       val mappings = await(connector.findSaMappingsFor(arn))
-      mappings.size shouldBe 0
-    }
-
-    "return empty list if no vat mappings found for a given arn" in {
-      noVatMappingsFound(arn)
-      val mappings = await(connector.findVatMappingsFor(arn))
       mappings.size shouldBe 0
     }
 
@@ -106,16 +92,6 @@ with MetricTestSupport {
       )
       intercept[RuntimeException] {
         await(connector.findSaMappingsFor(arn))
-      }
-    }
-
-    "throw a runtime exception when vat mappings call returns an error" in {
-      mappingsError(
-        arn = arn,
-        regime = "vat"
-      )
-      intercept[RuntimeException] {
-        await(connector.findVatMappingsFor(arn))
       }
     }
   }

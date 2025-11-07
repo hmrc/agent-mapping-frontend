@@ -27,10 +27,7 @@ object MappingStubs {
 
   val listOfSaMappings = List(SaMapping("ARN0001", "AgentCode1"), SaMapping("ARN0001", "AgentCode2"))
 
-  val listOfVatMappings = List(VatMapping("ARN0001", "101747696"), VatMapping("ARN0001", "101747641"))
-
   val saJsonBody = Json.toJson(SaMappings(listOfSaMappings))
-  val vatJsonBody = Json.toJson(VatMappings(listOfVatMappings))
 
   def mappingIsCreated(arn: Arn): StubMapping = stubFor(
     put(urlPathEqualTo(s"/agent-mapping/mappings/arn/${arn.value}"))
@@ -52,18 +49,8 @@ object MappingStubs {
       .willReturn(aResponse().withStatus(200).withBody(saJsonBody.toString()))
   )
 
-  def vatMappingsFound(arn: Arn): StubMapping = stubFor(
-    get(urlPathEqualTo(s"/agent-mapping/mappings/vat/${arn.value}"))
-      .willReturn(aResponse().withStatus(200).withBody(vatJsonBody.toString()))
-  )
-
   def noSaMappingsFound(arn: Arn): StubMapping = stubFor(
     get(urlPathEqualTo(s"/agent-mapping/mappings/sa/${arn.value}"))
-      .willReturn(aResponse().withStatus(404))
-  )
-
-  def noVatMappingsFound(arn: Arn): StubMapping = stubFor(
-    get(urlPathEqualTo(s"/agent-mapping/mappings/vat/${arn.value}"))
       .willReturn(aResponse().withStatus(404))
   )
 

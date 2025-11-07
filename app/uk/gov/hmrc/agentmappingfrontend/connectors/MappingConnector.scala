@@ -24,7 +24,6 @@ import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
 import uk.gov.hmrc.agentmappingfrontend.model.MappingDetailsRepositoryRecord
 import uk.gov.hmrc.agentmappingfrontend.model.MappingDetailsRequest
 import uk.gov.hmrc.agentmappingfrontend.model.SaMapping
-import uk.gov.hmrc.agentmappingfrontend.model.VatMapping
 import uk.gov.hmrc.agentmappingfrontend.util.HttpAPIMonitor
 import uk.gov.hmrc.agentmappingfrontend.util.RequestSupport.hc
 import uk.gov.hmrc.agentmappingfrontend.model.identifiers.Arn
@@ -78,20 +77,6 @@ with Logging {
             case OK => Future((response.json \ "mappings").as[Seq[SaMapping]])
             case NOT_FOUND => Future(Seq.empty)
             case s => Future.failed(new RuntimeException(s"unexpected error when calling findSaMappingsFor, status: $s"))
-          }
-        }
-    }
-
-  def findVatMappingsFor(arn: Arn)(implicit rh: RequestHeader): Future[Seq[VatMapping]] =
-    monitor("ConsumedAPI-Mapping-FindVatMappingsForArn-GET") {
-      http
-        .get(url"$baseUrl/agent-mapping/mappings/vat/${arn.value}")
-        .execute[HttpResponse]
-        .map { response =>
-          response.status match {
-            case OK => (response.json \ "mappings").as[Seq[VatMapping]]
-            case NOT_FOUND => Seq.empty
-            case s => throw new RuntimeException(s"unexpected error when calling findVatMappingsFor, status: $s")
           }
         }
     }
