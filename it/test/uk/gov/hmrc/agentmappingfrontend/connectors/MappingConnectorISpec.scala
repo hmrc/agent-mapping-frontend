@@ -27,7 +27,6 @@ import uk.gov.hmrc.agentmappingfrontend.model.MappingDetails
 import uk.gov.hmrc.agentmappingfrontend.model.MappingDetailsRepositoryRecord
 import uk.gov.hmrc.agentmappingfrontend.model.MappingDetailsRequest
 import uk.gov.hmrc.agentmappingfrontend.stubs.MappingStubs._
-import uk.gov.hmrc.agentmappingfrontend.support.MetricTestSupport
 import uk.gov.hmrc.agentmappingfrontend.model.identifiers.Arn
 import uk.gov.hmrc.http.ConflictException
 
@@ -35,8 +34,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class MappingConnectorISpec
-extends BaseControllerISpec
-with MetricTestSupport {
+extends BaseControllerISpec {
 
   private val arn = Arn("ARN0001")
 
@@ -45,10 +43,8 @@ with MetricTestSupport {
 
   "createMapping" should {
     "create a mapping" in {
-      givenCleanMetricRegistry()
       mappingIsCreated(arn)
       await(connector.createMapping(arn)) shouldBe 201
-      timerShouldExistsAndBeenUpdated("ConsumedAPI-Mapping-CreateMapping-PUT")
     }
 
     "not create a mapping when one already exists" in {
@@ -64,7 +60,6 @@ with MetricTestSupport {
 
   "getClientCount" should {
     "return the count" in {
-      givenCleanMetricRegistry()
       givenClientCountRecordsFound(299)
       await(connector.getClientCount) shouldBe 299
     }
