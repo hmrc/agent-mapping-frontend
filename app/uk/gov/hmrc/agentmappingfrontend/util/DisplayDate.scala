@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,24 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.agentmappingfrontend.model
+package uk.gov.hmrc.agentmappingfrontend.util
 
-import play.api.libs.json.Format
-import play.api.libs.json.Json._
+import play.api.i18n.Lang
+import play.api.mvc.RequestHeader
 
+import java.time.format.DateTimeFormatter
 import java.time.LocalDate
 
-case class SaMappings(mappings: List[SaMapping])
+object DisplayDate {
 
-object SaMappings {
-  implicit val formats: Format[SaMappings] = format[SaMappings]
-}
+  def displayDateForLang(date: LocalDate)(implicit request: RequestHeader): String = {
+    val lang = request.cookies
+      .get("PLAY_LANG")
+      .map(_.value)
+      .getOrElse("en")
 
-case class SaMapping(
-  arn: String,
-  saAgentReference: String,
-  created: Option[LocalDate]
-)
+    val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM uuuu", Lang(lang).toLocale)
 
-object SaMapping {
-  implicit val formats: Format[SaMapping] = format[SaMapping]
+    date.format(dateFormatter)
+  }
 }

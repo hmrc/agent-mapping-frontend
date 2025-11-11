@@ -1,0 +1,78 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.agentmappingfrontend.controllers.routes
+@import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
+@import uk.gov.hmrc.agentmappingfrontend.views.html.MainTemplate
+@import uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId
+@import uk.gov.hmrc.agentmappingfrontend.model.SaMapping
+@import uk.gov.hmrc.agentmappingfrontend.util.DisplayDate
+
+@this(
+        mainTemplate: MainTemplate,
+        govukPanel: GovukPanel,
+        govukInsetText: GovukInsetText,
+        govukTable: GovukTable
+)
+
+@(
+        agentCode: String,
+        clientCount: Int,
+        mappings: Seq[SaMapping]
+)(implicit request: RequestHeader, msgs: Messages)
+
+@mainTemplate(title = msgs("authorisationsFound.title", clientCount)) {
+
+    @govukPanel(Panel(
+        title = Text(msgs("authorisationsFound.banner.header", clientCount)),
+        content = Text(msgs("authorisationsFound.banner.body", agentCode))
+    ))
+
+    <h2 class="govuk-heading-l">@msgs(s"authorisationsFound.h2")</h2>
+    <p class="govuk-body">@msgs(s"authorisationsFound.para.1")</p>
+    @govukInsetText(InsetText(
+        content = Text(msgs("authorisationsFound.inset"))
+    ))
+
+    <h2 class="govuk-heading-l">@msgs(s"authorisationsFound.table.h2")</h2>
+
+    @govukTable(
+        Table(
+            head = Some(Seq(
+                HeadCell(Text(msgs("authorisationsFound.table.agentReference"))),
+                HeadCell(Text(msgs("authorisationsFound.table.dateCreated")))
+            )),
+            rows = mappings.map { mapping =>
+                Seq(
+                    TableRow(Text(mapping.saAgentReference)),
+                    TableRow(Text(mapping.created.map(DisplayDate.displayDateForLang).getOrElse("")))
+                )
+            }
+        )
+    )
+
+    <a class="govuk-link govuk-body" target="_blank" rel="noreferrer noopener" href="@{
+        "routes.MappingController.showWhatAgentCode.url"
+    }"> @* TODO add this route *@
+        @msgs("authorisationsFound.link.addAnother")
+    </a>
+    <a class="govuk-link govuk-body" target="_blank" rel="noreferrer noopener" href="@{
+        routes.SignedOutController.reLogForMappingStart.url
+    }">
+    @msgs("authorisationsFound.link.asa")
+    </a>
+
+}

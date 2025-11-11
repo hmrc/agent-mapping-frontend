@@ -53,13 +53,12 @@ case object ClientCountAndGGTag {
 }
 
 case class MappingArnResult(
-  id: MappingArnResultId,
+  id: MappingArnResultId = UUID.randomUUID().toString.replace("-", ""),
   arn: Arn,
-  createdDate: LocalDateTime = Instant.now().atZone(ZoneOffset.UTC).toLocalDateTime.truncatedTo(MILLIS),
-  currentCount: Int,
-  currentGGTag: String = "",
-  clientCountAndGGTags: Seq[ClientCountAndGGTag] = Seq.empty,
-  alreadyMapped: Boolean = false
+  agentCode: Option[String],
+  mappedAgentCode: Option[String],
+  mappedClientCount: Option[Int],
+  createdDate: LocalDateTime = Instant.now().atZone(ZoneOffset.UTC).toLocalDateTime.truncatedTo(MILLIS)
 )
 
 object MappingResult {
@@ -67,20 +66,6 @@ object MappingResult {
 }
 
 object MappingArnResult {
-
-  def apply(
-    arn: Arn,
-    currentCount: Int,
-    clientCountAndGGTags: Seq[ClientCountAndGGTag]
-  ): MappingArnResult = {
-    val id: MappingArnResultId = UUID.randomUUID().toString.replace("-", "")
-    MappingArnResult(
-      id = id,
-      arn = arn,
-      currentCount = currentCount,
-      clientCountAndGGTags = clientCountAndGGTags
-    )
-  }
 
   implicit val localDateTimeFormat: Format[LocalDateTime] = MongoLocalDateTimeFormat.localDateTimeFormat
   implicit val format: OFormat[MappingArnResult] = Json.format
@@ -105,14 +90,13 @@ extends PlayMongoRepository[MappingArnResult](
 with Logging {
 
   def create(
-    arn: Arn,
-    currentCount: Int = 0,
-    clientCountAndGGTags: Seq[ClientCountAndGGTag] = Seq.empty
+    arn: Arn
   ): Future[MappingArnResultId] = {
     val record = MappingArnResult(
       arn = arn,
-      currentCount = currentCount,
-      clientCountAndGGTags = clientCountAndGGTags
+      agentCode = None,
+      mappedAgentCode = None,
+      mappedClientCount = None
     )
     collection
       .insertOne(record)
