@@ -26,6 +26,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmappingfrontend.model._
 import uk.gov.hmrc.agentmappingfrontend.repository.MappingArnRepository
+import uk.gov.hmrc.agentmappingfrontend.repository.MappingArnResult
 import uk.gov.hmrc.agentmappingfrontend.stubs.AuthStubs
 import uk.gov.hmrc.agentmappingfrontend.stubs.MappingStubs._
 import uk.gov.hmrc.agentmappingfrontend.support.SampleUsers._
@@ -203,13 +204,6 @@ with MongoSupport {
       status(result) shouldBe 303
       redirectLocation(result) shouldBe Some("http://localhost:9401/agent-services-account")
     }
-    "404 when no record for the agent is found" in {
-      givenAuthorisedFor("IR-SA-AGENT")
-      implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest(POST, s"/agent-mapping/start-submit?id=foo")
-      val result = callEndpointWith(request)
-
-      status(result) shouldBe 404
-    }
     "303 the /sign-in-required for unAuthenticated" in {
       givenUserIsNotAuthenticated()
       val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest(POST, s"/agent-mapping/start?id=foo")
@@ -257,31 +251,90 @@ with MongoSupport {
   import uk.gov.hmrc.agentmappingfrontend.stubs.MappingStubs._
 
   "/start-submit" should {
+    val arn = Arn("TARN0000001")
+    "redirect to client authorisations added for a user with IR-SA-AGENT enrolment after mapping and updating session" in {
+      val testData = MappingArnResult(
+        arn = arn,
+        agentCode = Some(saAgentCode)
+      )
+      await(repo.collection.insertOne(testData).toFuture())
+      givenClientCountRecordsFound(2)
+      mappingIsCreated(arn)
+      givenUserIsAuthenticated(eligibleAgent)
 
-    redirectFromGGLoginTests(true)
-    redirectFromGGLoginTests(false)
+      val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest(GET, routes.MappingController.returnFromGGLogin(testData.id).url)
+      val result = callEndpointWith(request)
 
-    def redirectFromGGLoginTests(singleClientCountResponse: Boolean): Unit = {
-      val arn = Arn("TARN0000001")
-      LegacyAgentEnrolmentType.foreach { enrolmentType =>
-        s"303 to /client-relationships-found for ${enrolmentType.serviceKey} and for a single client relationship $singleClientCountResponse" in {
-          val id = await(repo.create(arn))
-          if (singleClientCountResponse)
-            givenClientCountRecordsFound(1)
-          else
-            givenClientCountRecordsFound(12)
-          givenAuthorisedFor(enrolmentType.serviceKey)
-          implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest(GET, s"/agent-mapping/start-submit?id=$id")
-          val result = callEndpointWith(request)
+      status(result) shouldBe 303
+      redirectLocation(result) shouldBe Some(routes.MappingController.showClientAuthorisationsAdded(testData.id).url)
+      await(repo.findRecord(testData.id)) shouldBe Some(
+        testData.copy(
+          agentCode = None,
+          mappedAgentCode = Some(saAgentCode),
+          mappedClientCount = Some(2)
+        )
+      )
+    }
 
-          status(result) shouldBe 303
-        }
-      }
+    "redirect to already mapped for a user with IR-SA-AGENT enrolment after mapping responds with a duplicate error" in {
+      val testData = MappingArnResult(
+        arn = arn,
+        agentCode = Some(saAgentCode)
+      )
+      await(repo.collection.insertOne(testData).toFuture())
+      mappingExists(arn)
+      givenUserIsAuthenticated(eligibleAgent)
+
+      val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest(GET, routes.MappingController.returnFromGGLogin(testData.id).url)
+      val result = callEndpointWith(request)
+
+      status(result) shouldBe 303
+      redirectLocation(result) shouldBe Some(routes.MappingController.alreadyMapped(testData.id).url)
+    }
+
+    "throw error for a user with IR-SA-AGENT enrolment after mapping returns unexpected response" in {
+      val testData = MappingArnResult(
+        arn = arn,
+        agentCode = Some(saAgentCode)
+      )
+      await(repo.collection.insertOne(testData).toFuture())
+      mappingError(arn)
+      givenUserIsAuthenticated(eligibleAgent)
+
+      val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest(GET, routes.MappingController.returnFromGGLogin(testData.id).url)
+      val result = intercept[RuntimeException](callEndpointWith(request))
+
+      result.getMessage should include("Unexpected response from mapping service: 403")
+    }
+
+    "redirect to error page if is a record with a different agentDode" in {
+      val testData = MappingArnResult(
+        arn = arn,
+        agentCode = Some("AB1234")
+      )
+      await(repo.collection.insertOne(testData).toFuture())
+      givenUserIsAuthenticated(eligibleAgent)
+      implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest(GET, routes.MappingController.returnFromGGLogin(testData.id).url)
+      val result = callEndpointWith(request)
+
+      status(result) shouldBe 303
+      redirectLocation(result) shouldBe Some(routes.MappingController.notEnrolled(testData.id).url)
+    }
+
+    "redirect to start if is a record without an agentCode" in {
+      val testData = MappingArnResult(arn = arn)
+      await(repo.collection.insertOne(testData).toFuture())
+      givenUserIsAuthenticated(eligibleAgent)
+      implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest(GET, routes.MappingController.returnFromGGLogin(testData.id).url)
+      val result = callEndpointWith(request)
+
+      status(result) shouldBe 303
+      redirectLocation(result) shouldBe Some(routes.MappingController.start.url)
     }
 
     "redirect to start if there is no record found" in {
-      givenAuthorisedFor("IR-SA-AGENT")
-      implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest(GET, s"/agent-mapping/start-submit?id=foo")
+      givenUserIsAuthenticated(eligibleAgent)
+      implicit val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest(GET, routes.MappingController.returnFromGGLogin("foo").url)
       val result = callEndpointWith(request)
 
       status(result) shouldBe 303
@@ -307,7 +360,6 @@ with MongoSupport {
         s" enrolments: ${eligibleAgent.activeEnrolments.mkString(", ")} and a client count of $clientCount" in {
           val mappingId = await(repo.create(arn))
           val record = await(repo.findRecord(mappingId)).get
-          val saAgentCode = "HZ1234"
           await(
             repo.replace(
               record.copy(
@@ -319,6 +371,7 @@ with MongoSupport {
           )
 
           givenUserIsAuthenticated(eligibleAgent)
+          saMappingsFound(arn)
           val request = fakeRequest(GET, routes.MappingController.showClientAuthorisationsAdded(id = mappingId).url)
           val result = callEndpointWith(request)
           status(result) shouldBe 200
@@ -367,7 +420,6 @@ with MongoSupport {
       s" enrolment ${eligibleAgent.activeEnrolments.mkString(", ")}" in {
         val mappingId = await(repo.create(arn))
         val record = await(repo.findRecord(mappingId)).get
-        val saAgentCode = "HZ1234"
         await(
           repo.replace(
             record.copy(

@@ -53,7 +53,7 @@ extends BaseControllerISpec {
     }
 
     "not create a mapping when there is a problem with the supplied known facts" in {
-      mappingKnownFactsIssue(arn)
+      mappingError(arn)
       await(connector.createMapping(arn)) shouldBe 403
     }
   }

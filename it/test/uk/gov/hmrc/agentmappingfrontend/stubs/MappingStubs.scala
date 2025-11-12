@@ -52,7 +52,7 @@ object MappingStubs {
       willReturn aResponse().withStatus(409)
   )
 
-  def mappingKnownFactsIssue(arn: Arn): StubMapping = stubFor(
+  def mappingError(arn: Arn): StubMapping = stubFor(
     put(urlPathEqualTo(s"/agent-mapping/mappings/arn/${arn.value}"))
       willReturn aResponse().withStatus(403)
   )
@@ -83,11 +83,6 @@ object MappingStubs {
   def givenClientCountRecordsFound(recordCount: Int): StubMapping = stubFor(
     get(urlPathEqualTo(s"/agent-mapping/client-count"))
       .willReturn(aResponse().withStatus(200).withBody(Json.obj("clientCount" -> recordCount).toString()))
-  )
-
-  def getClientCount500(): StubMapping = stubFor(
-    get(urlPathEqualTo(s"/agent-mapping/client-count"))
-      .willReturn(aResponse().withStatus(500))
   )
 
   def mappingDetailsAreCreated(

@@ -154,7 +154,7 @@ with Logging {
   def returnFromGGLogin(id: MappingArnResultId): Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedSaAgent(id) { enrolment =>
       repository.findRecord(id).flatMap {
-        case Some(MappingArnResult(
+        case Some(record @ MappingArnResult(
               _,
               arn,
               Some(agentCode),
@@ -166,7 +166,7 @@ with Logging {
             case CREATED =>
               for {
                 clientCount <- mappingConnector.getClientCount
-                newRecord = MappingArnResult(
+                newRecord = record.copy(
                   arn = arn,
                   agentCode = None,
                   mappedAgentCode = Some(agentCode),
