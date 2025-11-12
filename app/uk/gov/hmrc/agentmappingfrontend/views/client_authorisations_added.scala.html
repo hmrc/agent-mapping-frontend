@@ -34,26 +34,38 @@
         mappings: Seq[SaMapping]
 )(implicit request: RequestHeader, msgs: Messages)
 
-@mainTemplate(title = msgs("authorisationsFound.title", clientCount)) {
+@countSuffix = @{
+    if(clientCount == 0) {
+        "none"
+    } else if(clientCount == 1) {
+        "single"
+    } else {
+        "multi"
+    }
+}
+@mainTemplate(title = msgs(s"authorisationsAdded.title.$countSuffix", clientCount)) {
 
     @govukPanel(Panel(
-        title = Text(msgs("authorisationsFound.banner.header", clientCount)),
-        content = Text(msgs("authorisationsFound.banner.body", agentCode))
+        title = Text(msgs(s"authorisationsAdded.banner.header.$countSuffix", clientCount)),
+        content = Text(msgs("authorisationsAdded.banner.body", agentCode))
     ))
 
-    <h2 class="govuk-heading-l">@msgs(s"authorisationsFound.h2")</h2>
-    <p class="govuk-body">@msgs(s"authorisationsFound.para.1")</p>
+    <h2 class="govuk-heading-m">@msgs(s"authorisationsAdded.h2")</h2>
+    <p class="govuk-body">@msgs(s"authorisationsAdded.para.1.$countSuffix")</p>
+    @if(clientCount == 0) {
+        <p class="govuk-body">@msgs("authorisationsAdded.para.2.none")</p>
+    }
+
     @govukInsetText(InsetText(
-        content = Text(msgs("authorisationsFound.inset"))
+        content = Text(msgs(s"authorisationsAdded.inset.$countSuffix", agentCode))
     ))
-
-    <h2 class="govuk-heading-l">@msgs(s"authorisationsFound.table.h2")</h2>
 
     @govukTable(
         Table(
+            caption = Some(msgs("authorisationsAdded.table.caption")),
             head = Some(Seq(
-                HeadCell(Text(msgs("authorisationsFound.table.agentReference"))),
-                HeadCell(Text(msgs("authorisationsFound.table.dateCreated")))
+                HeadCell(Text(msgs("authorisationsAdded.table.agentReference"))),
+                HeadCell(Text(msgs("authorisationsAdded.table.dateCreated")))
             )),
             rows = mappings.map { mapping =>
                 Seq(
@@ -64,15 +76,19 @@
         )
     )
 
-    <a class="govuk-link govuk-body" target="_blank" rel="noreferrer noopener" href="@{
-        "routes.MappingController.showWhatAgentCode.url"
-    }"> @* TODO add this route *@
-        @msgs("authorisationsFound.link.addAnother")
-    </a>
-    <a class="govuk-link govuk-body" target="_blank" rel="noreferrer noopener" href="@{
-        routes.SignedOutController.reLogForMappingStart.url
-    }">
-    @msgs("authorisationsFound.link.asa")
-    </a>
+    <p class="govuk-body">
+        <a class="govuk-link govuk-body" target="_blank" rel="noreferrer noopener" href="@{
+            "routes.MappingController.showWhatAgentCode.url"
+        }"> @* TODO add this route *@
+            @msgs("authorisationsAdded.link.addAnother")
+        </a>
+    </p>
+    <p class="govuk-body">
+        <a class="govuk-link govuk-body" target="_blank" rel="noreferrer noopener" href="@{
+            routes.SignedOutController.reLogForMappingStart.url
+        }">
+            @msgs("authorisationsAdded.link.asa")
+        </a>
+    </p>
 
 }

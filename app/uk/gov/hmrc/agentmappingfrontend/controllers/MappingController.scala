@@ -52,7 +52,7 @@ class MappingController @Inject() (
   val config: Configuration,
   val env: Environment,
   signInTemplate: start_sign_in_required,
-  clientAuthorisationsFoundTemplate: client_authorisations_found,
+  clientAuthorisationsAddedTemplate: client_authorisations_added,
   startTemplate: start,
   alreadyMappedTemplate: already_mapped,
   notEnrolledTemplate: not_enrolled,
@@ -153,7 +153,6 @@ with Logging {
 
   def returnFromGGLogin(id: MappingArnResultId): Action[AnyContent] = Action.async { implicit request =>
     withAuthorisedSaAgent(id) { enrolment =>
-      // val testAgentCode = "AGENTCODE123" // TODO REMOVE
       repository.findRecord(id).flatMap {
         case Some(MappingArnResult(
               _,
@@ -173,7 +172,7 @@ with Logging {
                   mappedAgentCode = Some(agentCode),
                   mappedClientCount = Some(clientCount)
                 )
-                _ <- repository.upsert(newRecord, id)
+                _ <- repository.replace(newRecord, id)
               } yield Redirect(routes.MappingController.showClientAuthorisationsAdded(newRecord.id))
             case CONFLICT => Future.successful(Redirect(routes.MappingController.alreadyMapped(id)))
             case e => throw new RuntimeException(s"Unexpected response from mapping service: $e")
@@ -200,7 +199,7 @@ with Logging {
               _
             )) =>
           mappingConnector.findSaMappingsFor(arn).map { saMappings =>
-            Ok(clientAuthorisationsFoundTemplate(
+            Ok(clientAuthorisationsAddedTemplate(
               mappedAgentCode,
               mappedClientCount,
               saMappings

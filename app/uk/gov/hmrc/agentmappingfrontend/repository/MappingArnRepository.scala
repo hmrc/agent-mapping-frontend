@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.agentmappingfrontend.repository
 
-import org.mongodb.scala.model.Updates.set
 import org.mongodb.scala.model.Filters.equal
 import org.mongodb.scala.model.Indexes.ascending
 import org.mongodb.scala.model.IndexModel
@@ -55,9 +54,9 @@ case object ClientCountAndGGTag {
 case class MappingArnResult(
   id: MappingArnResultId = UUID.randomUUID().toString.replace("-", ""),
   arn: Arn,
-  agentCode: Option[String],
-  mappedAgentCode: Option[String],
-  mappedClientCount: Option[Int],
+  agentCode: Option[String] = None,
+  mappedAgentCode: Option[String] = None,
+  mappedClientCount: Option[Int] = None,
   createdDate: LocalDateTime = Instant.now().atZone(ZoneOffset.UTC).toLocalDateTime.truncatedTo(MILLIS)
 )
 
@@ -92,12 +91,7 @@ with Logging {
   def create(
     arn: Arn
   ): Future[MappingArnResultId] = {
-    val record = MappingArnResult(
-      arn = arn,
-      agentCode = None,
-      mappedAgentCode = None,
-      mappedClientCount = None
-    )
+    val record = MappingArnResult(arn = arn)
     collection
       .insertOne(record)
       .toFuture()
@@ -108,7 +102,7 @@ with Logging {
     .find(equal("id", id))
     .headOption()
 
-  def upsert(
+  def replace(
     mappingArnResult: MappingArnResult,
     id: MappingArnResultId
   ): Future[Unit] = collection
@@ -125,35 +119,6 @@ with Logging {
       else
         logger.info(
           s"Upsert success. Found ${wr.getMatchedCount} matching documents. " +
-            s"${wr.getModifiedCount} were modified."
-        )
-    )
-
-  def updateCurrentGGTag(
-    id: MappingArnResultId,
-    ggTag: String
-  ): Future[Unit] = collection
-    .updateOne(equal("id", id), set("currentGGTag", ggTag))
-    .toFuture()
-    .map(wr =>
-      if (!wr.wasAcknowledged())
-        throw new RuntimeException("Something went wrong with updateCurrentGGTag.")
-      else
-        logger.info(
-          s"updateCurrentGGTag success. Found ${wr.getMatchedCount} matching documents. " +
-            s"${wr.getModifiedCount} were modified."
-        )
-    )
-
-  def updateMappingCompleteStatus(id: MappingArnResultId): Future[Unit] = collection
-    .updateOne(equal("id", id), set("alreadyMapped", true))
-    .toFuture()
-    .map(wr =>
-      if (!wr.wasAcknowledged())
-        throw new RuntimeException("Something went wrong with updateMappingCompleteStatus.")
-      else
-        logger.info(
-          s"updateMappingCompleteStatus success. Found ${wr.getMatchedCount} matching documents. " +
             s"${wr.getModifiedCount} were modified."
         )
     )

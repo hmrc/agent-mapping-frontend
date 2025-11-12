@@ -23,9 +23,22 @@ import play.api.libs.json.Json
 import uk.gov.hmrc.agentmappingfrontend.model._
 import uk.gov.hmrc.agentmappingfrontend.model.identifiers.Arn
 
+import java.time.LocalDate
+
 object MappingStubs {
 
-  val listOfSaMappings = List(SaMapping("ARN0001", "AgentCode1"), SaMapping("ARN0001", "AgentCode2"))
+  val listOfSaMappings = List(
+    SaMapping(
+      "ARN0001",
+      "AgentCode1",
+      Some(LocalDate.now())
+    ),
+    SaMapping(
+      "ARN0001",
+      "AgentCode2",
+      Some(LocalDate.now())
+    )
+  )
 
   val saJsonBody = Json.toJson(SaMappings(listOfSaMappings))
 
