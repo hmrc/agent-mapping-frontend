@@ -384,7 +384,7 @@ with MongoSupport {
     }
   }
 
-  "/use-gg-user-id" should {
+  "GET /use-gg-user-id" should {
     "show the 'use GG user id' page for agent code page when record is found" in {
       val testData = MappingArnResult(
         arn = arn,
@@ -432,7 +432,7 @@ with MongoSupport {
     }
   }
 
-  "/start-submit" should {
+  "GET /start-submit" should {
     val arn = Arn("TARN0000001")
     "redirect to client authorisations added for a user with IR-SA-AGENT enrolment after mapping and updating session" in {
       val testData = MappingArnResult(
@@ -524,7 +524,7 @@ with MongoSupport {
     }
   }
 
-  "/client-authorisations-added" should {
+  "GET /client-authorisations-added" should {
     val arn = Arn("TARN0000001")
 
     behave like anEndpointReachableIfSignedInWithEligibleEnrolment(

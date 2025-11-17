@@ -28,7 +28,6 @@ import uk.gov.hmrc.agentmappingfrontend.connectors.MappingConnector
 import uk.gov.hmrc.agentmappingfrontend.model.RadioInputAnswer.No
 import uk.gov.hmrc.agentmappingfrontend.model.RadioInputAnswer.Yes
 import uk.gov.hmrc.agentmappingfrontend.model._
-import uk.gov.hmrc.agentmappingfrontend.model.identifiers.Arn
 import uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId
 import uk.gov.hmrc.agentmappingfrontend.repository.ClientCountAndGGTag
 import uk.gov.hmrc.agentmappingfrontend.repository.MappingArnRepository
@@ -202,18 +201,6 @@ with AuthActions {
     }
   }
 
-  def test() = Action.async { implicit request =>
-    withBasicAgentAuth {
-      repository.create(Arn("TARN0000001")).flatMap { id =>
-        repository.findRecord(id).flatMap { record =>
-          repository.replace(record.get.copy(agentCode = Some("A12345")), id).map { _ =>
-            Redirect(routes.MappingController.showUseTheGgUserId(id))
-          }
-        }
-      }
-    }
-  }
-
   def showUseTheGgUserId(id: MappingArnResultId): Action[AnyContent] = Action.async { implicit request =>
     withBasicAgentAuth {
       repository.findRecord(id).map {
@@ -284,7 +271,8 @@ with AuthActions {
             Ok(clientAuthorisationsAddedTemplate(
               mappedAgentCode,
               mappedClientCount,
-              saMappings
+              saMappings,
+              id
             ))
           }
         case _ =>
