@@ -374,7 +374,7 @@ with MongoSupport {
       )
     }
 
-    "redirect to already mapped for a user with IR-SA-AGENT enrolment after mapping responds with a duplicate error" in {
+    "throw error if a user with IR-SA-AGENT enrolment has an identical code to an existing mapping" in {
       val testData = MappingArnResult(
         arn = arn,
         agentCode = Some(saAgentCode)
@@ -384,10 +384,9 @@ with MongoSupport {
       givenUserIsAuthenticated(eligibleAgent)
 
       val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest(GET, routes.MappingController.returnFromGGLogin(testData.id).url)
-      val result = callEndpointWith(request)
+      val result = intercept[RuntimeException](callEndpointWith(request))
 
-      status(result) shouldBe 303
-      redirectLocation(result) shouldBe Some(routes.MappingController.alreadyMapped(testData.id).url)
+      result.getMessage should include("Agent is already mapped - unexpected state as this was checked earlier")
     }
 
     "throw error for a user with IR-SA-AGENT enrolment after mapping returns unexpected response" in {
@@ -416,7 +415,7 @@ with MongoSupport {
       val result = callEndpointWith(request)
 
       status(result) shouldBe 303
-      redirectLocation(result) shouldBe Some(routes.MappingController.notEnrolled(testData.id).url)
+      redirectLocation(result) shouldBe Some(routes.MappingController.problemWithDetails(testData.id).url)
     }
 
     "redirect to start if is a record without an agentCode" in {
