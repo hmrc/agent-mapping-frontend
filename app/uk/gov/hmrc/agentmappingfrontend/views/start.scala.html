@@ -19,6 +19,7 @@
 @import uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId
 @import uk.gov.hmrc.agentmappingfrontend.model.SaMapping
 @import uk.gov.hmrc.agentmappingfrontend.util.DisplayDate
+@import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 
 @import uk.gov.hmrc.govukfrontend.views.Implicits._
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.implicits._
@@ -31,7 +32,8 @@
         govukButton: GovukButton,
         govukTable: GovukTable,
         govukErrorSummary: GovukErrorSummary,
-        govukInsetText : GovukInsetText
+        govukInsetText : GovukInsetText,
+        govukDetails: GovukDetails
 )
 
 @(
@@ -76,29 +78,27 @@
     ))
 
     @if(agentCodes.length <= 1) {
-        <details class="govuk-details">
-            <summary class=govuk-details__summary">
-                <span class="govuk-details__summary-text">@msgs("start.details.link")
-                </span>
-            </summary>
-            <div class="govuk-inset-text">
-                <p class="govuk-body">@msgs("start.details1")</p>
-                <p class="govuk-body">@msgs("start.details2")</p>
-                <p class="govuk-body">@msgs("start.details3")</p>
-            </div>
-        </details>
+        @govukDetails(Details(
+            summary = Text(msgs("start.details.link")),
+            content = HtmlContent (
+                s"""
+             <p class="govuk-body">${msgs("start.details1")}</p>
+             <p class="govuk-body">${msgs("start.details2")}</p>
+             <p class="govuk-body">${msgs("start.details3")}</p>
+               """
+            )
+        ))
 
-    } else {
-        <details class="govuk-details">
-            <summary class=govuk-details__summary">
-                <span class="govuk-details__summary-text">@msgs("start.details.link")
-                </span>
-            </summary>
-            <div class="govuk-inset-text">
-                <p class="govuk-body">@msgs("start.details1")</p>
-                <p class="govuk-body">@msgs("start.details4")</p>
-            </div>
-        </details>
+    }else {
+        @govukDetails(Details(
+            summary = Text(msgs("start.details.link")),
+            content = HtmlContent (
+                s"""
+             <p class="govuk-body">${msgs("start.details1")}</p>
+             <p class="govuk-body">${msgs("start.details4")}</p>
+               """
+            )
+        ))
     }
 
     <a href="@routes.MappingController.showAgentCode(id).url" class="govuk-button" role="button">

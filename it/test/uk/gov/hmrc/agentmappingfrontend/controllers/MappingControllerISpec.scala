@@ -18,12 +18,16 @@ package uk.gov.hmrc.agentmappingfrontend.controllers
 
 import com.google.inject.AbstractModule
 import play.api.http.Writeable
-import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Request, Result}
+import play.api.mvc.AnyContentAsEmpty
+import play.api.mvc.AnyContentAsFormUrlEncoded
+import play.api.mvc.Request
+import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.agentmappingfrontend.model._
 import uk.gov.hmrc.agentmappingfrontend.model.identifiers.Arn
-import uk.gov.hmrc.agentmappingfrontend.repository.{MappingArnRepository, MappingArnResult}
+import uk.gov.hmrc.agentmappingfrontend.repository.MappingArnRepository
+import uk.gov.hmrc.agentmappingfrontend.repository.MappingArnResult
 import uk.gov.hmrc.agentmappingfrontend.stubs.AuthStubs
 import uk.gov.hmrc.agentmappingfrontend.stubs.MappingStubs._
 import uk.gov.hmrc.agentmappingfrontend.support.SampleUsers._
