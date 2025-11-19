@@ -48,7 +48,7 @@
 
     @govukButton(Button(
         attributes = Map("id" -> "continue"),
-        href = Some(routes.MappingController.returnFromGGLogin(id).url),
+        href = Some(routes.SignedOutController.signOutAndRedirect(id).url),
         content = Text(msgs("userTheGgUserId.button"))
     ))
 

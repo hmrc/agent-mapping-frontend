@@ -105,7 +105,11 @@ with AuthActions {
               case Some(code) => AgentCodeForm.form.fill(code)
               case None => AgentCodeForm.form
             }
-          Ok(agentCodeTemplate(form, id))
+          Ok(agentCodeTemplate(
+            form,
+            record.mappedAgentCode.isDefined,
+            id
+          ))
         case _ =>
           logger.warn(s"Agent with $id not found in repository or agent is page hopping")
           Redirect(routes.MappingController.start)
@@ -115,13 +119,18 @@ with AuthActions {
 
   def submitAgentCode(id: MappingArnResultId): Action[AnyContent] = Action.async { implicit request =>
     withBasicAuth {
-      AgentCodeForm.form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => BadRequest(agentCodeTemplate(formWithErrors, id)),
-          agentCode =>
-            repository.findRecord(id).flatMap {
-              case Some(record) =>
+      repository.findRecord(id).flatMap {
+        case Some(record) =>
+          AgentCodeForm.form
+            .bindFromRequest()
+            .fold(
+              formWithErrors =>
+                BadRequest(agentCodeTemplate(
+                  formWithErrors,
+                  record.mappedAgentCode.isDefined,
+                  id
+                )),
+              agentCode =>
                 mappingConnector.findSaMappingsFor(record.arn).flatMap { saMappings =>
                   if (saMappings.map(_.saAgentReference).contains(agentCode)) {
                     Future.successful(BadRequest(agentCodeTemplate(
@@ -129,6 +138,7 @@ with AuthActions {
                         AgentCodeForm.fieldName,
                         "agentCode.error.alreadyMapped"
                       ).fill(agentCode),
+                      record.mappedAgentCode.isDefined,
                       id
                     )))
                   }
@@ -138,11 +148,11 @@ with AuthActions {
                     }
                   }
                 }
-              case _ =>
-                logger.warn(s"Agent with $id not found in repository or agent is page hopping")
-                Future.successful(Redirect(routes.MappingController.start))
-            }
-        )
+            )
+        case _ =>
+          logger.warn(s"Agent with $id not found in repository or agent is page hopping")
+          Future.successful(Redirect(routes.MappingController.start))
+      }
     }
   }
 
