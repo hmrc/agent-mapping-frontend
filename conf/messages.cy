@@ -177,14 +177,14 @@ authorisationsAdded.table.dateCreated=Dyddiad yr ychwanegiad
 authorisationsAdded.link.addAnother=Ychwanegwch god asiant Hunanasesiad arall
 authorisationsAdded.link.asa=Mewngofnodwch eto i’ch cyfrif gwasanaethau asiant
 
-agentCode.title=TODO
-agentCode.heading=TODO
-agentCode.hint=TODO
-agentCode.button=TODO
-agentCode.error.required=TODO
-agentCode.error.lengthAndFormat=TODO
-agentCode.error.length=TODO
-agentCode.error.format=TODO
+agentCode.title=Pa god asiant ydych chi am ei ychwanegu at y cyfrif hwn?
+agentCode.heading=Pa god asiant ydych chi am ei ychwanegu at y cyfrif hwn?
+agentCode.hint=Er enghraifft, A12345
+agentCode.button=Er enghraifft, A12345
+agentCode.error.required=Nodwch y cod asiant rydych am ei ychwanegu
+agentCode.error.lengthAndFormat=Nodwch god asiant sy’n cynnwys 6 o gymeriadau ac sy’n llythrennau a rhifau yn unig
+agentCode.error.length=Nodwch god asiant sy’n cynnwys 6 o gymeriadau
+agentCode.error.format=Nodwch god asiant yn y fformat cywir 
 agentCode.error.alreadyMapped=TODO
 
 userTheGgUserId.title=TODO
