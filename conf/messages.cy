@@ -187,14 +187,14 @@ agentCode.error.length=Nodwch god asiant sy’n cynnwys 6 o gymeriadau
 agentCode.error.format=Nodwch god asiant yn y fformat cywir 
 agentCode.error.alreadyMapped=TODO
 
-userTheGgUserId.title=TODO
-userTheGgUserId.heading=TODO
-userTheGgUserId.para.1=TODO
-userTheGgUserId.para.2=TODO
-userTheGgUserId.para.3=TODO
-userTheGgUserId.bullet.1=TODO
-userTheGgUserId.bullet.2=TODO
-userTheGgUserId.button=TODO
+userTheGgUserId.title=Defnyddiwch y Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth ar gyfer cod asiant {0}
+userTheGgUserId.heading=Defnyddiwch y Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth ar gyfer cod asiant {0}
+userTheGgUserId.para.1=Ar y dudalen nesaf, byddwn yn gofyn i chi fewngofnodi drwy Borth y Llywodraeth. Bydd gwneud hyn yn eich allgofnodi o’ch cyfrif gwasanaethau asiant.
+userTheGgUserId.para.2=Nodwch yr ID Defnyddiwr, a’r cyfrinair sy’n gysylltiedig â’r cod asiant {0}, pan ofynnir i chi wneud hynny.
+userTheGgUserId.para.3=Bydd mewngofnodi yn:
+userTheGgUserId.bullet.1=cadarnhau bod y cod asiant hwn wedi’i roi i chi gan CThEF
+userTheGgUserId.bullet.2=ein caniatáu i gysylltu pob awdurdodiad o dan y cod perthansol â’ch cyfrif gwasanaethau asiant
+userTheGgUserId.button=Parhau
 
 wrongSignInDetails.title=TODO
 wrongSignInDetails.heading=TODO
