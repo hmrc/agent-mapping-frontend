@@ -203,12 +203,12 @@ wrongSignInDetails.para.1.notAgent=Nid yw’r manylion mewngofnodi a nodwyd genn
 wrongSignInDetails.para.2=Nodwch y Dynodydd Defnyddiwr (ID) a’r cyfrinair ar gyfer Porth y Llywodraeth rydych yn eu defnyddio i reoli Hunanasesiad ar gyfer eich cleientiaid. 
 wrongSignInDetails.button=Rhowch gynnig arall arni
 
-problemWithDetails.title=TODO
-problemWithDetails.heading=TODO
-problemWithDetails.para.1=TODO
-problemWithDetails.para.2=TODO
-problemWithDetails.bullet.1=TODO
-problemWithDetails.bullet.2=TODO
-problemWithDetails.bullet.3=TODO
-problemWithDetails.button=TODO
+problemWithDetails.title=Mae problem gyda’r manylion rydych wedi’u nodi
+problemWithDetails.heading=Mae problem gyda’r manylion rydych wedi’u nodi
+problemWithDetails.para.1=Nid yw’r manylion yn cyd-fynd â’r hyn sydd gennym yn ein cofnodion.
+problemWithDetails.para.2=Gall hyn fod oherwydd:
+problemWithDetails.bullet.1=nid yw’r cod asiant a nodwyd gennych yn god ar gyfer Hunanasesiad
+problemWithDetails.bullet.2=nid yw’r Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth a nodwyd gennych yn cael ei ddefnyddio i reoli cleientiaid Hunanasesiad
+problemWithDetails.bullet.3=mae’r cod asiant a nodwyd gennych yn god ar gyfer Hunanasesiad, ond mae’n gysylltiedig ag ID Defnyddiwr gwahanol i’r un a roesoch
+problemWithDetails.button=Rhowch gynnig arall arni
 
