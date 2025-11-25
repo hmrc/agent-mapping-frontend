@@ -196,12 +196,12 @@ userTheGgUserId.bullet.1=cadarnhau bod y cod asiant hwn wedi’i roi i chi gan C
 userTheGgUserId.bullet.2=ein caniatáu i gysylltu pob awdurdodiad o dan y cod perthansol â’ch cyfrif gwasanaethau asiant
 userTheGgUserId.button=Parhau
 
-wrongSignInDetails.title=TODO
-wrongSignInDetails.heading=TODO
-wrongSignInDetails.para.1.asa=TODO
-wrongSignInDetails.para.1.notAgent=TODO
-wrongSignInDetails.para.2=TODO
-wrongSignInDetails.button=TODO
+wrongSignInDetails.title=Rydych wedi nodi’r manylion mewngofnodi anghywir
+wrongSignInDetails.heading=Rydych wedi nodi’r manylion mewngofnodi anghywir
+wrongSignInDetails.para.1.asa=Mae’r manylion mewngofnodi a nodwyd gennych yn fanylion ar gyfer eich cyfrif gwasanaethau asiant.
+wrongSignInDetails.para.1.notAgent=Nid yw’r manylion mewngofnodi a nodwyd gennych ar gyfer eich cyfrif asiant.
+wrongSignInDetails.para.2=Nodwch y Dynodydd Defnyddiwr (ID) a’r cyfrinair ar gyfer Porth y Llywodraeth rydych yn eu defnyddio i reoli Hunanasesiad ar gyfer eich cleientiaid. 
+wrongSignInDetails.button=Rhowch gynnig arall arni
 
 problemWithDetails.title=TODO
 problemWithDetails.heading=TODO
