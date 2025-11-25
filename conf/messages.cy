@@ -8,12 +8,18 @@ start.not-signed-in.p1=Mae’n rhaid i chi fewngofnodi i’ch cyfrif gwasanaetha
 
 start.title=Ychwanegwch awdurdodiadau gan gleientiaid Hunanasesiad
 start.p1=Mae angen i chi roi gwybod i ni am bob cyfrif Porth y Llywodraeth yr ydych yn ei ddefnyddio i reoli’ch cleientiaid Hunanasesiad.
-start.p2=Mae hyn er mwyn sicrhau ein bod yn ychwanegu eich awdurdodiadau gan gleientiaid at eich cyfrif gwasanaethau asiant.
 start.inset=Y cyfan y bydd ychwanegu awdurdodiadau yn ei wneud yw copïo’r awdurdodiadau hyn draw i’ch cyfrif gwasanaethau asiant. Ni fyddwch yn colli unrhyw fynediad neu ganiatâd sydd gennych i reoli Hunanasesiad ar ran eich cleientiaid yn eich cyfrif gwasanaethau ar-lein CThEF.
 start.copied=Rydych eisoes wedi copïo drosodd bob awdurdodiad cleientiaid o dan:
-start.added=Awdurdodiadau wedi’u hychwanegu
-start.addClients=A ydych am ychwanegu awdurdodiadau gan eich cleient?
-start.addMore=A ydych am ychwanegu rhagor o awdurdodiadau?
+start.table.caption=TODO
+start.li.header=TODO
+start.li1=TODO
+start.li2=TODO
+start.details.link=TODO
+start.details1=TODO
+start.details2=TODO
+start.details3=TODO
+start.details4=TODO
+start.button.agent.code=Add an agent code
 start.yes=Iawn - byddaf yn mewngofnodi nawr
 start.hint=Mae angen i chi fewngofnodi gan ddefnyddio?r Dynodydd Defnyddiwr (ID) perthnasol ar gyfer Porth y Llywodraeth er mwyn profi bod gennych fynediad at y cyfrif.
 start.error.required=Dewiswch ‘Iawn’ os ydych am ychwanegu eich awdurdodiadau gan gleientiaid
@@ -149,4 +155,60 @@ global.error.500.sa_helpline=os oes angen help arnoch gyda’r cynllun Troi Tret
 # TODO - remove?
 footer.links.accessibility.text=Hygyrchedd
 footer.links.accessibility.url=/agent-mapping/accessibility-statement
+
+authorisationsAdded.title.none=TODO
+authorisationsAdded.title.single=TODO
+authorisationsAdded.title.multi=TODO
+authorisationsAdded.banner.header.none=TODO
+authorisationsAdded.banner.header.single=TODO
+authorisationsAdded.banner.header.multi=TODO
+authorisationsAdded.banner.body=TODO
+authorisationsAdded.h2=TODO
+authorisationsAdded.para.1.none=TODO
+authorisationsAdded.para.1.single=TODO
+authorisationsAdded.para.1.multi=TODO
+authorisationsAdded.para.2.none=TODO
+authorisationsAdded.inset.none=TODO
+authorisationsAdded.inset.single=TODO
+authorisationsAdded.inset.multi=TODO
+authorisationsAdded.table.caption=TODO
+authorisationsAdded.table.agentReference=TODO
+authorisationsAdded.table.dateCreated=TODO
+authorisationsAdded.link.addAnother=TODO
+authorisationsAdded.link.asa=TODO
+
+agentCode.title=TODO
+agentCode.heading=TODO
+agentCode.hint=TODO
+agentCode.button=TODO
+agentCode.error.required=TODO
+agentCode.error.lengthAndFormat=TODO
+agentCode.error.length=TODO
+agentCode.error.format=TODO
+agentCode.error.alreadyMapped=TODO
+
+userTheGgUserId.title=TODO
+userTheGgUserId.heading=TODO
+userTheGgUserId.para.1=TODO
+userTheGgUserId.para.2=TODO
+userTheGgUserId.para.3=TODO
+userTheGgUserId.bullet.1=TODO
+userTheGgUserId.bullet.2=TODO
+userTheGgUserId.button=TODO
+
+wrongSignInDetails.title=TODO
+wrongSignInDetails.heading=TODO
+wrongSignInDetails.para.1.asa=TODO
+wrongSignInDetails.para.1.notAgent=TODO
+wrongSignInDetails.para.2=TODO
+wrongSignInDetails.button=TODO
+
+problemWithDetails.title=TODO
+problemWithDetails.heading=TODO
+problemWithDetails.para.1=TODO
+problemWithDetails.para.2=TODO
+problemWithDetails.bullet.1=TODO
+problemWithDetails.bullet.2=TODO
+problemWithDetails.bullet.3=TODO
+problemWithDetails.button=TODO
 
