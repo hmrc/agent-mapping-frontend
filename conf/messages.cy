@@ -7,8 +7,8 @@ start.not-signed-in.title=Copïwch eich cleientiaid Hunanasesiad presennol ar dr
 start.not-signed-in.p1=Mae’n rhaid i chi fewngofnodi i’ch cyfrif gwasanaethau asiant er mwyn defnyddio’r gwasanaeth hwn.
 
 start.title=Ychwanegwch awdurdodiadau gan gleientiaid Hunanasesiad
-start.p1=Mae angen i chi roi gwybod i ni am bob cyfrif Porth y Llywodraeth yr ydych yn ei ddefnyddio i reoli’ch cleientiaid Hunanasesiad.
-start.inset=Y cyfan y bydd ychwanegu awdurdodiadau yn ei wneud yw copïo’r awdurdodiadau hyn draw i’ch cyfrif gwasanaethau asiant. Ni fyddwch yn colli unrhyw fynediad neu ganiatâd sydd gennych i reoli Hunanasesiad ar ran eich cleientiaid yn eich cyfrif gwasanaethau ar-lein CThEF.
+start.p1=TODO
+start.inset=TODO
 start.copied=Rydych eisoes wedi copïo drosodd bob awdurdodiad cleientiaid o dan:
 start.table.caption=TODO
 start.li.header=TODO
