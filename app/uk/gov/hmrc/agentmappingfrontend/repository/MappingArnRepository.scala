@@ -54,6 +54,8 @@ case object ClientCountAndGGTag {
 case class MappingArnResult(
   id: MappingArnResultId = UUID.randomUUID().toString.replace("-", ""),
   arn: Arn,
+  clientName: String = "",
+  clientsLegacyRelationships: Seq[String] = Seq(),
   agentCode: Option[String] = None,
   mappedAgentCode: Option[String] = None,
   mappedClientCount: Option[Int] = None,

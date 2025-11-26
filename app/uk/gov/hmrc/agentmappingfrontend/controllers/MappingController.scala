@@ -16,18 +16,19 @@
 
 package uk.gov.hmrc.agentmappingfrontend.controllers
 
-import play.api.i18n.I18nSupport
-import play.api.mvc._
 import play.api.Configuration
 import play.api.Environment
+import play.api.i18n.I18nSupport
+import play.api.libs.json.Json
+import play.api.mvc._
 import uk.gov.hmrc.agentmappingfrontend.auth.AuthActions
 import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
 import uk.gov.hmrc.agentmappingfrontend.connectors.AgentSubscriptionConnector
 import uk.gov.hmrc.agentmappingfrontend.connectors.MappingConnector
 import uk.gov.hmrc.agentmappingfrontend.model._
-import uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId
 import uk.gov.hmrc.agentmappingfrontend.repository.MappingArnRepository
 import uk.gov.hmrc.agentmappingfrontend.repository.MappingArnResult
+import uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId
 import uk.gov.hmrc.agentmappingfrontend.util._
 import uk.gov.hmrc.agentmappingfrontend.views.html._
 import uk.gov.hmrc.auth.core._
@@ -37,6 +38,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
+import scala.concurrent.Future.successful
 
 @Singleton
 class MappingController @Inject() (
@@ -88,6 +90,19 @@ with AuthActions {
       case None => Future.successful(Redirect(routes.MappingController.needAgentServicesAccount))
     }
   }
+
+  def startSession(): Action[LegacyClientDetails] =
+    Action.async(parse.json[LegacyClientDetails]) { implicit request =>
+      withCheckForArn {
+        case Some(arn) =>
+          repository.create(arn).map { id =>
+            val redirectUrl = routes.MappingController.showAgentCode(id).url
+            Created(Json.toJson(Map("redirectUrl" -> redirectUrl)))
+          }
+        case None =>
+          Future.successful(NotFound)
+      }
+    }
 
   def needAgentServicesAccount: Action[AnyContent] = Action.async { implicit request =>
     withCheckForArn {
@@ -162,6 +177,8 @@ with AuthActions {
         case Some(MappingArnResult(
               _,
               _,
+              _,
+              _,
               Some(agentCode),
               _,
               _,
@@ -181,6 +198,8 @@ with AuthActions {
         case Some(record @ MappingArnResult(
               _,
               arn,
+              _,
+              _,
               Some(agentCode),
               _,
               _,
@@ -215,6 +234,8 @@ with AuthActions {
         case Some(MappingArnResult(
               _,
               arn,
+              _,
+              _,
               _,
               Some(mappedAgentCode),
               Some(mappedClientCount),
