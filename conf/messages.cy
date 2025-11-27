@@ -185,7 +185,7 @@ agentCode.error.required=Nodwch y cod asiant rydych am ei ychwanegu
 agentCode.error.lengthAndFormat=Nodwch god asiant sy’n cynnwys 6 o gymeriadau ac sy’n llythrennau a rhifau yn unig
 agentCode.error.length=Nodwch god asiant sy’n cynnwys 6 o gymeriadau
 agentCode.error.format=Nodwch god asiant yn y fformat cywir 
-agentCode.error.alreadyMapped=TODO
+agentCode.error.alreadyMapped=Nodwch god asiant sydd heb gael ei gysylltu â’ch cyfrif gwasanaethau asiant eisoes
 
 userTheGgUserId.title=Defnyddiwch y Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth ar gyfer cod asiant {0}
 userTheGgUserId.heading=Defnyddiwch y Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth ar gyfer cod asiant {0}
