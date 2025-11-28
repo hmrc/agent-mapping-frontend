@@ -92,18 +92,6 @@ with AuthActions {
     }
   }
 
-  def startAuthMappingJourney(): Action[LegacyClientDetails] =
-    Action.async(parse.json[LegacyClientDetails]) { implicit request =>
-      withCheckForArn {
-        case Some(arn) =>
-          repository.create(arn, Some(request.body)).map { id =>
-            val redirectUrl = s"${appConfig.agentMappingFrontendBaseUrl}${routes.MappingController.showAgentCode(id).url}"
-            Created(Json.toJson(Map("redirectUrl" -> redirectUrl)))
-          }
-        case None => Future.successful(Forbidden)
-      }
-    }
-
   def needAgentServicesAccount: Action[AnyContent] = Action.async { implicit request =>
     withCheckForArn {
       case Some(_) => Future.successful(Redirect(routes.MappingController.start))
