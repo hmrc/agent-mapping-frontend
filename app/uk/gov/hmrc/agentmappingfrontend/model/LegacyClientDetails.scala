@@ -21,7 +21,9 @@ import play.api.libs.json.Json
 
 case class LegacyClientDetails(
   clientName: String,
-  clientsLegacyRelationships: Seq[String]
+  clientsLegacyRelationships: Seq[String],
+  backUrl: String,
+  cancelUrl: String
 )
 
 object LegacyClientDetails {

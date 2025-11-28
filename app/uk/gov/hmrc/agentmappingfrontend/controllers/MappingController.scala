@@ -18,6 +18,7 @@ package uk.gov.hmrc.agentmappingfrontend.controllers
 
 import play.api.Configuration
 import play.api.Environment
+import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -38,7 +39,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
-import scala.concurrent.Future.successful
 
 @Singleton
 class MappingController @Inject() (
@@ -50,6 +50,7 @@ class MappingController @Inject() (
   val env: Environment,
   signInTemplate: start_sign_in_required,
   agentCodeTemplate: agent_code,
+  agentCodeAuthTemplate: agent_code_auth,
   useTheGgUserIdTemplate: use_the_gg_user_id,
   clientAuthorisationsAddedTemplate: client_authorisations_added,
   wrongSignInDetailsTemplate: wrong_sign_in_details,
@@ -91,16 +92,15 @@ with AuthActions {
     }
   }
 
-  def startSession(): Action[LegacyClientDetails] =
+  def startAuthMappingJourney(): Action[LegacyClientDetails] =
     Action.async(parse.json[LegacyClientDetails]) { implicit request =>
       withCheckForArn {
         case Some(arn) =>
-          repository.create(arn).map { id =>
-            val redirectUrl = routes.MappingController.showAgentCode(id).url
+          repository.create(arn, Some(request.body)).map { id =>
+            val redirectUrl = s"${appConfig.agentMappingFrontendBaseUrl}${routes.MappingController.showAgentCode(id).url}"
             Created(Json.toJson(Map("redirectUrl" -> redirectUrl)))
           }
-        case None =>
-          Future.successful(NotFound)
+        case None => Future.successful(Forbidden)
       }
     }
 
@@ -111,23 +111,44 @@ with AuthActions {
     }
   }
 
+  private def agentCodeView(
+    form: Form[String],
+    record: MappingArnResult,
+    id: MappingArnResultId
+  )(implicit requestHeader: RequestHeader) =
+    record.legacyClientDetails.fold(
+      agentCodeTemplate(
+        form,
+        record.mappedAgentCode.isDefined,
+        id
+      )
+    )(
+      agentCodeAuthTemplate(
+        form,
+        record.mappedAgentCode.isDefined,
+        _,
+        id
+      )
+    )
+
   def showAgentCode(id: MappingArnResultId): Action[AnyContent] = Action.async { implicit request =>
     withBasicAuth {
       repository.findRecord(id).map {
-        case Some(record) =>
+        // The if check prevents agent on the handshake journey from adding more mappings as it's a 1 time only flow
+        case Some(record) if !(record.mappedAgentCode.isDefined && record.legacyClientDetails.isDefined) =>
           val form =
             record.agentCode match {
-              case Some(code) => AgentCodeForm.form.fill(code)
-              case None => AgentCodeForm.form
+              case Some(code) => AgentCodeForm.form(record.legacyClientDetails).fill(code)
+              case None => AgentCodeForm.form(record.legacyClientDetails)
             }
-          Ok(agentCodeTemplate(
+          Ok(agentCodeView(
             form,
-            record.mappedAgentCode.isDefined,
+            record,
             id
           ))
         case _ =>
           logger.warn(s"Agent with $id not found in repository or agent is page hopping")
-          Redirect(routes.MappingController.start)
+          Redirect(appConfig.agentServicesFrontendBaseUrl)
       }
     }
   }
@@ -135,38 +156,44 @@ with AuthActions {
   def submitAgentCode(id: MappingArnResultId): Action[AnyContent] = Action.async { implicit request =>
     withBasicAuth {
       repository.findRecord(id).flatMap {
-        case Some(record) =>
-          AgentCodeForm.form
+        // The if check prevents agent on the handshake journey from adding more mappings as it's a 1 time only flow
+        case Some(record) if !(record.mappedAgentCode.isDefined && record.legacyClientDetails.isDefined) =>
+          AgentCodeForm.form(record.legacyClientDetails)
             .bindFromRequest()
             .fold(
               formWithErrors =>
-                BadRequest(agentCodeTemplate(
+                BadRequest(agentCodeView(
                   formWithErrors,
-                  record.mappedAgentCode.isDefined,
+                  record,
                   id
                 )),
               agentCode =>
-                mappingConnector.findSaMappingsFor(record.arn).flatMap { saMappings =>
-                  if (saMappings.map(_.saAgentReference).contains(agentCode)) {
-                    Future.successful(BadRequest(agentCodeTemplate(
-                      AgentCodeForm.form.withError(
-                        AgentCodeForm.fieldName,
-                        "agentCode.error.alreadyMapped"
-                      ).fill(agentCode),
-                      record.mappedAgentCode.isDefined,
-                      id
-                    )))
+                if (record.legacyClientDetails.isDefined)
+                  repository.replace(record.copy(agentCode = Some(agentCode)), id).map { _ =>
+                    Redirect(routes.MappingController.showUseTheGgUserId(id))
                   }
-                  else {
-                    repository.replace(record.copy(agentCode = Some(agentCode)), id).map { _ =>
-                      Redirect(routes.MappingController.showUseTheGgUserId(id))
+                else
+                  mappingConnector.findSaMappingsFor(record.arn).flatMap { saMappings =>
+                    if (saMappings.map(_.saAgentReference).contains(agentCode)) {
+                      Future.successful(BadRequest(agentCodeTemplate(
+                        AgentCodeForm.form(None).withError(
+                          AgentCodeForm.fieldName,
+                          "agentCode.error.alreadyMapped"
+                        ).fill(agentCode),
+                        record.mappedAgentCode.isDefined,
+                        id
+                      )))
+                    }
+                    else {
+                      repository.replace(record.copy(agentCode = Some(agentCode)), id).map { _ =>
+                        Redirect(routes.MappingController.showUseTheGgUserId(id))
+                      }
                     }
                   }
-                }
             )
         case _ =>
           logger.warn(s"Agent with $id not found in repository or agent is page hopping")
-          Future.successful(Redirect(routes.MappingController.start))
+          Redirect(appConfig.agentServicesFrontendBaseUrl)
       }
     }
   }
@@ -178,7 +205,6 @@ with AuthActions {
               _,
               _,
               _,
-              _,
               Some(agentCode),
               _,
               _,
@@ -187,7 +213,7 @@ with AuthActions {
           Ok(useTheGgUserIdTemplate(agentCode, id))
         case _ =>
           logger.warn(s"Agent with $id not found in repository or agent is page hopping")
-          Redirect(routes.MappingController.start)
+          Redirect(appConfig.agentServicesFrontendBaseUrl)
       }
     }
   }
@@ -198,7 +224,6 @@ with AuthActions {
         case Some(record @ MappingArnResult(
               _,
               arn,
-              _,
               _,
               Some(agentCode),
               _,
@@ -223,7 +248,7 @@ with AuthActions {
         case Some(result) if result.agentCode.isDefined => Redirect(routes.MappingController.problemWithDetails(id))
         case _ =>
           logger.warn(s"Agent with $id not found in repository or agent is page hopping")
-          Redirect(routes.MappingController.start)
+          Redirect(appConfig.agentServicesFrontendBaseUrl)
       }
     }
   }
@@ -234,8 +259,7 @@ with AuthActions {
         case Some(MappingArnResult(
               _,
               arn,
-              _,
-              _,
+              legacyClientDetails,
               _,
               Some(mappedAgentCode),
               Some(mappedClientCount),
@@ -245,13 +269,14 @@ with AuthActions {
             Ok(clientAuthorisationsAddedTemplate(
               mappedAgentCode,
               mappedClientCount,
+              legacyClientDetails,
               saMappings,
               id
             ))
           }
         case _ =>
           logger.warn(s"Agent with $id not found in repository or agent is page hopping")
-          Redirect(routes.MappingController.start)
+          Redirect(appConfig.agentServicesFrontendBaseUrl)
       }
     }
   }

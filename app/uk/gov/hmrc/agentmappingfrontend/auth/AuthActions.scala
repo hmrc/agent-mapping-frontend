@@ -16,7 +16,8 @@
 
 package uk.gov.hmrc.agentmappingfrontend.auth
 
-import play.api.{Configuration, Environment}
+import play.api.Configuration
+import play.api.Environment
 import play.api.mvc.Results._
 import play.api.mvc._
 import sttp.model.Uri.UriContext
@@ -30,13 +31,18 @@ import uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResul
 import uk.gov.hmrc.agentmappingfrontend.util.RequestAwareLogging
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.{affinityGroup, agentCode, allEnrolments, credentials}
-import uk.gov.hmrc.auth.core.retrieve.{Credentials, ~}
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.affinityGroup
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.agentCode
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.allEnrolments
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.credentials
+import uk.gov.hmrc.auth.core.retrieve.Credentials
+import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.domain.AgentCode
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
 trait AuthActions
 extends AuthorisedFunctions
@@ -93,7 +99,7 @@ with RequestAwareLogging {
   def withCheckForArn(
     body: Option[Arn] => Future[Result]
   )(implicit
-    request: Request[AnyContent],
+    request: Request[_],
     ec: ExecutionContext
   ): Future[Result] = {
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
