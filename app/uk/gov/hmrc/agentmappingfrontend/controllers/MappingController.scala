@@ -20,7 +20,6 @@ import play.api.Configuration
 import play.api.Environment
 import play.api.data.Form
 import play.api.i18n.I18nSupport
-import play.api.libs.json.Json
 import play.api.mvc._
 import uk.gov.hmrc.agentmappingfrontend.auth.AuthActions
 import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
