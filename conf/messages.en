@@ -231,5 +231,5 @@ agentCodeAuth.details.para.3=But there’s no limit to how many agent codes you 
 agentCodeAuth.label=What is the agent code?
 agentCodeAuth.hint=For example, A12345. All the client authorisations linked to this code will be added to your agent services account.
 agentCodeAuth.button=Continue
-agentCodeAuth.error.wrongCode=Enter the agent code you used when {0} authorised you to manage their Self Assessment.
+agentCodeAuth.error.wrongCode=Enter the agent code you used when {0} authorised you to manage their Self Assessment
 agentCodeAuth.cancelLink=Get new authorisation from {0} instead

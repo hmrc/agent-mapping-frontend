@@ -230,5 +230,5 @@ agentCodeAuth.details.para.3=Ond nid oes terfyn ar faint o godau asiant y gallwc
 agentCodeAuth.label=Beth yw’r cod asiant?
 agentCodeAuth.hint=Er enghraifft, A12345. Bydd yr holl awdurdodiadau gan gleientiaid sy’n gysylltiedig â’r cod hwn yn cael eu hychwanegu at eich cyfrif gwasanaethau asiant.
 agentCodeAuth.button=Parhau
-agentCodeAuth.error.wrongCode=Nodwch y cod asiant a ddefnyddiwyd gennych pan wnaeth {0} eich awdurdodi i reoli ei Hunanasesiad.
+agentCodeAuth.error.wrongCode=Nodwch y cod asiant a ddefnyddiwyd gennych pan wnaeth {0} eich awdurdodi i reoli ei Hunanasesiad
 agentCodeAuth.cancelLink=Cael awdurdodiad newydd gan {0} yn lle hynny
