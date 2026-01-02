@@ -47,9 +47,6 @@ trait AppConfig {
   lazy val signOutUrl: String = s"$basGatewayFrontendExternalUrl$signOutPath"
   lazy val signInUrl: String = s"$basGatewayFrontendExternalUrl$signInPath"
   lazy val signOutRedirectUrl: String = s"$agentMappingFrontendBaseUrl/agent-mapping/start-submit"
-  lazy val taskListSignOutRedirectUrl: String = s"$agentMappingFrontendBaseUrl/agent-mapping/task-list/start-submit"
-  lazy val agentSubscriptionFrontendTaskListUrl: String = s"$agentSubscriptionFrontendBaseUrl/task-list"
-  lazy val agentSubscriptionFrontendProgressSavedUrl = s"$agentSubscriptionFrontendBaseUrl/progress-saved/?backLink=$agentMappingFrontendBaseUrl/agent-mapping"
   lazy val signInAndContinue: String = uri"$signInUrl?continue_url=$agentServicesFrontendBaseUrl".toString
 
   val languageMap: Map[String, Lang] = Map(
