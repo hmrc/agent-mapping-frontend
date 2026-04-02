@@ -18,7 +18,7 @@ package uk.gov.hmrc.agentmappingfrontend.support
 
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.classic.Level
-import ch.qos.logback.classic.{Logger => LogbackLogger}
+import ch.qos.logback.classic.Logger as LogbackLogger
 import ch.qos.logback.core.read.ListAppender
 import play.Logger.ALogger
 import play.api.LoggerLike

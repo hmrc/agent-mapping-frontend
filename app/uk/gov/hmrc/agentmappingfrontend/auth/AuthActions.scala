@@ -16,20 +16,20 @@
 
 package uk.gov.hmrc.agentmappingfrontend.auth
 
-import play.api.mvc.Results._
-import play.api.mvc._
+import play.api.mvc.Results.*
+import play.api.mvc.*
 import play.api.Configuration
 import play.api.Environment
 import sttp.model.Uri.UriContext
-import uk.gov.hmrc.agentmappingfrontend.auth.EnrolmentHelper._
+import uk.gov.hmrc.agentmappingfrontend.auth.EnrolmentHelper.*
 import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
 import uk.gov.hmrc.agentmappingfrontend.controllers.routes
-import uk.gov.hmrc.agentmappingfrontend.model._
+import uk.gov.hmrc.agentmappingfrontend.model.*
 import uk.gov.hmrc.agentmappingfrontend.model.identifiers.Arn
 import uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId
 import uk.gov.hmrc.agentmappingfrontend.util.RequestAwareLogging
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
-import uk.gov.hmrc.auth.core._
+import uk.gov.hmrc.auth.core.*
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.affinityGroup
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.allEnrolments
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.credentials
@@ -84,16 +84,16 @@ with RequestAwareLogging {
             case _ if affinityGroup != AffinityGroup.Agent => Future.successful(Redirect(routes.MappingController.wrongSignInDetailsNotAgent(idRefToArn)))
             case _ => Future.successful(Redirect(routes.MappingController.problemWithDetails(idRefToArn)))
           }
-      }
+    }
       .recover {
         handleException
-      }
+    }
   }
 
   def withCheckForArn(
     body: Option[Arn] => Future[Result]
   )(implicit
-    request: Request[_],
+    request: Request[?],
     ec: ExecutionContext
   ): Future[Result] = {
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
@@ -106,7 +106,7 @@ with RequestAwareLogging {
         case _: NoActiveSession => body(None)
 
         case e => Future.successful(handleException.apply(e))
-      }
+    }
   }
 
   def withBasicAgentAuth[A](
@@ -127,9 +127,10 @@ with RequestAwareLogging {
     for {
       enrolment <- enrolments.getEnrolment(AsAgentServiceKey)
       identifier <- enrolment.getIdentifier(ArnEnrolmentKey)
-    } yield Arn(identifier.value)
+    }
+    yield Arn(identifier.value)
 
-  private def handleException(implicit request: Request[_]): PartialFunction[Throwable, Result] = {
+  private def handleException(implicit request: Request[?]): PartialFunction[Throwable, Result] = {
 
     case _: UnsupportedAffinityGroup =>
       logger.warn(s"Logged in user does not have the required affinity group")
@@ -164,5 +165,4 @@ with RequestAwareLogging {
   private val appName = getString("appName")
 
   private def getString(key: String): String = config.underlying.getString(key)
-
 }

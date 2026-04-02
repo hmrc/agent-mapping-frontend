@@ -39,5 +39,4 @@ object RadioInputAnswer {
       case Yes => Some("yes")
       case No => Some("no")
     }
-
 }

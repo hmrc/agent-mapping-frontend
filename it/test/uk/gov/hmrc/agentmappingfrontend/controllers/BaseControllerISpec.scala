@@ -37,12 +37,17 @@ import uk.gov.hmrc.agentmappingfrontend.support.EndpointBehaviours
 import uk.gov.hmrc.agentmappingfrontend.support.UnitSpec
 import uk.gov.hmrc.agentmappingfrontend.support.WireMockSupport
 import uk.gov.hmrc.http.SessionKeys
+import org.mongodb.scala.ObservableFuture
+
+import scala.concurrent.ExecutionContext
 
 abstract class BaseControllerISpec
 extends UnitSpec
 with GuiceOneAppPerSuite
 with WireMockSupport
 with EndpointBehaviours {
+
+  implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
 
   override implicit lazy val app: Application = appBuilder.build()
   val repo: MappingArnRepository = app.injector.instanceOf[MappingArnRepository]

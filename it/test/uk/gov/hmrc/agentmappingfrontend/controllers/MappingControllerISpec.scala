@@ -33,6 +33,7 @@ import uk.gov.hmrc.agentmappingfrontend.support.SampleUsers._
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.test.MongoSupport
+import org.mongodb.scala.ObservableFuture
 
 class MappingControllerISpec
 extends BaseControllerISpec
@@ -422,18 +423,6 @@ with MongoSupport {
         redirectLocation(result) shouldBe Some("http://localhost:9401/agent-services-account")
       }
       "redirect to ASA home when the journey is already complete" in {
-        val testData = MappingArnResult(
-          arn = arn,
-          agentCode = None,
-          legacyClientDetails = Some(LegacyClientDetails(
-            "Client Name",
-            Seq(saAgentCode),
-            "/test-url",
-            "/test-url"
-          )),
-          mappedAgentCode = Some(saAgentCode),
-          mappedClientCount = Some(1)
-        )
         givenUserIsAuthenticated(eligibleAgent)
         val request: FakeRequest[AnyContentAsFormUrlEncoded] = fakeRequest(POST, routes.MappingController.submitAgentCode("foo").url)
           .withFormUrlEncodedBody("agentCode" -> saAgentCode)

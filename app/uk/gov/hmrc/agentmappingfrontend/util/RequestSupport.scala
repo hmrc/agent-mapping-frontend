@@ -24,7 +24,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendHeaderCarrierProvi
 import javax.inject.Inject
 
 class RequestSupport @Inject() () {
-  implicit def hc(implicit request: Request[_]): HeaderCarrier = RequestSupport.hc
+  implicit def hc(implicit request: Request[?]): HeaderCarrier = RequestSupport.hc
 }
 
 object RequestSupport {
@@ -33,7 +33,6 @@ object RequestSupport {
 
   private object HcProvider
   extends FrontendHeaderCarrierProvider {
-    def headerCarrier(implicit request: RequestHeader): HeaderCarrier = hc(request)
+    def headerCarrier(implicit request: RequestHeader): HeaderCarrier = this hc (request)
   }
-
 }

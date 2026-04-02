@@ -61,7 +61,6 @@ object MappingArnResult {
 
   implicit val localDateTimeFormat: Format[LocalDateTime] = MongoLocalDateTimeFormat.localDateTimeFormat
   implicit val format: OFormat[MappingArnResult] = Json.format
-
 }
 
 @Singleton
@@ -124,5 +123,4 @@ with Logging {
     .deleteOne(equal("id", id))
     .toFuture()
     .map(_ => ())
-
 }

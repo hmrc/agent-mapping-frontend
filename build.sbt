@@ -4,19 +4,17 @@ import uk.gov.hmrc.{DefaultBuildSettings, SbtAutoBuildPlugin}
 val appName = "agent-mapping-frontend"
 
 ThisBuild / majorVersion := 1
-ThisBuild / scalaVersion := "2.13.18"
+ThisBuild / scalaVersion := "3.3.7"
 
 val scalaCOptions = Seq(
   "-Werror",
-  "-Wdead-code",
-  "-Wunused",
-  "-deprecation",
+  "-Wconf:msg=Flag.*repeatedly:s",
   "-feature",
-  "-unchecked",
+  "-old-syntax",
+  "-rewrite",
   "-language:implicitConversions",
   "-Wconf:src=target/.*:s", // silence warnings from compiled files
   "-Wconf:msg=match may not be exhaustive:s", // silence warnings about non-exhaustive pattern matching
-
 )
 
 lazy val root = (project in file("."))
@@ -29,10 +27,11 @@ lazy val root = (project in file("."))
     resolvers ++= Seq(Resolver.typesafeRepo("releases")),
     routesImport ++= Seq("uk.gov.hmrc.agentmappingfrontend.controllers.UrlBinders._"),
     scalacOptions ++= scalaCOptions,
-    Compile / scalafmtOnCompile := true,
-    Test / scalafmtOnCompile := true,
+    Compile / scalafmtOnCompile := false,
+    Test / scalafmtOnCompile := false,
     Test / logBuffered := false,
-    Compile / unmanagedResourceDirectories += baseDirectory.value / "resources"
+    Compile / unmanagedResourceDirectories += baseDirectory.value / "resources",
+    Global / onChangedBuildSource := ReloadOnSourceChanges
   )
   .settings(
     Test / parallelExecution := false,
@@ -56,8 +55,8 @@ lazy val it = project
   .settings(DefaultBuildSettings.itSettings())
   .settings(libraryDependencies ++= AppDependencies.test)
   .settings(
-    Compile / scalafmtOnCompile := true,
-    Test / scalafmtOnCompile := true,
+    Compile / scalafmtOnCompile := false,
+    Test / scalafmtOnCompile := false,
     Test / logBuffered := false
   )
 

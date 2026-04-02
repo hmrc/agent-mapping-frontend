@@ -56,5 +56,4 @@ with I18nSupport {
       Ok(noMappingsTemplate(arn))
     }
   }
-
 }

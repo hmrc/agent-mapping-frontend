@@ -31,6 +31,7 @@ import java.time.ZoneOffset
 import java.time.temporal.ChronoUnit.MILLIS
 import java.time.temporal.ChronoUnit.SECONDS
 import scala.concurrent.ExecutionContext.Implicits.global
+import org.mongodb.scala.SingleObservableFuture
 
 class MappingArnRepositoryISpec
 extends UnitSpec

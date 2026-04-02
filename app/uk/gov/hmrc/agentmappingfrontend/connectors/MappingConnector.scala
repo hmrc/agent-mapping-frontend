@@ -17,14 +17,14 @@
 package uk.gov.hmrc.agentmappingfrontend.connectors
 
 import play.api.Logging
-import play.api.http.Status._
+import play.api.http.Status.*
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
 import uk.gov.hmrc.agentmappingfrontend.model.SaMapping
 import uk.gov.hmrc.agentmappingfrontend.model.identifiers.Arn
 import uk.gov.hmrc.agentmappingfrontend.util.RequestSupport.hc
-import uk.gov.hmrc.http.HttpReads.Implicits._
-import uk.gov.hmrc.http._
+import uk.gov.hmrc.http.HttpReads.Implicits.*
+import uk.gov.hmrc.http.*
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.play.bootstrap.metrics.Metrics
 
@@ -72,5 +72,4 @@ extends Logging {
     .map(_.status)
 
   private lazy val baseUrl = appConfig.agentMappingBaseUrl
-
 }

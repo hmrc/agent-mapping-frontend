@@ -17,7 +17,7 @@
 package uk.gov.hmrc.agentmappingfrontend.model
 
 import play.api.libs.json.Format
-import play.api.libs.json.Json._
+import play.api.libs.json.Json.*
 
 import java.time.LocalDate
 

@@ -44,7 +44,6 @@ sealed abstract class LegacyAgentEnrolmentType {
       case IRAgentReferencePaye => "IR-PAYE-AGENT"
       case SdltStorn => "IR-SDLT-AGENT"
     }
-
 }
 
 object LegacyAgentEnrolmentType {
@@ -100,7 +99,6 @@ object LegacyAgentEnrolmentType {
     IRAgentReferencePaye,
     SdltStorn
   )
-
 }
 
 case object IRAgentReference

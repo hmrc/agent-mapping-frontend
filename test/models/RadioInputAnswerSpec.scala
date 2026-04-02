@@ -45,5 +45,4 @@ extends UnitSpec {
       RadioInputAnswer.unapply(No) shouldBe Some("no")
     }
   }
-
 }

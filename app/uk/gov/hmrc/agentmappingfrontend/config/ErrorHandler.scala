@@ -54,5 +54,4 @@ with I18nSupport {
       message
     )
   }
-
 }

@@ -20,17 +20,17 @@ import play.api.Configuration
 import play.api.Environment
 import play.api.data.Form
 import play.api.i18n.I18nSupport
-import play.api.mvc._
+import play.api.mvc.*
 import uk.gov.hmrc.agentmappingfrontend.auth.AuthActions
 import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
 import uk.gov.hmrc.agentmappingfrontend.connectors.MappingConnector
-import uk.gov.hmrc.agentmappingfrontend.model._
+import uk.gov.hmrc.agentmappingfrontend.model.*
 import uk.gov.hmrc.agentmappingfrontend.repository.MappingArnRepository
 import uk.gov.hmrc.agentmappingfrontend.repository.MappingArnResult
 import uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId
-import uk.gov.hmrc.agentmappingfrontend.util._
-import uk.gov.hmrc.agentmappingfrontend.views.html._
-import uk.gov.hmrc.auth.core._
+import uk.gov.hmrc.agentmappingfrontend.util.*
+import uk.gov.hmrc.agentmappingfrontend.views.html.*
+import uk.gov.hmrc.auth.core.*
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.Inject
@@ -66,7 +66,7 @@ with AuthActions {
     Redirect(routes.MappingController.start)
   }
 
-  private def getBackLinkForStart(implicit request: Request[_]): String = request.session
+  private def getBackLinkForStart(implicit request: Request[?]): String = request.session
     .get("OriginForMapping") // set in AIF (agent journey & fastTrack) and the dashboard
     .getOrElse(appConfig.agentServicesFrontendBaseUrl)
 
@@ -159,7 +159,7 @@ with AuthActions {
                   }
                 else
                   mappingConnector.findSaMappingsFor(record.arn).flatMap { saMappings =>
-                    if (saMappings.map(_.saAgentReference).contains(agentCode)) {
+                    if (saMappings.map(_.saAgentReference).contains(agentCode))
                       Future.successful(BadRequest(agentCodeTemplate(
                         AgentCodeForm.form(None).withError(
                           AgentCodeForm.fieldName,
@@ -168,12 +168,10 @@ with AuthActions {
                         record.mappedAgentCode.isDefined,
                         id
                       )))
-                    }
-                    else {
+                    else
                       repository.replace(record.copy(agentCode = Some(agentCode)), id).map { _ =>
                         Redirect(routes.MappingController.showUseTheGgUserId(id))
                       }
-                    }
                   }
             )
         case _ =>
@@ -226,7 +224,8 @@ with AuthActions {
                   mappedClientCount = Some(clientCount)
                 )
                 _ <- repository.replace(newRecord, id)
-              } yield Redirect(routes.MappingController.showClientAuthorisationsAdded(newRecord.id))
+              }
+              yield Redirect(routes.MappingController.showClientAuthorisationsAdded(newRecord.id))
             case CONFLICT => throw new RuntimeException("Agent is already mapped - unexpected state as this was checked earlier")
             case e => throw new RuntimeException(s"Unexpected response from mapping service: $e")
           }
@@ -283,5 +282,4 @@ with AuthActions {
       Future.successful(Ok(problemWithDetailsTemplate(id)))
     }
   }
-
 }

@@ -19,7 +19,7 @@ package uk.gov.hmrc.agentmappingfrontend.util
 import play.api.Logger
 import play.api.http.HeaderNames
 import play.api.mvc.RequestHeader
-import uk.gov.hmrc.agentmappingfrontend.util.RequestSupport._
+import uk.gov.hmrc.agentmappingfrontend.util.RequestSupport.*
 
 trait RequestAwareLogging {
   val logger: RequestAwareLogger =
@@ -60,11 +60,10 @@ class RequestAwareLogger(
 
   private def deviceId(implicit r: RequestHeader) = s"[DeviceId: ${hc.deviceID}]"
 
-  private def makeRichMessage(message: String)(implicit request: RequestHeader): String = {
+  private def makeRichMessage(message: String)(implicit request: RequestHeader): String =
     request match {
       case _ => s"$message $context "
     }
-  }
 
   private sealed trait LogLevel
 
@@ -91,5 +90,4 @@ class RequestAwareLogger(
       case Warn => delegateLogger.warn(richMessage, ex)
     }
   }
-
 }

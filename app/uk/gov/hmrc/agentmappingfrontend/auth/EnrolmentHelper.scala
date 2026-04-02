@@ -33,5 +33,4 @@ object EnrolmentHelper {
     enrolments: Set[Enrolment],
     key: String
   ): Boolean = enrolments.map(_.key).contains(key)
-
 }

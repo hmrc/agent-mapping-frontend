@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.agentmappingfrontend.support
 
-import uk.gov.hmrc.auth.core.InsufficientEnrolments
 
 case class SampleUser(
   authoriseJsonResponse: String,

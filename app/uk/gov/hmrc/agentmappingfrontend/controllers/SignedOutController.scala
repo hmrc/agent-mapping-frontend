@@ -63,5 +63,4 @@ extends FrontendController(cc) {
   def timedOut: Action[AnyContent] = Action.async { implicit request =>
     Future successful Forbidden(timedOutTemplate())
   }
-
 }

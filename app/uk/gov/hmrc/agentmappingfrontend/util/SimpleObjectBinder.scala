@@ -22,7 +22,7 @@ import play.api.mvc.PathBindable
 class SimpleObjectBinder[T](
   bind: String => T,
   unbind: T => String
-)(implicit m: Manifest[T])
+)(implicit m: scala.reflect.ClassTag[T])
 extends PathBindable[T] {
 
   override def bind(
@@ -38,5 +38,4 @@ extends PathBindable[T] {
     key: String,
     value: T
   ): String = unbind(value)
-
 }
