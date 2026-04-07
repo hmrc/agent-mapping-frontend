@@ -23,13 +23,13 @@ import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.mvc.Request
 import play.api.mvc.Result
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import uk.gov.hmrc.agentmappingfrontend.model._
+import play.api.test.Helpers.*
+import uk.gov.hmrc.agentmappingfrontend.model.*
 import uk.gov.hmrc.agentmappingfrontend.model.identifiers.Arn
 import uk.gov.hmrc.agentmappingfrontend.repository.MappingArnResult
 import uk.gov.hmrc.agentmappingfrontend.stubs.AuthStubs
-import uk.gov.hmrc.agentmappingfrontend.stubs.MappingStubs._
-import uk.gov.hmrc.agentmappingfrontend.support.SampleUsers._
+import uk.gov.hmrc.agentmappingfrontend.stubs.MappingStubs.*
+import uk.gov.hmrc.agentmappingfrontend.support.SampleUsers.*
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.test.MongoSupport
@@ -38,14 +38,13 @@ import org.mongodb.scala.ObservableFuture
 class MappingControllerISpec
 extends BaseControllerISpec
 with AuthStubs
-with MongoSupport {
+with MongoSupport:
 
   override def additionalConfig: Map[String, String] = Map("mongodb.uri" -> mongoUri)
 
   override def moduleWithOverrides: AbstractModule =
-    new AbstractModule {
+    new AbstractModule:
       override def configure(): Unit = bind(classOf[MongoComponent]).toInstance(mongoComponent)
-    }
 
   val arn: Arn = Arn("TARN0000001")
 
@@ -111,6 +110,7 @@ with MongoSupport {
 
     "get the backLink from the request.session OriginForMapping key" in {
       givenUserIsAuthenticated(mtdAsAgent)
+      noSaMappingsFound(arn)
       val request = fakeRequest(GET, "/agent-mapping/start")
       val result = callEndpointWith(request)
       status(result) shouldBe 200
@@ -607,9 +607,9 @@ with MongoSupport {
           val result = callEndpointWith(request)
           status(result) shouldBe 200
           val countSuffix =
-            if (clientCount == 0)
+            if clientCount == 0 then
               "none"
-            else if (clientCount == 1)
+            else if clientCount == 1 then
               "single"
             else
               "multi"
@@ -620,10 +620,11 @@ with MongoSupport {
               s"authorisationsAdded.banner.header.$countSuffix" -> clientCount.toString,
               "authorisationsAdded.banner.body" -> saAgentCode,
               s"authorisationsAdded.para.1.$countSuffix" -> "",
-              s"authorisationsAdded.para.2${if (clientCount == 0)
+              s"authorisationsAdded.para.2${if clientCount == 0 then
                   ".none"
                 else
-                  ""}" -> "",
+                  ""
+                }" -> "",
               s"authorisationsAdded.inset.$countSuffix" -> saAgentCode,
               "authorisationsAdded.table.caption" -> "",
               "authorisationsAdded.table.agentReference" -> "",
@@ -660,7 +661,7 @@ with MongoSupport {
           val result = callEndpointWith(request)
           status(result) shouldBe 200
           val countSuffix =
-            if (clientCount == 1)
+            if clientCount == 1 then
               "single"
             else
               "multi"
@@ -761,5 +762,3 @@ with MongoSupport {
       )
     }
   }
-
-}

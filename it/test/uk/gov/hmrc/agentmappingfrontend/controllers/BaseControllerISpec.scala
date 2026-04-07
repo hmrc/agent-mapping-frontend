@@ -45,7 +45,7 @@ abstract class BaseControllerISpec
 extends UnitSpec
 with GuiceOneAppPerSuite
 with WireMockSupport
-with EndpointBehaviours {
+with EndpointBehaviours:
 
   implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
 
@@ -68,10 +68,9 @@ with EndpointBehaviours {
 
   protected implicit val materializer: Materializer = app.materializer
 
-  override def beforeEach(): Unit = {
+  override def beforeEach(): Unit =
     super.beforeEach()
     repo.collection.deleteMany(BsonDocument()).toFuture().futureValue
-  }
   protected def fakeRequest(
     endpointMethod: String = GET,
     endpointPath: String = ""
@@ -84,12 +83,12 @@ with EndpointBehaviours {
   protected def htmlEscapedMessage(
     key: String,
     args: Any*
-  ): String = HtmlFormat.escape(Messages(key, args: _*)).toString
+  ): String = HtmlFormat.escape(Messages(key, args*)).toString
 
   protected def checkHtmlResultContainsEscapedMsgs(
     result: Result,
     expectedMessageKeys: String*
-  ): Unit = {
+  ): Unit =
     contentType(result) shouldBe Some("text/html")
     charset(result) shouldBe Some("utf-8")
 
@@ -103,12 +102,11 @@ with EndpointBehaviours {
         bodyOf(result) should include(htmlEscapedMessage(expectedContent))
       }
     }
-  }
 
   protected def checkHtmlResultContainsMsgsWithArg(
     result: Result,
     expectedMessageKeys: Map[String, String]
-  ): Unit = {
+  ): Unit =
     contentType(result) shouldBe Some("text/html")
     charset(result) shouldBe Some("utf-8")
 
@@ -123,12 +121,11 @@ with EndpointBehaviours {
         bodyOf(result) should include(htmlEscapedMessage(expectedContent))
       }
     }
-  }
 
   protected def checkHtmlResultContainsMsgsWithArgs(
     result: Result,
     expectedMessageKeys: Map[String, Seq[String]]
-  ): Unit = {
+  ): Unit =
     contentType(result) shouldBe Some("text/html")
     charset(result) shouldBe Some("utf-8")
 
@@ -137,18 +134,17 @@ with EndpointBehaviours {
         Messages.isDefinedAt(messageKey) shouldBe true
       }
 
-      val expectedContent = Messages(messageKey, messageArgs: _*)
+      val expectedContent = Messages(messageKey, messageArgs*)
 
       withClue(s"Expected content ('$expectedContent') for message keys '$messageKey' to be in request body: ") {
         bodyOf(result) should include(htmlEscapedMessage(expectedContent))
       }
     }
-  }
 
   protected def checkHtmlResultContainsMsgs(
     result: Result,
     expectedMessageKeys: String*
-  ): Unit = {
+  ): Unit =
     contentType(result) shouldBe Some("text/html")
     charset(result) shouldBe Some("utf-8")
 
@@ -162,17 +158,15 @@ with EndpointBehaviours {
         bodyOf(result) should include(expectedContent)
       }
     }
-  }
 
-  protected def checkIsHtml200(result: Result) = {
+  protected def checkIsHtml200(result: Result) =
     status(result) shouldBe 200
     charset(result) shouldBe Some("utf-8")
     contentType(result) shouldBe Some("text/html")
-  }
 
   protected def containSubstrings(expectedSubstrings: String*): Matcher[Result] =
-    new Matcher[Result] {
-      override def apply(result: Result): MatchResult = {
+    new Matcher[Result]:
+      override def apply(result: Result): MatchResult =
         checkIsHtml200(result)
 
         val resultBody = bodyOf(result)
@@ -194,8 +188,6 @@ with EndpointBehaviours {
               "\""
             )}"
         )
-      }
-    }
 
   protected def checkMessageIsDefined(messageKey: String) =
     withClue(s"Message key ($messageKey) should be defined: ") {
@@ -207,8 +199,8 @@ with EndpointBehaviours {
     expectedElementId: String,
     expectedTagName: String = "button"
   ): Matcher[Result] =
-    new Matcher[Result] {
-      override def apply(result: Result): MatchResult = {
+    new Matcher[Result]:
+      override def apply(result: Result): MatchResult =
         val doc = Jsoup.parse(bodyOf(result))
 
         checkMessageIsDefined(expectedMessageKey)
@@ -216,42 +208,34 @@ with EndpointBehaviours {
         val foundElement = doc.getElementById(expectedElementId)
 
         val isAsExpected =
-          Option(foundElement) match {
+          Option(foundElement) match
             case None => false
             case Some(elAmls) =>
               val isExpectedTag = elAmls.tagName() == expectedTagName
               val hasExpectedMsg = elAmls.text() == htmlEscapedMessage(expectedMessageKey)
               isExpectedTag && hasExpectedMsg
-          }
 
         MatchResult(
           isAsExpected,
           s"""Response does not contain a submit button with id "$expectedElementId" with content for message key "$expectedMessageKey" """,
           s"""Response contains a submit button with id "$expectedElementId" with content for message key "$expectedMessageKey" """
         )
-      }
-    }
 
   protected def containLink(
     expectedMessageKey: String,
     expectedHref: String
   ): Matcher[Result] =
-    new Matcher[Result] {
-      override def apply(result: Result): MatchResult = {
+    new Matcher[Result]:
+      override def apply(result: Result): MatchResult =
         val doc = Jsoup.parse(bodyOf(result))
         checkMessageIsDefined(expectedMessageKey)
         val foundElement = doc.select(s"a[href=$expectedHref]").first()
         val wasFoundWithCorrectMessage =
-          Option(foundElement) match {
+          Option(foundElement) match
             case None => false
             case Some(element) => element.text() == htmlEscapedMessage(expectedMessageKey)
-          }
         MatchResult(
           wasFoundWithCorrectMessage,
           s"""Response does not contain a link to "$expectedHref" with content for message key "$expectedMessageKey" """,
           s"""Response contains a link to "$expectedHref" with content for message key "$expectedMessageKey" """
         )
-      }
-    }
-
-}

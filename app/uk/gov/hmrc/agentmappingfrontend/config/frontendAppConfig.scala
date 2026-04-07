@@ -25,7 +25,7 @@ import sttp.model.Uri.UriContext
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 @ImplementedBy(classOf[FrontendAppConfig])
-trait AppConfig {
+trait AppConfig:
 
   val appName: String = "agent-mapping-frontend"
 
@@ -52,11 +52,10 @@ trait AppConfig {
     "english" -> Lang("en"),
     "cymraeg" -> Lang("cy")
   )
-}
 
 @Singleton
 class FrontendAppConfig @Inject() (servicesConfig: ServicesConfig)
-extends AppConfig {
+extends AppConfig:
 
   override lazy val contactFrontendHost: String = servicesConfig.getString("contact-frontend.host")
 
@@ -77,4 +76,3 @@ extends AppConfig {
   override val timeoutCountdown: Int = servicesConfig.getInt("timeoutDialog.timeout-countdown-seconds")
 
   override val languageToggle: Boolean = servicesConfig.getBoolean("features.enable-welsh-toggle")
-}

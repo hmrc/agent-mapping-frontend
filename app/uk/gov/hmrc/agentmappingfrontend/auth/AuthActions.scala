@@ -42,7 +42,7 @@ import scala.concurrent.Future
 
 trait AuthActions
 extends AuthorisedFunctions
-with RequestAwareLogging {
+with RequestAwareLogging:
 
   def env: Environment
 
@@ -55,82 +55,71 @@ with RequestAwareLogging {
   )(implicit
     request: Request[AnyContent],
     ec: ExecutionContext
-  ): Future[Result] = {
+  ): Future[Result] =
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
     authorised(AuthProviders(GovernmentGateway)) {
       body
-    } recover {
+    } recover:
       handleException
-    }
-  }
 
   def withAuthorisedSaAgent(idRefToArn: MappingArnResultId)(
     body: Enrolment => Future[Result]
   )(implicit
     request: Request[AnyContent],
     ec: ExecutionContext
-  ): Future[Result] = {
+  ): Future[Result] =
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
     authorised(AuthProviders(GovernmentGateway))
-      .retrieve(allEnrolments and credentials and affinityGroup) {
+      .retrieve(allEnrolments and credentials and affinityGroup):
         case _ ~ None ~ _ => Future.successful(Forbidden)
         case agentEnrolments ~ Some(_) ~ Some(affinityGroup) =>
           val activeEnrolments = agentEnrolments.enrolments.filter(_.isActivated)
           val saEnrolment = activeEnrolments.find(_.key == IRAgentReference.serviceKey)
 
-          saEnrolment match {
+          saEnrolment match
             case Some(enrolment) => body(enrolment)
             case _ if userHasAsAgentEnrolment(activeEnrolments) => Future.successful(Redirect(routes.MappingController.wrongSignInDetailsAsa(idRefToArn)))
             case _ if affinityGroup != AffinityGroup.Agent => Future.successful(Redirect(routes.MappingController.wrongSignInDetailsNotAgent(idRefToArn)))
             case _ => Future.successful(Redirect(routes.MappingController.problemWithDetails(idRefToArn)))
-          }
-    }
-      .recover {
+      .recover:
         handleException
-    }
-  }
 
   def withCheckForArn(
     body: Option[Arn] => Future[Result]
   )(implicit
     request: Request[?],
     ec: ExecutionContext
-  ): Future[Result] = {
+  ): Future[Result] =
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
     authorised(AuthProviders(GovernmentGateway) and AffinityGroup.Agent)
       .retrieve(allEnrolments) { agentEnrolments =>
         val arn = getArn(agentEnrolments)
         body(arn)
       }
-      .recoverWith {
+      .recoverWith:
         case _: NoActiveSession => body(None)
 
         case e => Future.successful(handleException.apply(e))
-    }
-  }
 
   def withBasicAgentAuth[A](
     body: => Future[Result]
   )(implicit
     request: Request[AnyContent],
     ec: ExecutionContext
-  ): Future[Result] = {
+  ): Future[Result] =
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
     authorised(AuthProviders(GovernmentGateway) and AffinityGroup.Agent) {
       body
-    } recover {
+    } recover:
       handleException
-    }
-  }
 
   private def getArn(enrolments: Enrolments) =
-    for {
+    for
       enrolment <- enrolments.getEnrolment(AsAgentServiceKey)
       identifier <- enrolment.getIdentifier(ArnEnrolmentKey)
-    }
     yield Arn(identifier.value)
 
-  private def handleException(implicit request: Request[?]): PartialFunction[Throwable, Result] = {
+  private def handleException(implicit request: Request[?]): PartialFunction[Throwable, Result] =
 
     case _: UnsupportedAffinityGroup =>
       logger.warn(s"Logged in user does not have the required affinity group")
@@ -157,7 +146,6 @@ with RequestAwareLogging {
       )
       val url = uri"""${basGatewayFrontendExternalUrl + signInUrl}?${params}"""
       Redirect(url.toString)
-  }
 
   private val basGatewayFrontendExternalUrl = getString("microservice.services.bas-gateway-frontend.external-url")
   private val signInUrl = getString("microservice.services.bas-gateway-frontend.sign-in.path")
@@ -165,4 +153,3 @@ with RequestAwareLogging {
   private val appName = getString("appName")
 
   private def getString(key: String): String = config.underlying.getString(key)
-}

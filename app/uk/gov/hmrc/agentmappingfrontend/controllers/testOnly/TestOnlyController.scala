@@ -40,11 +40,11 @@ class TestOnlyController @Inject() (
   cc: MessagesControllerComponents
 )
 extends FrontendController(cc)
-with I18nSupport {
+with I18nSupport:
 
   def findSaMappings(arn: Arn): Action[AnyContent] = Action.async { implicit request =>
     mappingConnector.findSaMappingsFor(arn).map { mappings =>
-      if (mappings.nonEmpty)
+      if mappings.nonEmpty then
         Ok(viewSaMappingsTemplate(arn, mappings))
       else
         NotFound(noMappingsTemplate(arn))
@@ -56,4 +56,3 @@ with I18nSupport {
       Ok(noMappingsTemplate(arn))
     }
   }
-}

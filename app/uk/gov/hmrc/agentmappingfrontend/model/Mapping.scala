@@ -23,9 +23,8 @@ import java.time.LocalDate
 
 case class SaMappings(mappings: List[SaMapping])
 
-object SaMappings {
+object SaMappings:
   implicit val formats: Format[SaMappings] = format[SaMappings]
-}
 
 case class SaMapping(
   arn: String,
@@ -33,6 +32,5 @@ case class SaMapping(
   created: Option[LocalDate]
 )
 
-object SaMapping {
+object SaMapping:
   implicit val formats: Format[SaMapping] = format[SaMapping]
-}

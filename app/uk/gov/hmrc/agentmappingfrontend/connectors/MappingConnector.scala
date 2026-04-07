@@ -41,7 +41,7 @@ class MappingConnector @Inject() (
 )(implicit
   val ec: ExecutionContext
 )
-extends Logging {
+extends Logging:
 
   def createMapping(arn: Arn)(implicit rh: RequestHeader): Future[Int] = http
     .put(url"$baseUrl/agent-mapping/mappings/arn/${arn.value}")
@@ -59,11 +59,10 @@ extends Logging {
     .get(url"$baseUrl/agent-mapping/mappings/sa/${arn.value}")
     .execute[HttpResponse]
     .map { response =>
-      response.status match {
+      response.status match
         case OK => (response.json \ "mappings").as[Seq[SaMapping]]
         case NOT_FOUND => Seq.empty
         case s => throw new RuntimeException(s"unexpected error when calling findSaMappingsFor, status: $s")
-      }
     }
 
   def deleteAllMappingsBy(arn: Arn)(implicit rh: RequestHeader): Future[Int] = http
@@ -72,4 +71,3 @@ extends Logging {
     .map(_.status)
 
   private lazy val baseUrl = appConfig.agentMappingBaseUrl
-}

@@ -23,7 +23,7 @@ import play.api.data.validation.Invalid
 import play.api.data.validation.Valid
 import play.api.data.validation.ValidationError
 
-object AgentCodeForm {
+object AgentCodeForm:
 
   val fieldName = "agentCode"
   val regex = "[a-zA-Z0-9]*"
@@ -41,7 +41,7 @@ object AgentCodeForm {
 
   // scalastyle:off cyclomatic.complexity
   private def validateAgentCode(legacyClientDetails: Option[LegacyClientDetails]): Constraint[String] =
-    Constraint[String] {
+    Constraint[String]:
       case value if value.isEmpty => Invalid(ValidationError("agentCode.error.required"))
       case value if value.length != length && !value.matches(regex) => Invalid(ValidationError("agentCode.error.lengthAndFormat"))
       case value if value.length != length => Invalid(ValidationError("agentCode.error.length"))
@@ -49,5 +49,3 @@ object AgentCodeForm {
       case value if legacyClientDetails.isDefined && !legacyClientDetails.exists(_.clientsLegacyRelationships.contains(value)) =>
         Invalid(ValidationError("agentCodeAuth.error.wrongCode", legacyClientDetails.get.clientName))
       case _ => Valid
-    }
-}
