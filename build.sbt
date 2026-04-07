@@ -1,4 +1,4 @@
-import uk.gov.hmrc.{DefaultBuildSettings, SbtAutoBuildPlugin}
+import uk.gov.hmrc.DefaultBuildSettings
 
 
 val appName = "agent-mapping-frontend"

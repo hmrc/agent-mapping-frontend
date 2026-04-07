@@ -32,15 +32,11 @@ trait AppConfig:
   lazy val agentServicesFrontendBaseUrl: String
   lazy val basGatewayFrontendExternalUrl: String
   lazy val agentMappingBaseUrl: String
-  lazy val agentSubscriptionBaseUrl: String
   lazy val agentMappingFrontendBaseUrl: String
-  lazy val contactFrontendHost: String
-  lazy val clientCountMaxRecords: Int
   lazy val signOutPath: String
   lazy val signInPath: String
   val timeout: Int
   val timeoutCountdown: Int
-  val languageToggle: Boolean
 
   // derived values
   lazy val signOutUrl: String = s"$basGatewayFrontendExternalUrl$signOutPath"
@@ -57,11 +53,8 @@ trait AppConfig:
 class FrontendAppConfig @Inject() (servicesConfig: ServicesConfig)
 extends AppConfig:
 
-  override lazy val contactFrontendHost: String = servicesConfig.getString("contact-frontend.host")
-
   // base urls
   override lazy val basGatewayFrontendExternalUrl: String = servicesConfig.getString("microservice.services.bas-gateway-frontend.external-url")
-  override lazy val agentSubscriptionBaseUrl: String = servicesConfig.baseUrl("agent-subscription")
   override lazy val agentMappingBaseUrl: String = servicesConfig.baseUrl("agent-mapping")
   override lazy val agentMappingFrontendBaseUrl: String = s"${servicesConfig.getString("microservice.services.agent-mapping-frontend.external-url")}"
   override lazy val agentServicesFrontendBaseUrl: String =
@@ -70,9 +63,5 @@ extends AppConfig:
   override lazy val signOutPath: String = servicesConfig.getString("microservice.services.bas-gateway-frontend.sign-out.path")
   override lazy val signInPath: String = servicesConfig.getString("microservice.services.bas-gateway-frontend.sign-in.path")
 
-  override lazy val clientCountMaxRecords: Int = servicesConfig.getInt("clientCount.maxRecords")
-
   override val timeout: Int = servicesConfig.getInt("timeoutDialog.timeout-seconds")
   override val timeoutCountdown: Int = servicesConfig.getInt("timeoutDialog.timeout-countdown-seconds")
-
-  override val languageToggle: Boolean = servicesConfig.getBoolean("features.enable-welsh-toggle")
