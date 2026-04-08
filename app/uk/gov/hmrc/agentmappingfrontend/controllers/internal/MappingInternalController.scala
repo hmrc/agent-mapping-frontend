@@ -50,7 +50,8 @@ with I18nSupport
 with AuthActions:
 
   def startAuthMappingJourney(): Action[LegacyClientDetails] =
-    Action.async(parse.json[LegacyClientDetails]) { implicit request =>
+    Action.async(parse.json[LegacyClientDetails]): request =>
+      given MessagesRequest[?] = request
       withCheckForArn:
         case Some(arn) =>
           repository.create(arn, Some(request.body)).map { id =>
@@ -58,4 +59,3 @@ with AuthActions:
             Created(Json.toJson(Map("redirectUrl" -> redirectUrl)))
           }
         case None => Future.successful(Forbidden)
-    }

@@ -69,7 +69,8 @@ with AuthActions:
     .get("OriginForMapping") // set in AIF (agent journey & fastTrack) and the dashboard
     .getOrElse(appConfig.agentServicesFrontendBaseUrl)
 
-  val start: Action[AnyContent] = Action.async { implicit request =>
+  val start: Action[AnyContent] = Action.async: request =>
+    given MessagesRequest[?] = request
     withCheckForArn:
       case Some(arn) =>
         mappingConnector.findSaMappingsFor(arn).flatMap { agentCodes =>
@@ -83,15 +84,13 @@ with AuthActions:
               ))
             )
         }
-
       case None => Future.successful(Redirect(routes.MappingController.needAgentServicesAccount))
-  }
 
-  def needAgentServicesAccount: Action[AnyContent] = Action.async { implicit request =>
+  def needAgentServicesAccount: Action[AnyContent] = Action.async: request =>
+    given MessagesRequest[?] = request
     withCheckForArn:
       case Some(_) => Future.successful(Redirect(routes.MappingController.start))
       case None => Future.successful(Ok(signInTemplate()))
-  }
 
   private def agentCodeView(
     form: Form[String],

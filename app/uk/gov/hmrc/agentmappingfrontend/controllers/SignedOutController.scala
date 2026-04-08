@@ -19,6 +19,7 @@ package uk.gov.hmrc.agentmappingfrontend.controllers
 import play.api.mvc.Action
 import play.api.mvc.AnyContent
 import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.MessagesRequest
 import sttp.model.Uri.UriContext
 import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
 import uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId
@@ -55,6 +56,6 @@ extends FrontendController(cc):
     val url = uri"${appConfig.agentMappingFrontendBaseUrl + routes.SignedOutController.timedOut.url}"
     signOutWithContinue(url.toString)
 
-  def timedOut: Action[AnyContent] = Action.async { implicit request =>
+  def timedOut: Action[AnyContent] = Action.async: request =>
+    given MessagesRequest[?] = request
     Future successful Forbidden(timedOutTemplate())
-  }
