@@ -1,6 +1,5 @@
 import uk.gov.hmrc.DefaultBuildSettings
 
-
 val appName = "agent-mapping-frontend"
 
 ThisBuild / majorVersion := 1
@@ -47,7 +46,6 @@ lazy val twirlImports: Seq[String] = Seq(
   "uk.gov.hmrc.hmrcfrontend.views.html.helpers._"
 )
 
-
 lazy val it = project
   .enablePlugins(PlayScala)
   .dependsOn(root % "test->test") // the "test->test" allows reusing test code and test dependencies
@@ -58,4 +56,3 @@ lazy val it = project
     Test / scalafmtOnCompile := true,
     Test / logBuffered := false
   )
-
