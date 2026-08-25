@@ -32,4 +32,4 @@ object RequestSupport:
 
   private object HcProvider
   extends FrontendHeaderCarrierProvider:
-    def headerCarrier(implicit request: RequestHeader): HeaderCarrier = this hc (request)
+    def headerCarrier(implicit request: RequestHeader): HeaderCarrier = super.hc(using request)

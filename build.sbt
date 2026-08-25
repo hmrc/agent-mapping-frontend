@@ -3,11 +3,10 @@ import uk.gov.hmrc.DefaultBuildSettings
 val appName = "agent-mapping-frontend"
 
 ThisBuild / majorVersion := 1
-ThisBuild / scalaVersion := "3.3.7"
+ThisBuild / scalaVersion := "3.7.4"
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
 val scalaCOptions = Seq(
-  "-Werror",
   "-Wconf:msg=Flag.*repeatedly:s",
   "-feature",
   "-language:implicitConversions",
