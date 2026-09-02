@@ -1,14 +1,12 @@
 import uk.gov.hmrc.DefaultBuildSettings
 
-
 val appName = "agent-mapping-frontend"
 
 ThisBuild / majorVersion := 1
-ThisBuild / scalaVersion := "3.3.7"
+ThisBuild / scalaVersion := "3.7.4"
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
 val scalaCOptions = Seq(
-  "-Werror",
   "-Wconf:msg=Flag.*repeatedly:s",
   "-feature",
   "-language:implicitConversions",
@@ -47,7 +45,6 @@ lazy val twirlImports: Seq[String] = Seq(
   "uk.gov.hmrc.hmrcfrontend.views.html.helpers._"
 )
 
-
 lazy val it = project
   .enablePlugins(PlayScala)
   .dependsOn(root % "test->test") // the "test->test" allows reusing test code and test dependencies
@@ -58,4 +55,3 @@ lazy val it = project
     Test / scalafmtOnCompile := true,
     Test / logBuffered := false
   )
-

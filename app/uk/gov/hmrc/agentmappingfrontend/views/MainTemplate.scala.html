@@ -64,7 +64,6 @@
         serviceUrl = None,
         signOutUrl = if(isSignedIn) Some(routes.SignedOutController.signOut.url) else None
     ),
-    banners = uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage.Banners(displayHmrcBanner = true),
     templateOverrides = TemplateOverrides(
         additionalHeadBlock = Some(head)
     ),

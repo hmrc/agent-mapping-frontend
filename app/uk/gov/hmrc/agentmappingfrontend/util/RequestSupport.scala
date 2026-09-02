@@ -30,6 +30,9 @@ object RequestSupport:
 
   implicit def hc(implicit request: RequestHeader): HeaderCarrier = HcProvider.headerCarrier
 
+  /** This is because we want to give responsibility of creation of HeaderCarrier to the platform code. If they refactor how hc is created our code will pick it
+    * up automatically.
+    */
   private object HcProvider
   extends FrontendHeaderCarrierProvider:
-    def headerCarrier(implicit request: RequestHeader): HeaderCarrier = this hc (request)
+    def headerCarrier(implicit request: RequestHeader): HeaderCarrier = super.hc(using request)
