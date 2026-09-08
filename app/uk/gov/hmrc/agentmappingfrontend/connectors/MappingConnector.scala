@@ -16,15 +16,14 @@
 
 package uk.gov.hmrc.agentmappingfrontend.connectors
 
-import play.api.Logging
 import play.api.http.Status.*
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
 import uk.gov.hmrc.agentmappingfrontend.model.SaMapping
 import uk.gov.hmrc.agentmappingfrontend.model.identifiers.Arn
 import uk.gov.hmrc.agentmappingfrontend.util.RequestSupport.hc
-import uk.gov.hmrc.http.HttpReads.Implicits.*
 import uk.gov.hmrc.http.*
+import uk.gov.hmrc.http.HttpReads.Implicits.*
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.play.bootstrap.metrics.Metrics
 
@@ -40,8 +39,7 @@ class MappingConnector @Inject() (
   appConfig: AppConfig
 )(implicit
   val ec: ExecutionContext
-)
-extends Logging:
+):
 
   def createMapping(arn: Arn)(implicit rh: RequestHeader): Future[Int] = http
     .put(url"$baseUrl/agent-mapping/mappings/arn/${arn.value}")

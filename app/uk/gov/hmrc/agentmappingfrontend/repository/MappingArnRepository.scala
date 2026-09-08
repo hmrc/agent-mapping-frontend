@@ -25,10 +25,12 @@ import play.api.Logging
 import play.api.libs.json.Format
 import play.api.libs.json.Json
 import play.api.libs.json.OFormat
+import play.api.mvc.RequestHeader
 import uk.gov.hmrc.agentmappingfrontend.model.LegacyClientDetails
 import uk.gov.hmrc.agentmappingfrontend.model.MongoLocalDateTimeFormat
 import uk.gov.hmrc.agentmappingfrontend.model.identifiers.Arn
 import uk.gov.hmrc.agentmappingfrontend.repository.MappingResult.MappingArnResultId
+import uk.gov.hmrc.agentmappingfrontend.util.RequestAwareLogging
 import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
 
@@ -76,7 +78,7 @@ extends PlayMongoRepository[MappingArnResult](
   ),
   replaceIndexes = true
 )
-with Logging:
+with RequestAwareLogging:
 
   def create(
     arn: Arn,
@@ -98,7 +100,7 @@ with Logging:
   def replace(
     mappingArnResult: MappingArnResult,
     id: MappingArnResultId
-  ): Future[Unit] = collection
+  )(using RequestHeader): Future[Unit] = collection
     .replaceOne(
       equal("id", id),
       mappingArnResult,

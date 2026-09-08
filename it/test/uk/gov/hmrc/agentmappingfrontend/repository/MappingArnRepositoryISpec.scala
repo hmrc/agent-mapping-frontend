@@ -32,11 +32,15 @@ import java.time.temporal.ChronoUnit.MILLIS
 import java.time.temporal.ChronoUnit.SECONDS
 import scala.concurrent.ExecutionContext.Implicits.global
 import org.mongodb.scala.SingleObservableFuture
+import play.api.mvc.RequestHeader
+import play.api.test.FakeRequest
 
 class MappingArnRepositoryISpec
 extends UnitSpec
 with GuiceOneAppPerSuite
 with DefaultPlayMongoRepositorySupport[MappingArnResult]:
+
+  private given RequestHeader = FakeRequest()
 
   protected def builder: GuiceApplicationBuilder = new GuiceApplicationBuilder()
     .configure("mongodb.uri" -> mongoUri)

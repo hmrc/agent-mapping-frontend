@@ -18,10 +18,7 @@ package uk.gov.hmrc.agentmappingfrontend.controllers
 
 import com.google.inject.AbstractModule
 import play.api.http.Writeable
-import play.api.mvc.AnyContentAsEmpty
-import play.api.mvc.AnyContentAsFormUrlEncoded
-import play.api.mvc.Request
-import play.api.mvc.Result
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Request, RequestHeader, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import uk.gov.hmrc.agentmappingfrontend.model.*
@@ -39,6 +36,8 @@ class MappingControllerISpec
 extends BaseControllerISpec
 with AuthStubs
 with MongoSupport:
+  
+  private given RequestHeader = FakeRequest()
 
   override def additionalConfig: Map[String, String] = Map("mongodb.uri" -> mongoUri)
 
