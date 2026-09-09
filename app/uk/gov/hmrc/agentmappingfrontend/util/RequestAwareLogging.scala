@@ -36,6 +36,17 @@ class RequestAwareLogger(
   delegateLogger: Logger
 ):
 
+  def info(message: => String)(implicit request: RequestHeader): Unit = logMessage(message, Info)
+
+  def info(
+    message: => String,
+    ex: Throwable
+  )(implicit request: RequestHeader): Unit = logMessage(
+    message,
+    ex,
+    Info
+  )
+
   def warn(message: => String)(implicit request: RequestHeader): Unit = logMessage(message, Warn)
 
   def warn(
@@ -65,6 +76,9 @@ class RequestAwareLogger(
 
   private sealed trait LogLevel
 
+  private case object Info
+  extends LogLevel
+
   private case object Warn
   extends LogLevel
 
@@ -74,6 +88,7 @@ class RequestAwareLogger(
   )(implicit request: RequestHeader): Unit =
     lazy val richMessage = makeRichMessage(message)
     level match
+      case Info => delegateLogger.info(richMessage)
       case Warn => delegateLogger.warn(richMessage)
 
   private def logMessage(
@@ -83,4 +98,5 @@ class RequestAwareLogger(
   )(implicit request: RequestHeader): Unit =
     lazy val richMessage = makeRichMessage(message)
     level match
+      case Info => delegateLogger.info(richMessage, ex)
       case Warn => delegateLogger.warn(richMessage, ex)
