@@ -35,6 +35,7 @@ import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.allEnrolments
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.credentials
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import scala.concurrent.ExecutionContext
@@ -81,6 +82,29 @@ with RequestAwareLogging:
             case _ if userHasAsAgentEnrolment(activeEnrolments) => Future.successful(Redirect(routes.MappingController.wrongSignInDetailsAsa(idRefToArn)))
             case _ if affinityGroup != AffinityGroup.Agent => Future.successful(Redirect(routes.MappingController.wrongSignInDetailsNotAgent(idRefToArn)))
             case _ => Future.successful(Redirect(routes.MappingController.problemWithDetails(idRefToArn)))
+      .recover:
+        handleException
+
+  def withAuthorisedLegacyAgent(
+    legacyAgentEnrolmentType: LegacyAgentEnrolmentType,
+    returnUrl: String
+  )(
+    body: Enrolment => Future[Result]
+  )(implicit
+    request: Request[AnyContent],
+    ec: ExecutionContext
+  ): Future[Result] =
+    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
+    authorised(AuthProviders(GovernmentGateway))
+      .retrieve(allEnrolments and affinityGroup):
+        case _ ~ None => Future.successful(Forbidden)
+        case agentEnrolments ~ Some(affinityGroup) =>
+          val activeEnrolments = agentEnrolments.enrolments.filter(_.isActivated)
+          val legacyEnrolment = activeEnrolments.find(_.key == legacyAgentEnrolmentType.serviceKey)
+
+          legacyEnrolment match
+            case Some(enrolment) => body(enrolment)
+            case _ => Future.successful(Redirect(returnUrl))
       .recover:
         handleException
 

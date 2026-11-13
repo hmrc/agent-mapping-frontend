@@ -11,7 +11,7 @@ val scalaCOptions = Seq(
   "-feature",
   "-language:implicitConversions",
   "-Wconf:src=target/.*:s", // silence warnings from compiled files
-  "-Wconf:msg=match may not be exhaustive:s", // silence warnings about non-exhaustive pattern matching
+  "-Wconf:msg=match may not be exhaustive:s" // silence warnings about non-exhaustive pattern matching
 )
 
 lazy val root = (project in file("."))
@@ -22,13 +22,18 @@ lazy val root = (project in file("."))
     libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test,
     TwirlKeys.templateImports ++= twirlImports,
     resolvers ++= Seq(Resolver.typesafeRepo("releases")),
-    routesImport ++= Seq("uk.gov.hmrc.agentmappingfrontend.controllers.UrlBinders._"),
+    routesImport ++= Seq(
+      "uk.gov.hmrc.agentmappingfrontend.controllers.UrlBinders._",
+      "uk.gov.hmrc.agentmappingfrontend.controllers.UrlBinders.given",
+      "uk.gov.hmrc.play.bootstrap.binders.RedirectUrl._",
+      "uk.gov.hmrc.agentmappingfrontend.model.LegacyAgentEnrolmentType",
+      "uk.gov.hmrc.play.bootstrap.binders.RedirectUrl"
+    ),
     scalacOptions ++= scalaCOptions,
     Compile / scalafmtOnCompile := true,
     Test / scalafmtOnCompile := true,
     Test / logBuffered := false,
-    Compile / unmanagedResourceDirectories += baseDirectory.value / "resources",
-
+    Compile / unmanagedResourceDirectories += baseDirectory.value / "resources"
   )
   .settings(
     Test / parallelExecution := false,

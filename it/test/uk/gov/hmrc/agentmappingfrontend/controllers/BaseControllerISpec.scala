@@ -23,6 +23,7 @@ import org.mongodb.scala.bson.BsonDocument
 import org.scalatest.matchers.MatchResult
 import org.scalatest.matchers.Matcher
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.Application
 import play.api.i18n.Lang
 import play.api.i18n.Messages
@@ -35,6 +36,7 @@ import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.agentmappingfrontend.repository.MappingArnRepository
 import uk.gov.hmrc.agentmappingfrontend.support.EndpointBehaviours
 import uk.gov.hmrc.agentmappingfrontend.support.UnitSpec
+import uk.gov.hmrc.agentmappingfrontend.support.WSHelper
 import uk.gov.hmrc.agentmappingfrontend.support.WireMockSupport
 import uk.gov.hmrc.http.SessionKeys
 import org.mongodb.scala.ObservableFuture
@@ -43,13 +45,13 @@ import scala.concurrent.ExecutionContext
 
 abstract class BaseControllerISpec
 extends UnitSpec
-with GuiceOneAppPerSuite
+with GuiceOneServerPerSuite
+with WSHelper
 with WireMockSupport
 with EndpointBehaviours:
 
-  implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
-
   override implicit lazy val app: Application = appBuilder.build()
+  implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
   val repo: MappingArnRepository = app.injector.instanceOf[MappingArnRepository]
 
   def additionalConfig: Map[String, String] = Map.empty
