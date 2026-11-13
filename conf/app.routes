@@ -23,3 +23,5 @@ GET         /time-out                                            uk.gov.hmrc.age
 GET         /timed-out                                           uk.gov.hmrc.agentmappingfrontend.controllers.SignedOutController.timedOut
 
 GET         /language/:lang                                      uk.gov.hmrc.agentmappingfrontend.controllers.AgentMappingLanguageController.switchToLanguage(lang: String)
+
+GET         /mapping-check/:enrolmentType                        uk.gov.hmrc.agentmappingfrontend.controllers.MappingCheckController.checkMapping(enrolmentType: LegacyAgentEnrolmentType, returnUrl: RedirectUrl)

@@ -84,6 +84,21 @@ object MappingStubs:
       .willReturn(aResponse().withStatus(200).withBody(Json.obj("clientCount" -> recordCount).toString()))
   )
 
+  def givenMappingStatus(
+    identifier: String,
+    enrolmentType: LegacyAgentEnrolmentType,
+    statusCode: Int,
+    continueUrl: Option[String] = None
+  ): StubMapping = stubFor(
+    get(urlPathEqualTo(s"/agent-mapping/mapping-status/service/${enrolmentType.serviceKey}/value/$identifier"))
+      .willReturn(
+        aResponse()
+          .withStatus(statusCode)
+          .withHeader("Content-Type", "application/json")
+          .withBody(continueUrl.fold("")(url => Json.obj("continueUrl" -> url).toString()))
+      )
+  )
+
   def givenGetMappingDetailsFailsForReason(
     arn: Arn,
     statusCode: Int
