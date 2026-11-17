@@ -16,8 +16,27 @@
 
 package uk.gov.hmrc.agentmappingfrontend.controllers
 
+import play.api.mvc.PathBindable
+import uk.gov.hmrc.agentmappingfrontend.model.LegacyAgentEnrolmentType
 import uk.gov.hmrc.agentmappingfrontend.util.SimpleObjectBinder
 import uk.gov.hmrc.agentmappingfrontend.model.identifiers.Arn
 
 object UrlBinders:
+
   implicit val arnBinder: SimpleObjectBinder[Arn] = new SimpleObjectBinder[Arn](Arn.apply, _.value)
+
+  given PathBindable[LegacyAgentEnrolmentType] =
+    new PathBindable[LegacyAgentEnrolmentType]:
+      override def bind(
+        key: String,
+        value: String
+      ): Either[String, LegacyAgentEnrolmentType] =
+        LegacyAgentEnrolmentType.find(value) match
+          case Some(legacyEnrolment) => Right(legacyEnrolment)
+          case _ => Left(s"Cannot parse parameter '$key' with value '$value' as LegacyAgentEnrolmentType")
+
+      override def unbind(
+        key: String,
+        enrolmentType: LegacyAgentEnrolmentType
+      ): String =
+        enrolmentType.serviceKey

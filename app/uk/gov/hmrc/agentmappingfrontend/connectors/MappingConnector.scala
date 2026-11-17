@@ -19,6 +19,8 @@ package uk.gov.hmrc.agentmappingfrontend.connectors
 import play.api.http.Status.*
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.agentmappingfrontend.config.AppConfig
+import uk.gov.hmrc.agentmappingfrontend.model.LegacyAgentEnrolmentType
+import uk.gov.hmrc.agentmappingfrontend.model.MappingStatus
 import uk.gov.hmrc.agentmappingfrontend.model.SaMapping
 import uk.gov.hmrc.agentmappingfrontend.model.identifiers.Arn
 import uk.gov.hmrc.agentmappingfrontend.util.RequestSupport.hc
@@ -67,5 +69,19 @@ class MappingConnector @Inject() (
     .delete(url"$baseUrl/agent-mapping/test-only/mappings/${arn.value}")
     .execute[HttpResponse]
     .map(_.status)
+
+  def getMappingStatus(
+    identifier: String,
+    legacyAgentEnrolmentType: LegacyAgentEnrolmentType
+  )(implicit rh: RequestHeader): Future[MappingStatus] = http
+    .get(url"$baseUrl/agent-mapping/mapping-status/service/${legacyAgentEnrolmentType.serviceKey}/value/$identifier")
+    .execute[HttpResponse]
+    .map: response =>
+      def continueUrl = (response.json \ "continueUrl").as[String]
+      response.status match
+        case NO_CONTENT => MappingStatus.Mapped
+        case OK => MappingStatus.NotMappedNotMandated(continueUrl)
+        case NOT_FOUND => MappingStatus.NotMappedMandated(continueUrl)
+        case CONFLICT => MappingStatus.Suspended(continueUrl)
 
   private lazy val baseUrl = appConfig.agentMappingBaseUrl

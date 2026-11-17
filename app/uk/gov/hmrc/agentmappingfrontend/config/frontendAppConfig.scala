@@ -17,11 +17,17 @@
 package uk.gov.hmrc.agentmappingfrontend.config
 
 import com.google.inject.ImplementedBy
+import play.api.Configuration
 
 import javax.inject.Inject
 import javax.inject.Singleton
 import play.api.i18n.Lang
 import sttp.model.Uri.UriContext
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrlPolicy.Id
+import uk.gov.hmrc.play.bootstrap.binders.AbsoluteWithHostnameFromAllowlist
+import uk.gov.hmrc.play.bootstrap.binders.OnlyRelative
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl.idFunctor
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrlPolicy
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 @ImplementedBy(classOf[FrontendAppConfig])
@@ -49,8 +55,13 @@ trait AppConfig:
     "cymraeg" -> Lang("cy")
   )
 
+  val redirectUrlPolicy: RedirectUrlPolicy[Id]
+
 @Singleton
-class FrontendAppConfig @Inject() (servicesConfig: ServicesConfig)
+class FrontendAppConfig @Inject() (
+  servicesConfig: ServicesConfig,
+  configuration: Configuration
+)
 extends AppConfig:
 
   // base urls
@@ -65,3 +76,6 @@ extends AppConfig:
 
   override val timeout: Int = servicesConfig.getInt("timeoutDialog.timeout-seconds")
   override val timeoutCountdown: Int = servicesConfig.getInt("timeoutDialog.timeout-countdown-seconds")
+  private val allowedRedirectUrls: Seq[String] = configuration.get[Seq[String]]("redirect-host-allow-list")
+
+  override val redirectUrlPolicy: RedirectUrlPolicy[Id] = AbsoluteWithHostnameFromAllowlist(allowedRedirectUrls*) | OnlyRelative

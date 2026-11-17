@@ -29,7 +29,6 @@ extends BaseControllerISpec:
   private val arn = Arn("ARN0001")
 
   private def connector = app.injector.instanceOf[MappingConnector]
-  private implicit val rh: RequestHeader = FakeRequest()
 
   "createMapping" should {
     "create a mapping" in {
