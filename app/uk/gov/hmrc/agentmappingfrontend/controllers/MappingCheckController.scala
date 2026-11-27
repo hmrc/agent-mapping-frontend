@@ -63,19 +63,22 @@ with AuthActions:
   ): Action[AnyContent] =
     Action.async:
       implicit request =>
-        val validatedReturnUrl = returnUrl.get(appConfig.redirectUrlPolicy).url
-        lazy val sessionMarker = s"mapping-checked-${enrolmentType.serviceKey}" -> "true"
-        withAuthorisedLegacyAgent(enrolmentType, validatedReturnUrl): enrolment =>
-          mappingConnector
-            .getMappingStatus(enrolment.identifiers.head.value, enrolmentType)
-            .flatMap:
-              case MappingStatus.Mapped => Future.successful(Redirect(validatedReturnUrl).addingToSession(sessionMarker))
-              case MappingStatus.NotMappedMandated(continueUrl) => Future.successful(Redirect(continueUrl, Map("returnUrl" -> Seq(validatedReturnUrl))))
-              case MappingStatus.NotMappedNotMandated(continueUrl) =>
-                isUserAlreadyNotified(enrolment, enrolmentType).map:
-                  case true => Redirect(validatedReturnUrl).addingToSession(sessionMarker)
-                  case false => Redirect(continueUrl, Map("returnUrl" -> Seq(validatedReturnUrl)))
-              case MappingStatus.Suspended(continueUrl) => Future.successful(Redirect(continueUrl))
+        if appConfig.mappingCheckEnabled then
+          val validatedReturnUrl = returnUrl.get(appConfig.redirectUrlPolicy).url
+          lazy val sessionMarker = s"mapping-checked-${enrolmentType.serviceKey}" -> "true"
+          withAuthorisedLegacyAgent(enrolmentType, validatedReturnUrl): enrolment =>
+            mappingConnector
+              .getMappingStatus(enrolment.identifiers.head.value, enrolmentType)
+              .flatMap:
+                case MappingStatus.Mapped => Future.successful(Redirect(validatedReturnUrl).addingToSession(sessionMarker))
+                case MappingStatus.NotMappedMandated(continueUrl) => Future.successful(Redirect(continueUrl, Map("returnUrl" -> Seq(validatedReturnUrl))))
+                case MappingStatus.NotMappedNotMandated(continueUrl) =>
+                  isUserAlreadyNotified(enrolment, enrolmentType).map:
+                    case true => Redirect(validatedReturnUrl).addingToSession(sessionMarker)
+                    case false => Redirect(continueUrl, Map("returnUrl" -> Seq(validatedReturnUrl)))
+                case MappingStatus.Suspended(continueUrl) => Future.successful(Redirect(continueUrl))
+        else
+          Future.successful(NotImplemented)
 
   private def isUserAlreadyNotified(
     enrolment: Enrolment,
