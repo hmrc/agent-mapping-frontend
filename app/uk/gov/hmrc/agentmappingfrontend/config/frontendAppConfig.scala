@@ -43,6 +43,7 @@ trait AppConfig:
   lazy val signInPath: String
   val timeout: Int
   val timeoutCountdown: Int
+  val mappingCheckEnabled: Boolean
 
   // derived values
   lazy val signOutUrl: String = s"$basGatewayFrontendExternalUrl$signOutPath"
@@ -76,6 +77,7 @@ extends AppConfig:
 
   override val timeout: Int = servicesConfig.getInt("timeoutDialog.timeout-seconds")
   override val timeoutCountdown: Int = servicesConfig.getInt("timeoutDialog.timeout-countdown-seconds")
+  override val mappingCheckEnabled: Boolean = servicesConfig.getBoolean("features.mapping-check-enabled")
   private val allowedRedirectUrls: Seq[String] = configuration.get[Seq[String]]("redirect-host-allow-list")
 
   override val redirectUrlPolicy: RedirectUrlPolicy[Id] = AbsoluteWithHostnameFromAllowlist(allowedRedirectUrls*) | OnlyRelative
